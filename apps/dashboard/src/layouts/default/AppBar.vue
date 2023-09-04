@@ -10,9 +10,7 @@
       <v-icon size="small" color="white">mdi-pencil</v-icon>
     </p>
     <v-spacer></v-spacer>
-    <v-btn class="mr-3" variant="outlined" size="small" color="primary" href="/"
-      >Cancel</v-btn
-    >
+    <v-btn class="mr-3" variant="outlined" size="small" color="primary" href="/">Cancel</v-btn>
     <v-btn
       class="mr-3"
       variant="outlined"
@@ -30,15 +28,13 @@
             </v-col>
             <v-col cols="1">
               <v-sheet class="my-2 ml-9"
-                ><v-icon @click="previewDialog = !previewDialog"
-                  >mdi-close</v-icon
-                ></v-sheet
+                ><v-icon @click="previewDialog = !previewDialog">mdi-close</v-icon></v-sheet
               >
             </v-col>
           </v-row>
           <v-divider></v-divider>
           <Home :title="mainTitle" :desc="description" />
-          <grid-layout
+          <!-- <grid-layout
             :layout="widgets"
             :col-num="12"
             :is-draggable="false"
@@ -64,25 +60,16 @@
                 :preview="previewDialog"
               />
             </grid-item>
-          </grid-layout>
+          </grid-layout> -->
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-btn
-      variant="flat"
-      size="small"
-      color="primary"
-      @click="handleSaveChanges"
+    <v-btn variant="flat" size="small" color="primary" @click="handleSaveChanges"
       >Save Changes</v-btn
     >
   </v-app-bar>
 
-  <v-navigation-drawer
-    color="rgba(71,181,155)"
-    class="bg-grey-lighten-2"
-    rail
-    app
-  >
+  <v-navigation-drawer color="rgba(71,181,155)" class="bg-grey-lighten-2" rail app>
     <v-list color="rgba(70,60,110)" dense nav>
       <v-list-item
         v-for="(item, index) in sideMenuItems"
@@ -99,12 +86,7 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-navigation-drawer
-    v-model="drawer"
-    color="rgba(211,220,230,1)"
-    app
-    width="300"
-  >
+  <v-navigation-drawer v-model="drawer" color="rgba(211,220,230,1)" app width="300">
     <div id="sidebar">
       <div class="d-flex justify-end sidebar-toggle mx-4 mt-3">
         <div class="" @click="drawer = !drawer" id="btn-toggle">
@@ -128,11 +110,7 @@
           <div v-if="selectedChartLibrary" class="chartType">
             <h4 class="mb-4 ml-6">Simple</h4>
             <v-row class="mb-6" no-gutters>
-              <v-col
-                cols="3"
-                v-for="item in charts"
-                class="mb-5 d-flex justify-center"
-              >
+              <v-col cols="3" v-for="item in charts" class="mb-5 d-flex justify-center">
                 <img
                   :src="item.img"
                   style="width: 25px; height: 25px"
@@ -146,19 +124,10 @@
     </div>
   </v-navigation-drawer>
 
-  <v-navigation-drawer
-    v-model="controlsDrawer"
-    color="rgba(211,220,230,1)"
-    app
-    width="300"
-  >
+  <v-navigation-drawer v-model="controlsDrawer" color="rgba(211,220,230,1)" app width="300">
     <div id="sidebar">
       <div class="d-flex justify-end sidebar-toggle mx-4 mt-3">
-        <div
-          class="mb-2"
-          @click="controlsDrawer = !controlsDrawer"
-          id="btn-toggle"
-        >
+        <div class="mb-2" @click="controlsDrawer = !controlsDrawer" id="btn-toggle">
           <v-icon id="btn-toggle-icon" x-large>mdi-close</v-icon>
         </div>
       </div>
@@ -189,19 +158,10 @@
     </div>
   </v-navigation-drawer>
 
-  <v-navigation-drawer
-    v-model="settingsDrawer"
-    color="rgba(211,220,230,1)"
-    app
-    width="300"
-  >
+  <v-navigation-drawer v-model="settingsDrawer" color="rgba(211,220,230,1)" app width="300">
     <div id="sidebar">
       <div class="d-flex justify-end sidebar-toggle mx-4 mt-3">
-        <div
-          class="mb-2"
-          @click="settingsDrawer = !settingsDrawer"
-          id="btn-toggle"
-        >
+        <div class="mb-2" @click="settingsDrawer = !settingsDrawer" id="btn-toggle">
           <v-icon id="btn-toggle-icon" x-large>mdi-close</v-icon>
         </div>
       </div>
@@ -229,30 +189,30 @@
 
   <v-main>
     <Home :title="mainTitle" :desc="description" />
-    <ChartContainer :widgets="widgets" />
+    <!-- <ChartContainer :widgets="widgets" /> -->
   </v-main>
 </template>
 
 <script>
-import Home from "@/views/Home.vue";
-import ChartData from "../../../../chart-container/src/components/charts/ChartData";
-import line from "@/assets/line.png";
-import bar from "@/assets/bar.png";
-import pie from "@/assets/pie.png";
-import scatter from "@/assets/scatter.png";
-import { useSelectedChart } from "../../../../chart-container/src/stores/fetchSelectedChart";
-import { storeToRefs } from "pinia";
-const store = useSelectedChart();
-const { fetchChartOptions } = storeToRefs(store);
-const getChartOptions = fetchChartOptions;
-import axios from "axios";
+import Home from '@/views/Home.vue'
+// import ChartData from "../../../../chart-container/src/components/charts/ChartData";
+import line from '@/assets/line.png'
+import bar from '@/assets/bar.png'
+import pie from '@/assets/pie.png'
+import scatter from '@/assets/scatter.png'
+// import { useSelectedChart } from "../../../../chart-container/src/stores/fetchSelectedChart";
+// import { storeToRefs } from "pinia";
+// const store = useSelectedChart();
+// const { fetchChartOptions } = storeToRefs(store);
+// const getChartOptions = fetchChartOptions;
+import axios from 'axios'
 export default {
-  name: "AppBar",
+  name: 'AppBar',
   components: {
-    Home,
-    ChartData,
+    Home
+    // ChartData,
   },
-  inject: ["eventBus"],
+  inject: ['eventBus'],
   data: () => {
     return {
       drawer: false,
@@ -270,49 +230,49 @@ export default {
       selectedControl: false,
       sideMenuItems: [
         {
-          title: "Chart & Data",
-          value: "chartData",
-          icon: "mdi-chart-box-outline",
+          title: 'Chart & Data',
+          value: 'chartData',
+          icon: 'mdi-chart-box-outline'
         },
         {
-          title: "Controls",
-          value: "controls",
-          icon: "mdi-filter-variant-plus",
+          title: 'Controls',
+          value: 'controls',
+          icon: 'mdi-filter-variant-plus'
         },
-        { title: "Settings", value: "settings", icon: "mdi-cog" },
-        { title: "Analytics", value: "analytics", icon: "mdi-chart-bar" },
+        { title: 'Settings', value: 'settings', icon: 'mdi-cog' },
+        { title: 'Analytics', value: 'analytics', icon: 'mdi-chart-bar' }
       ],
       charts: [
         {
-          type: "Line Chart",
-          value: "line",
-          img: line,
+          type: 'Line Chart',
+          value: 'line',
+          img: line
         },
         {
-          type: "Bar Chart",
-          value: "bar",
-          img: bar,
+          type: 'Bar Chart',
+          value: 'bar',
+          img: bar
         },
         {
-          type: "Pie Chart",
-          value: "pie",
-          img: pie,
+          type: 'Pie Chart',
+          value: 'pie',
+          img: pie
         },
         {
-          type: "Scatter Chart",
-          value: "scatter",
-          img: scatter,
-        },
+          type: 'Scatter Chart',
+          value: 'scatter',
+          img: scatter
+        }
       ],
       chartData: [
         {
-          dataType: "Static Data",
-          value: "static",
+          dataType: 'Static Data',
+          value: 'static'
         },
         {
-          dataType: "Remote Data(From a URL)",
-          value: "remote",
-        },
+          dataType: 'Remote Data(From a URL)',
+          value: 'remote'
+        }
       ],
       chartLibraries: [
         // {
@@ -320,21 +280,21 @@ export default {
         //   value: "jsCharting",
         // },
         {
-          type: "ApexCharts",
-          value: "apexCharts",
+          type: 'ApexCharts',
+          value: 'apexCharts'
         },
         // {
         //   type: "Google Charts",
         //   value: "googlecharts",
         // },
         {
-          type: "Apache ECharts",
-          value: "eCharts",
+          type: 'Apache ECharts',
+          value: 'eCharts'
         },
         {
-          type: "Chart.js",
-          value: "chartjs",
-        },
+          type: 'Chart.js',
+          value: 'chartjs'
+        }
         // {
         //   type: "amCharts",
         //   value: "amCharts",
@@ -342,58 +302,58 @@ export default {
       ],
       controls: [
         {
-          name: "Date range control",
-          value: "daterange",
-          icon: "mdi-calendar-range",
-        },
+          name: 'Date range control',
+          value: 'daterange',
+          icon: 'mdi-calendar-range'
+        }
       ],
       previewDialog: false,
       widgets: [],
-      options: getChartOptions,
-      modifiedOptions: [],
-    };
+      // options: getChartOptions,
+      modifiedOptions: []
+    }
   },
   created() {
-    this.eventBus.on("savedWidgets", this.savedWidgets);
+    this.eventBus.on('savedWidgets', this.savedWidgets)
   },
-  watch: {
-    options: [
-      {
-        handler: "getOptions",
-      },
-    ],
-  },
+  // watch: {
+  //   options: [
+  //     {
+  //       handler: "getOptions",
+  //     },
+  //   ],
+  // },
   mounted() {
     if (this.$route.params.id) {
-      this.handleGetReportsById(this.$route.params.id);
+      this.handleGetReportsById(this.$route.params.id)
     }
   },
   methods: {
-    getOptions(data) {
-      this.modifiedOptions = data;
-    },
+    // getOptions(data) {
+    //   this.modifiedOptions = data;
+    // },
 
     savedWidgets(data) {
-      this.widgets = data;
+      this.widgets = data
     },
 
     onClickDrawer(val) {
-      this.drawer = val === 0;
-      this.controlsDrawer = val === 1;
-      this.settingsDrawer = val === 2;
+      this.drawer = val === 0
+      this.controlsDrawer = val === 1
+      this.settingsDrawer = val === 2
     },
 
     controlSelected() {
-      this.selectedControl = true;
+      this.selectedControl = true
       const item = {
         x: 0,
         y: 0,
         w: 3,
         h: 1,
         i: this.widgets.length,
-        selectedControl: this.selectedControl,
-      };
-      this.widgets.push(item);
+        selectedControl: this.selectedControl
+      }
+      this.widgets.push(item)
     },
 
     selectedChart(val) {
@@ -404,53 +364,50 @@ export default {
         h: 3,
         i: this.widgets.length,
         chart: val,
-        selectedLib: this.selectedChartLibrary,
-      };
-      this.widgets.push(item);
+        selectedLib: this.selectedChartLibrary
+      }
+      this.widgets.push(item)
     },
 
     handleTitleChange(event) {
-      this.mainTitle = event.target.value;
+      this.mainTitle = event.target.value
     },
 
     handleDescChange(event) {
-      this.description = event.target.value;
+      this.description = event.target.value
     },
 
     handleSaveChanges() {
       if (!this.$route.params.id) {
         axios
-          .post("https://retoolapi.dev/4RV8By/reports", {
+          .post('https://retoolapi.dev/4RV8By/reports', {
             name: this.mainTitle,
             description: this.description,
             widgetCount: this.widgets.length,
-            widgets: this.widgets,
+            widgets: this.widgets
           })
           .then((response) => {
-            this.$router.push({ path: "/" });
+            this.$router.push({ path: '/' })
           })
           .catch((error) => {
-            console.log(error);
+            console.log(error)
           })
-          .finally();
+          .finally()
       } else {
         axios
-          .patch(
-            `https://retoolapi.dev/4RV8By/reports/${this.$route.params.id}`,
-            {
-              name: this.mainTitle,
-              description: this.description,
-              widgetCount: this.widgets.length,
-              widgets: this.widgets,
-            }
-          )
+          .patch(`https://retoolapi.dev/4RV8By/reports/${this.$route.params.id}`, {
+            name: this.mainTitle,
+            description: this.description,
+            widgetCount: this.widgets.length,
+            widgets: this.widgets
+          })
           .then((response) => {
-            this.$router.push({ path: "/" });
+            this.$router.push({ path: '/' })
           })
           .catch((error) => {
-            console.log(error);
+            console.log(error)
           })
-          .finally();
+          .finally()
       }
     },
 
@@ -458,16 +415,16 @@ export default {
       axios
         .get(`https://retoolapi.dev/4RV8By/reports/${e}`)
         .then((response) => {
-          this.mainTitle = response.data.name;
-          this.description = response.data.description;
+          this.mainTitle = response.data.name
+          this.description = response.data.description
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
         })
-        .finally();
-    },
-  },
-};
+        .finally()
+    }
+  }
+}
 </script>
 <style scoped>
 .layoutJSON {
