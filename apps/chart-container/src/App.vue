@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
-import { getSiteInfo } from '../../../packages/site-info';
-let siteInfo = getSiteInfo();
-console.log('siteInfo: ', siteInfo);
 </script>
 
 <template>
