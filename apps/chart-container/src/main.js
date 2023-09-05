@@ -4,6 +4,7 @@ import App from './App.vue'
 import { registerPlugins } from '@/plugins'
 
 import mitt from 'mitt';
+import VueApexCharts from "vue3-apexcharts";
 import VueGridLayout from 'vue-grid-layout'
 import ECharts from 'vue-echarts'
 import { use } from "echarts/core"
@@ -48,6 +49,4 @@ registerPlugins(app)
 // register globally (or you can do it locally)
 app.component('v-chart', ECharts)
 
-app.use(createPinia()).use(VueGridLayout)
-
-app.mount('#app')
+app.use(createPinia()).use(VueGridLayout).use(VueApexCharts).mount('#app')

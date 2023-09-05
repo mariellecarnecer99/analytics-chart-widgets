@@ -799,7 +799,7 @@
             </v-col>
           </v-row>
           <v-divider></v-divider>
-          <PluggableWidget :chartLib="chartLib" :option="chartsConfig" :id="chartId" />
+          <!-- <PluggableWidget :chartLib="chartLib" :option="chartsConfig" :id="chartId" /> -->
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -811,7 +811,7 @@ import EChart from './EChart.vue'
 import ApexCharts from './ApexChart.vue'
 import ChartJS from './ChartJS.vue'
 import DateRange from '../controls/Daterange.vue'
-// import { useSelectedChart } from '@/stores/fetchSelectedChart'
+import { useSelectedChart } from '../../stores/fetchSelectedChart'
 import { VDatePicker } from 'vuetify/labs/VDatePicker'
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
@@ -826,9 +826,9 @@ import axios from 'axios'
 import { Vue3JsonEditor } from 'vue3-json-editor'
 import { storeToRefs } from 'pinia'
 
-// const store = useSelectedChart()
-// const { selectedDates } = storeToRefs(store)
-// const datesSelected = selectedDates
+const store = useSelectedChart()
+const { selectedDates } = storeToRefs(store)
+const datesSelected = selectedDates
 
 export default {
   components: {
@@ -975,7 +975,7 @@ export default {
       aggregationType: true,
       dates: [],
       datepickerModal: false,
-      // selectedDates: datesSelected,
+      selectedDates: datesSelected,
       apiData: null,
       chartsConfig: null,
       selectedApi: null
@@ -989,13 +989,13 @@ export default {
       return gridColor
     }
   },
-  // watch: {
-  //   selectedDates: [
-  //     {
-  //       handler: 'getDates'
-  //     }
-  //   ]
-  // },
+  watch: {
+    selectedDates: [
+      {
+        handler: 'getDates'
+      }
+    ]
+  },
   mounted() {
     this.handleOptions()
     this.handleApexOptions()
@@ -1639,48 +1639,48 @@ export default {
         .finally()
     },
 
-    // getDates(e) {
-    //   axios
-    //     .get(
-    //       `https://retoolapi.dev/NuWQVD/data?createdAt_gte=${e[0]}&createdAt_lte=${e[e.length - 1]}`
-    //     )
-    //     .then((response) => {
-    //       let mappedData = this.apiData.map((date) => {
-    //         const newDateFormat = moment(date.createdAt).format('YYYY-MM-DD')
-    //         return {
-    //           ...date,
-    //           newFormat: newDateFormat
-    //         }
-    //       })
+    getDates(e) {
+      axios
+        .get(
+          `https://retoolapi.dev/NuWQVD/data?createdAt_gte=${e[0]}&createdAt_lte=${e[e.length - 1]}`
+        )
+        .then((response) => {
+          let mappedData = this.apiData.map((date) => {
+            const newDateFormat = moment(date.createdAt).format('YYYY-MM-DD')
+            return {
+              ...date,
+              newFormat: newDateFormat
+            }
+          })
 
-    //       let res = e.map((x) => mappedData.find((date) => date.newFormat == x))
+          let res = e.map((x) => mappedData.find((date) => date.newFormat == x))
 
-    //       const filteredData = res.filter((item) => item !== undefined)
+          const filteredData = res.filter((item) => item !== undefined)
 
-    //       // Get dimensions
-    //       const allKeys = new Set()
-    //       for (const item of filteredData) {
-    //         const keys = Object.keys(item)
-    //         keys.forEach((key) => allKeys.add(key))
-    //       }
-    //       this.dimensions = Array.from(allKeys)
-    //       const keyToFind = 'createdAt'
-    //       const index = this.dimensions.indexOf(keyToFind)
+          // Get dimensions
+          const allKeys = new Set()
+          for (const item of filteredData) {
+            const keys = Object.keys(item)
+            keys.forEach((key) => allKeys.add(key))
+          }
+          this.dimensions = Array.from(allKeys)
+          const keyToFind = 'createdAt'
+          const index = this.dimensions.indexOf(keyToFind)
 
-    //       this.defaultCategory = this.dimensions[index]
-    //       this.defaultMetric = this.dimensions[4]
+          this.defaultCategory = this.dimensions[index]
+          this.defaultMetric = this.dimensions[4]
 
-    //       this.getUniqueValues(filteredData, this.defaultCategory, this.defaultMetric)
+          this.getUniqueValues(filteredData, this.defaultCategory, this.defaultMetric)
 
-    //       this.handleOptions()
-    //       this.handleApexOptions()
-    //       this.handleChartjsOptions()
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    //     .finally()
-    // },
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+        .finally()
+    },
 
     onJsonSave(e) {
       if (this.chartLib === 'eCharts') {

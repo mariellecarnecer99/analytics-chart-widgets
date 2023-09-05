@@ -1,6 +1,10 @@
 {
   "files": [],
   "allowJs": true,
+  "compilerOptions": {
+    "rootDir": "src",
+    // ... rest
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"

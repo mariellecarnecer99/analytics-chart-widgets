@@ -18,13 +18,13 @@
         :h="item.h"
         :i="item.i"
       >
-        <!-- <ChartData
+        <ChartData
           :chartType="item.chart?.value"
           :chartLib="item.selectedLib"
           :chartId="item.i"
           :control="item.selectedControl"
           :selectedChartsLength="widgets.length"
-        /> -->
+        />
         <span class="remove" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
         >
@@ -34,11 +34,11 @@
 </template>
 
 <script>
-// import ChartData from '@/components/charts/ChartData.vue'
+import ChartData from './components/charts/ChartData.vue'
 import axios from 'axios'
 export default {
   components: {
-    // ChartData
+    ChartData
   },
   inject: ['eventBus'],
   data: () => {
