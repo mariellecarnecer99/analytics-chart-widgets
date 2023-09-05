@@ -35,6 +35,7 @@
           </v-row>
           <v-divider></v-divider>
           <v-btn
+            v-if="$route.params?.id"
             class="mt-3"
             variant="outlined"
             size="small"
