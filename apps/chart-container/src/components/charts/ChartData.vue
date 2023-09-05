@@ -765,7 +765,7 @@
         <v-card-text>
           <v-row justify="space-between">
             <v-col cols="8">
-              <v-sheet class="my-2"><h3>Add the widget to your website</h3> </v-sheet>
+              <v-sheet class="my-2"><h3>Add widget to your website</h3> </v-sheet>
             </v-col>
             <v-col cols="1">
               <v-sheet class="my-2"
@@ -1674,8 +1674,7 @@ export default {
           this.handleApexOptions()
           this.handleChartjsOptions()
         })
-        .catch(() => {
-        })
+        .catch(() => {})
         .finally()
     },
 

@@ -16,6 +16,7 @@
       variant="outlined"
       size="small"
       color="primary"
+      :disabled="widgets.length ? false : true"
       @click="previewDialog = !previewDialog"
       >Preview Changes</v-btn
     >
@@ -33,6 +34,38 @@
             </v-col>
           </v-row>
           <v-divider></v-divider>
+          <v-btn
+            class="mt-3"
+            variant="outlined"
+            size="small"
+            color="primary"
+            @click="embedAll = !embedAll"
+            >Embed</v-btn
+          >
+          <v-dialog v-model="embedAll" width="500px">
+            <v-card>
+              <v-card-text>
+                <v-row justify="space-between">
+                  <v-col cols="8">
+                    <v-sheet class="my-2"><h3>Add widget to your website</h3> </v-sheet>
+                  </v-col>
+                  <v-col cols="1">
+                    <v-sheet class="my-2"
+                      ><v-icon @click="embedAll = !embedAll">mdi-close</v-icon></v-sheet
+                    >
+                  </v-col>
+                </v-row>
+                <v-textarea
+                  :model-value="`<chart-widget id='${$route.params?.id}'></chart-widget>`"
+                  id="tocopy"
+                  variant="outlined"
+                  density="compact"
+                  append-inner-icon="mdi-content-copy"
+                  @click:append-inner="copyText"
+                ></v-textarea>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
           <Home :title="mainTitle" :desc="description" />
           <grid-layout
             :layout="widgets"
@@ -64,7 +97,12 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-btn variant="flat" size="small" color="primary" @click="handleSaveChanges"
+    <v-btn
+      variant="flat"
+      size="small"
+      color="primary"
+      :disabled="widgets.length ? false : true"
+      @click="handleSaveChanges"
       >Save Changes</v-btn
     >
   </v-app-bar>
@@ -310,7 +348,8 @@ export default {
       previewDialog: false,
       widgets: [],
       options: getChartOptions,
-      modifiedOptions: []
+      modifiedOptions: [],
+      embedAll: false
     }
   },
   created() {
@@ -329,6 +368,12 @@ export default {
     }
   },
   methods: {
+    copyText() {
+      const input = document.getElementById('tocopy')
+      input.select()
+      document.execCommand('copy')
+    },
+
     getOptions(data) {
       this.modifiedOptions = data
     },
