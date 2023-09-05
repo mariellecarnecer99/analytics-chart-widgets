@@ -3,39 +3,39 @@
 </template>
 
 <script>
-import { Chart } from "chart.js";
+import Chart from 'chart.js/auto'
 export default {
-  name: "ChartJS",
+  name: 'ChartJS',
   props: {
     id: Number,
-    option: Object,
+    option: Object
   },
   watch: {
     option: [
       {
-        handler: "getOptions",
-      },
-    ],
+        handler: 'getOptions'
+      }
+    ]
   },
   data() {
     return {
-      ctx: null,
-    };
+      ctx: null
+    }
   },
   methods: {
     getOptions(el) {
       // const ctx = document.getElementById("chart" + this.id);
 
-      const canvas = this.$refs.canvas;
+      const canvas = this.$refs.canvas
 
       // var chartExist = Chart.getChart("chart" + this.id);
       if (this.ctx != undefined) {
-        this.ctx.destroy();
-        this.ctx = new Chart(canvas, el);
+        this.ctx.destroy()
+        this.ctx = new Chart(canvas, el)
       } else {
-        this.ctx = new Chart(canvas, el);
+        this.ctx = new Chart(canvas, el)
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
