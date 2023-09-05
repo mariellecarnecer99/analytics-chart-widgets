@@ -6,7 +6,8 @@
   "scripts": {
     "dashboard": "npm --prefix apps/dashboard run dev",
     "container": "npm --prefix apps/chart-container run dev",
-    "dev": "npm-run-all --parallel dashboard container",
+    "widgets": "npm --prefix apps/chart-widgets run dev",
+    "dev": "npm-run-all --parallel dashboard container widgets",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
