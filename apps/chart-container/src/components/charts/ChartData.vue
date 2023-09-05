@@ -1633,9 +1633,7 @@ export default {
           this.handleApexOptions()
           this.handleChartjsOptions()
         })
-        .catch((error) => {
-          console.log('error: ', error)
-        })
+        .catch(() => {})
         .finally()
     },
 
@@ -1676,8 +1674,7 @@ export default {
           this.handleApexOptions()
           this.handleChartjsOptions()
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
         })
         .finally()
     },

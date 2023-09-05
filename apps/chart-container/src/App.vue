@@ -70,9 +70,7 @@ export default {
           this.savedWidget = response.data.widgets
           this.eventBus.emit('savedWidgets', this.savedWidget)
         })
-        .catch((error) => {
-          console.log(error)
-        })
+        .catch(() => {})
         .finally()
     }
   }

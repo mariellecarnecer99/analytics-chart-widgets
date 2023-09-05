@@ -389,9 +389,7 @@ export default {
           .then((response) => {
             this.$router.push({ path: '/' })
           })
-          .catch((error) => {
-            console.log(error)
-          })
+          .catch(() => {})
           .finally()
       } else {
         axios
@@ -404,9 +402,7 @@ export default {
           .then((response) => {
             this.$router.push({ path: '/' })
           })
-          .catch((error) => {
-            console.log(error)
-          })
+          .catch(() => {})
           .finally()
       }
     },
@@ -418,9 +414,7 @@ export default {
           this.mainTitle = response.data.name
           this.description = response.data.description
         })
-        .catch((error) => {
-          console.log(error)
-        })
+        .catch(() => {})
         .finally()
     }
   }

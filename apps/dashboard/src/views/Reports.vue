@@ -98,9 +98,7 @@ export default {
           const responseData = response.data
           this.reports = responseData
         })
-        .catch((error) => {
-          console.log(error)
-        })
+        .catch(() => {})
         .finally()
     },
 
@@ -114,9 +112,7 @@ export default {
         .then((response) => {
           this.getReports()
         })
-        .catch((error) => {
-          console.log(error)
-        })
+        .catch(() => {})
         .finally()
     }
   }
