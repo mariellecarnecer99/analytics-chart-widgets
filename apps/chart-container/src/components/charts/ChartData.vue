@@ -799,7 +799,7 @@
             </v-col>
           </v-row>
           <v-divider></v-divider>
-          <!-- <PluggableWidget :chartLib="chartLib" :option="chartsConfig" :id="chartId" /> -->
+          <PluggableWidget :chartLib="chartLib" :option="chartsConfig" :id="chartId" />
         </v-card-text>
       </v-card>
     </v-dialog>

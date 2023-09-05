@@ -1,47 +1,59 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div id="app">
+    <v-chart
+      v-if="chartLib === 'eCharts'"
+      :id="'chart' + id"
+      :option="option"
+      autoresize
+      style="height: 400px"
+    />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+    <apexchart
+      v-if="chartLib === 'apexCharts'"
+      :id="'chart' + id"
+      :key="option.length"
+      :options="option"
+      :series="option.series"
+    ></apexchart>
 
-  <main>
-    <TheWelcome />
-  </main>
+    <canvas v-if="chartLib === 'chartjs'" :id="'chart' + id" ref="canvas" height="400"></canvas>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+<script>
+import Chart from 'chart.js/auto'
+export default {
+  props: {
+    id: Number,
+    chartLib: String,
+    option: Object
+  },
+  watch: {
+    option: {
+      handler(newOption) {
+        if (this.ctx) {
+          this.ctx.data = newOption.data
+          this.ctx.options = newOption.options
+          this.ctx.update()
+        }
+      }
+    }
+  },
+  data() {
+    return {
+      ctx: null
+    }
+  },
+  mounted() {
+    this.initializeChart()
+  },
+  methods: {
+    initializeChart() {
+      const canvas = this.$refs.canvas
+      if (this.chartLib === 'chartjs') {
+        this.ctx = new Chart(canvas, this.option)
+      }
+    }
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
 }
-</style>
+</script>

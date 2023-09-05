@@ -28,7 +28,7 @@ export default defineConfig({
     federation({
       name: "dashboard",
       remotes: {
-        // pluggable_widget: "http://localhost:3001/assets/pluggableWidget.js",
+        pluggable_widget: "http://localhost:3001/assets/pluggableWidget.js",
         chart_container: "http://localhost:8081/assets/chartContainer.js",
       },
       shared: [
