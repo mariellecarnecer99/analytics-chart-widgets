@@ -34,7 +34,7 @@
           </v-row>
           <v-divider></v-divider>
           <Home :title="mainTitle" :desc="description" />
-          <!-- <grid-layout
+          <grid-layout
             :layout="widgets"
             :col-num="12"
             :is-draggable="false"
@@ -60,7 +60,7 @@
                 :preview="previewDialog"
               />
             </grid-item>
-          </grid-layout> -->
+          </grid-layout>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -189,28 +189,28 @@
 
   <v-main>
     <Home :title="mainTitle" :desc="description" />
-    <!-- <ChartContainer :widgets="widgets" /> -->
+    <ChartContainer :widgets="widgets" />
   </v-main>
 </template>
 
 <script>
 import Home from '@/views/Home.vue'
-// import ChartData from "../../../../chart-container/src/components/charts/ChartData";
+import ChartData from '../../../../chart-container/src/components/charts/ChartData.vue'
 import line from '@/assets/line.png'
 import bar from '@/assets/bar.png'
 import pie from '@/assets/pie.png'
 import scatter from '@/assets/scatter.png'
-// import { useSelectedChart } from "../../../../chart-container/src/stores/fetchSelectedChart";
-// import { storeToRefs } from "pinia";
-// const store = useSelectedChart();
-// const { fetchChartOptions } = storeToRefs(store);
-// const getChartOptions = fetchChartOptions;
+import { useSelectedChart } from '../../../../chart-container/src/stores/fetchSelectedChart'
+import { storeToRefs } from 'pinia'
+const store = useSelectedChart()
+const { fetchChartOptions } = storeToRefs(store)
+const getChartOptions = fetchChartOptions
 import axios from 'axios'
 export default {
   name: 'AppBar',
   components: {
-    Home
-    // ChartData,
+    Home,
+    ChartData
   },
   inject: ['eventBus'],
   data: () => {
@@ -309,29 +309,29 @@ export default {
       ],
       previewDialog: false,
       widgets: [],
-      // options: getChartOptions,
+      options: getChartOptions,
       modifiedOptions: []
     }
   },
   created() {
     this.eventBus.on('savedWidgets', this.savedWidgets)
   },
-  // watch: {
-  //   options: [
-  //     {
-  //       handler: "getOptions",
-  //     },
-  //   ],
-  // },
+  watch: {
+    options: [
+      {
+        handler: 'getOptions'
+      }
+    ]
+  },
   mounted() {
     if (this.$route.params.id) {
       this.handleGetReportsById(this.$route.params.id)
     }
   },
   methods: {
-    // getOptions(data) {
-    //   this.modifiedOptions = data;
-    // },
+    getOptions(data) {
+      this.modifiedOptions = data
+    },
 
     savedWidgets(data) {
       this.widgets = data

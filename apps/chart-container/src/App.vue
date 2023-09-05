@@ -1,47 +1,106 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div>
+    <grid-layout
+      v-if="widgets"
+      :layout="widgets"
+      :col-num="12"
+      :is-draggable="true"
+      :is-resizable="true"
+      :vertical-compact="true"
+      :use-css-transforms="true"
+    >
+      <grid-item
+        v-for="item in widgets"
+        :key="item.i"
+        :x="item.x"
+        :y="item.y"
+        :w="item.w"
+        :h="item.h"
+        :i="item.i"
+      >
+        <!-- <ChartData
+          :chartType="item.chart?.value"
+          :chartLib="item.selectedLib"
+          :chartId="item.i"
+          :control="item.selectedControl"
+          :selectedChartsLength="widgets.length"
+        /> -->
+        <span class="remove" @click="removeItem(item.i)"
+          ><v-icon size="small">mdi-close</v-icon></span
+        >
+      </grid-item>
+    </grid-layout>
+  </div>
 </template>
 
+<script>
+// import ChartData from '@/components/charts/ChartData.vue'
+import axios from 'axios'
+export default {
+  components: {
+    // ChartData
+  },
+  inject: ['eventBus'],
+  data: () => {
+    return {
+      savedWidget: []
+    }
+  },
+  props: {
+    widgets: Array
+  },
+  mounted() {
+    if (this.$route.params.id) {
+      this.handleGetReportsById(this.$route.params.id)
+    }
+  },
+  methods: {
+    removeItem(i) {
+      const index = this.widgets.map((item) => item.i).indexOf(i)
+      this.widgets.splice(index, 1)
+      this.widgets.forEach((item, index) => {
+        item.i = index
+      })
+    },
+
+    handleGetReportsById(e) {
+      axios
+        .get(`https://retoolapi.dev/4RV8By/reports/${e}`)
+        .then((response) => {
+          this.savedWidget = response.data.widgets
+          this.eventBus.emit('savedWidgets', this.savedWidget)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+        .finally()
+    }
+  }
+}
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
+.layoutJSON {
+  background: #ddd;
+  border: 1px solid black;
+  margin-top: 10px;
+  padding: 10px;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.vue-grid-item:not(.vue-grid-placeholder) {
+  /* background: #ccc; */
+  border: 1px solid black;
+  padding: 65px 0 35px 0;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.vue-grid-item.resizing {
+  opacity: 0.9;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.remove {
+  position: absolute;
+  right: 2px;
+  top: 0;
+  cursor: pointer;
 }
 </style>

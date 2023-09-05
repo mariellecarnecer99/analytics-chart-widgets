@@ -11,7 +11,9 @@
       </v-row>
     </div> -->
     <v-list density="compact" lines="one">
-      <v-list-subheader color="primary" class="pa-0">REPORTS</v-list-subheader>
+      <v-list-subheader color="primary" class="pa-0" v-if="reports.length"
+        >REPORTS</v-list-subheader
+      >
 
       <v-list-item
         v-for="(item, i) in reports"
@@ -31,12 +33,7 @@
             variant="text"
             @click="handleEditReport(item.id)"
           ></v-btn>
-          <v-btn
-            size="small"
-            color="primary"
-            icon="mdi-content-copy"
-            variant="text"
-          ></v-btn>
+          <v-btn size="small" color="primary" icon="mdi-content-copy" variant="text"></v-btn>
           <v-dialog transition="dialog-bottom-transition" width="auto">
             <template v-slot:activator="{ props }">
               <v-btn
@@ -49,13 +46,10 @@
             </template>
             <template v-slot:default="{ isActive }">
               <v-card class="text-center">
-                <v-icon size="80" color="red" class="iconDelete"
-                  >mdi-close-circle-outline</v-icon
-                >
+                <v-icon size="80" color="red" class="iconDelete">mdi-close-circle-outline</v-icon>
                 <v-card-title class="text-h5"> Are you sure? </v-card-title>
                 <v-card-text
-                  >Do you really want to delete this report? This process cannot
-                  be undone.
+                  >Do you really want to delete this report? This process cannot be undone.
                 </v-card-text>
                 <v-card-actions class="d-block mb-5">
                   <v-spacer></v-spacer>
@@ -69,10 +63,7 @@
                   <v-btn
                     color="red"
                     variant="outlined"
-                    @click="
-                      (isActive.value = !isActive.value),
-                        handleDeleteItem(item.id)
-                    "
+                    @click="(isActive.value = !isActive.value), handleDeleteItem(item.id)"
                   >
                     Delete
                   </v-btn>
@@ -87,49 +78,49 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 export default {
   data: () => {
     return {
       reports: [],
       index: 0,
-      actionItems: [{ title: "Clone" }, { title: "Delete" }],
-    };
+      actionItems: [{ title: 'Clone' }, { title: 'Delete' }]
+    }
   },
   mounted() {
-    this.getReports();
+    this.getReports()
   },
   methods: {
     getReports() {
       axios
-        .get("https://retoolapi.dev/4RV8By/reports")
+        .get('https://retoolapi.dev/4RV8By/reports')
         .then((response) => {
-          const responseData = response.data;
-          this.reports = responseData;
+          const responseData = response.data
+          this.reports = responseData
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
         })
-        .finally();
+        .finally()
     },
 
     handleEditReport(e) {
-      this.$router.push({ name: "Edit Report", params: { id: e } });
+      this.$router.push({ name: 'Edit Report', params: { id: e } })
     },
 
     handleDeleteItem(id) {
       axios
         .delete(`https://retoolapi.dev/4RV8By/reports/${id}`)
         .then((response) => {
-          this.getReports();
+          this.getReports()
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
         })
-        .finally();
-    },
-  },
-};
+        .finally()
+    }
+  }
+}
 </script>
 
 <style scoped>
