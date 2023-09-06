@@ -7,7 +7,25 @@
     :id="chartId"
   />
   <ChartJS v-if="chartLib === 'chartjs'" :id="chartId" :option="datacollection" />
-  <DateRange v-if="control === true" />
+  <DateRange v-if="control === 'daterange'" />
+  <v-text-field
+    v-if="control === 'title'"
+    v-model="title"
+    class="px-5"
+    label="Chart Title"
+    variant="outlined"
+    density="compact"
+    @input="handleTitleChange"
+  ></v-text-field>
+  <v-text-field
+    v-if="control === 'description'"
+    v-model="description"
+    class="px-5"
+    label="Chart Description"
+    variant="outlined"
+    density="compact"
+    @input="handleDescChange"
+  ></v-text-field>
   <div v-if="!control && !preview" class="custom-toolbox">
     <v-icon color="#676767" @click="editDialog = !editDialog">mdi-pencil-outline</v-icon>
     <v-icon color="#676767" @click="jsonConfigDialog = !jsonConfigDialog">mdi-code-json</v-icon>
@@ -844,7 +862,7 @@ export default {
     chartType: String,
     chartLib: String,
     chartId: Number,
-    control: Boolean,
+    control: String,
     selectedChartsLength: Number,
     preview: Boolean
   },
@@ -978,7 +996,9 @@ export default {
       selectedDates: datesSelected,
       apiData: null,
       chartsConfig: null,
-      selectedApi: null
+      selectedApi: null,
+      title: null,
+      description: null
     }
   },
   computed: {
@@ -1005,6 +1025,14 @@ export default {
     })
   },
   methods: {
+    handleTitleChange(event) {
+      this.title = event.target.value
+    },
+
+    handleDescChange(event) {
+      this.description = event.target.value
+    },
+
     handleSelectedChart(val) {
       this.modifiedType = val
       this.handleOptions()

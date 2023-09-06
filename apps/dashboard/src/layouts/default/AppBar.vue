@@ -67,7 +67,7 @@
               </v-card-text>
             </v-card>
           </v-dialog>
-          <Home :title="mainTitle" :desc="description" />
+          <!-- <Home :title="mainTitle" :desc="description" /> -->
           <grid-layout
             :layout="widgets"
             :col-num="12"
@@ -173,14 +173,19 @@
       <div class="sidebar-body">
         <div class="data mx-5 mb-4">
           <h3 class="data-title mb-3">Controls</h3>
-          <v-card
-            v-model="selectedControl"
-            @click="controlSelected"
-            variant="outlined"
-            class="py-2 px-2"
-          >
-            <v-icon>mdi-calendar-range</v-icon> Date range control
-          </v-card>
+          <v-row v-for="i in controls" class="mt-0">
+            <v-col>
+              <v-card
+                v-model="selectedControl"
+                @click="controlSelected(i.value)"
+                variant="outlined"
+                class="py-2 px-2"
+              >
+                <v-icon>{{ i.icon }}</v-icon> {{ i.name }}
+              </v-card>
+            </v-col>
+          </v-row>
+
           <!-- <v-select
             v-model="selectedControl"
             :items="controls"
@@ -227,13 +232,13 @@
   </v-navigation-drawer>
 
   <v-main>
-    <Home :title="mainTitle" :desc="description" />
+    <!-- <Home :title="mainTitle" :desc="description" /> -->
     <ChartContainer :widgets="widgets" />
   </v-main>
 </template>
 
 <script>
-import Home from '@/views/Home.vue'
+// import Home from '@/views/Home.vue'
 import ChartData from '../../../../chart-container/src/components/charts/ChartData.vue'
 import line from '@/assets/line.png'
 import bar from '@/assets/bar.png'
@@ -248,7 +253,7 @@ import axios from 'axios'
 export default {
   name: 'AppBar',
   components: {
-    Home,
+    // Home,
     ChartData
   },
   inject: ['eventBus'],
@@ -266,7 +271,7 @@ export default {
       layout: [],
       index: 0,
       selectedChartLibrary: null,
-      selectedControl: false,
+      selectedControl: null,
       sideMenuItems: [
         {
           title: 'Chart & Data',
@@ -344,6 +349,16 @@ export default {
           name: 'Date range control',
           value: 'daterange',
           icon: 'mdi-calendar-range'
+        },
+        {
+          name: 'Chart Title',
+          value: 'title',
+          icon: 'mdi-chart-bar'
+        },
+        {
+          name: 'Chart Description',
+          value: 'description',
+          icon: 'mdi-chart-bar'
         }
       ],
       previewDialog: false,
@@ -389,8 +404,8 @@ export default {
       this.settingsDrawer = val === 2
     },
 
-    controlSelected() {
-      this.selectedControl = true
+    controlSelected(e) {
+      this.selectedControl = e
       const item = {
         x: 0,
         y: 0,
