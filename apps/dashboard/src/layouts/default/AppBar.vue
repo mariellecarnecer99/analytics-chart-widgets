@@ -185,18 +185,6 @@
               </v-card>
             </v-col>
           </v-row>
-
-          <!-- <v-select
-            v-model="selectedControl"
-            :items="controls"
-            item-title="name"
-            item-value="value"
-            label="Choose a control"
-            variant="outlined"
-            density="compact"
-            @update:modelValue="controlSelected"
-          >
-          </v-select> -->
         </div>
       </div>
     </div>
