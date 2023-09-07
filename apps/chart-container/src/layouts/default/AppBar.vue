@@ -222,7 +222,6 @@ import axios from 'axios'
 export default {
   name: 'AppBar',
   components: {
-    // Home,
     ChartData
   },
   inject: ['eventBus'],
@@ -425,6 +424,12 @@ export default {
           .catch(() => {})
           .finally()
       } else {
+        const indexToModify = this.widgets.findIndex((item) => item.i === this.modifiedOptions.i)
+        if (indexToModify !== -1) {
+          this.widgets[indexToModify] = this.modifiedOptions
+        } else {
+          console.log('Object with index not found in the array.')
+        }
         axios
           .patch(`https://retoolapi.dev/4RV8By/reports/${this.$route.params.id}`, {
             name: this.chartDetails.title,

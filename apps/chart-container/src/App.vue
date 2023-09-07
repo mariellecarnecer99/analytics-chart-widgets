@@ -26,6 +26,8 @@
           :selectedChartsLength="widgets.length"
           :chartTitle="title"
           :desc="description"
+          :widgets="item"
+          :selectedWidgets="widgets"
         />
         <span class="remove" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span

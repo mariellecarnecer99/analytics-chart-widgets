@@ -116,28 +116,28 @@
               </v-col>
 
               <!-- <v-col cols="4">
-                <p class="mb-3">X</p>
-                <v-select
-                  v-model="xAxisData"
-                  :items="xCategories"
-                  label="Choose data..."
-                  variant="outlined"
-                  density="compact"
-                  @update:modelValue="selectedXaxisData"
-                ></v-select>
-              </v-col>
-
-              <v-col cols="4">
-                <p class="mb-3">Y</p>
-                <v-select
-                  v-model="yAxisData"
-                  :items="yCategories"
-                  label="Choose data..."
-                  variant="outlined"
-                  density="compact"
-                  @update:modelValue="selectedYaxisData"
-                ></v-select>
-              </v-col> -->
+                  <p class="mb-3">X</p>
+                  <v-select
+                    v-model="xAxisData"
+                    :items="xCategories"
+                    label="Choose data..."
+                    variant="outlined"
+                    density="compact"
+                    @update:modelValue="selectedXaxisData"
+                  ></v-select>
+                </v-col>
+  
+                <v-col cols="4">
+                  <p class="mb-3">Y</p>
+                  <v-select
+                    v-model="yAxisData"
+                    :items="yCategories"
+                    label="Choose data..."
+                    variant="outlined"
+                    density="compact"
+                    @update:modelValue="selectedYaxisData"
+                  ></v-select>
+                </v-col> -->
             </v-row>
 
             <p class="mt-5 mb-3">Data source</p>
@@ -161,11 +161,11 @@
                   @change="onUploadChange"
                 />
                 <!-- <v-btn
-                  class="mr-3"
-                  color="primary"
-                  @click="handleNumberOfSeries"
-                  ><v-icon>mdi-plus</v-icon> Add Series</v-btn
-                > -->
+                    class="mr-3"
+                    color="primary"
+                    @click="handleNumberOfSeries"
+                    ><v-icon>mdi-plus</v-icon> Add Series</v-btn
+                  > -->
                 <v-btn color="primary" size="large" :loading="isSelecting" @click="handleFileImport"
                   ><v-icon>mdi-plus</v-icon> Blend Data</v-btn
                 >
@@ -306,188 +306,188 @@
             </div>
 
             <!-- <v-table
-              v-if="this.options.series.length != 0"
-              fixed-header
-              height="250px"
-              class="mt-5"
-            >
-              <thead>
-                <tr>
-                  <th class="text-left">Series</th>
-                  <th class="text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-if="this.options.series"
-                  v-for="(item, index) in this.options.series"
-                  :key="item"
-                >
-                  <td>
-                    <v-row>
-                      <v-col cols="8" class="mt-3">
-                        <v-text-field
-                          v-model="item.name"
-                          :placeholder="'Series ' + (index + 1)"
-                          variant="outlined"
-                          density="compact"
-                        >
-                          <template v-slot:append-inner>
-                            <v-menu
-                              v-model="item.menu"
-                              location="end"
-                              nudge-bottom="105"
-                              nudge-left="16"
-                              :close-on-content-click="false"
-                            >
-                              <template v-slot:activator="{ props }">
-                                <div
-                                  v-bind="props"
-                                  :style="{
-                                    backgroundColor: item.color,
-                                    cursor: 'pointer',
-                                    width: '30px',
-                                    height: '30px',
-                                    borderRadius: item.menu ? '50%' : '4px',
-                                    transition:
-                                      'border-radius 200ms ease-in-out',
-                                  }"
-                                ></div>
-                              </template>
-                              <v-card>
-                                <v-card-text class="pa-0">
-                                  <v-color-picker
-                                    v-model="item.color"
-                                    flat
-                                  ></v-color-picker>
-                                </v-card-text>
-                              </v-card>
-                            </v-menu>
-                          </template>
-                        </v-text-field>
-                      </v-col>
-                    </v-row>
-                  </td>
-                  <td>
-                    <v-dialog
-                      transition="dialog-bottom-transition"
-                      width="400px"
-                    >
-                      <template v-slot:activator="{ props }">
-                        <v-icon v-bind="props">mdi-pencil</v-icon>
-                      </template>
-                      <template v-slot:default="{ isActive }">
-                        <v-card>
-                          <v-toolbar color="primary" title="Chart Data">
-                            <v-spacer></v-spacer>
-                            <v-icon
-                              class="mr-3"
-                              @click="isActive.value = !isActive.value"
-                              >mdi-close</v-icon
-                            >
-                          </v-toolbar>
-                          <v-card-text>
-                            <div v-for="(s, idx) in item.data">
-                              <v-text-field
-                                v-model="s.value"
-                                variant="outlined"
-                                density="compact"
+                v-if="this.options.series.length != 0"
+                fixed-header
+                height="250px"
+                class="mt-5"
+              >
+                <thead>
+                  <tr>
+                    <th class="text-left">Series</th>
+                    <th class="text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-if="this.options.series"
+                    v-for="(item, index) in this.options.series"
+                    :key="item"
+                  >
+                    <td>
+                      <v-row>
+                        <v-col cols="8" class="mt-3">
+                          <v-text-field
+                            v-model="item.name"
+                            :placeholder="'Series ' + (index + 1)"
+                            variant="outlined"
+                            density="compact"
+                          >
+                            <template v-slot:append-inner>
+                              <v-menu
+                                v-model="item.menu"
+                                location="end"
+                                nudge-bottom="105"
+                                nudge-left="16"
+                                :close-on-content-click="false"
                               >
-                              </v-text-field>
-                            </div>
-                          </v-card-text>
-                        </v-card>
-                      </template>
-                    </v-dialog>
-                    <v-icon @click="deleteSeries(index)">mdi-delete</v-icon>
-                  </td>
-                </tr>
-                <tr
-                  v-if="this.apexSeries"
-                  v-for="(item, index) in this.apexSeries"
-                  :key="item"
-                >
-                  <td>
-                    <v-row>
-                      <v-col cols="8" class="mt-3">
-                        <v-text-field
-                          v-model="item.name"
-                          :placeholder="'Series ' + (index + 1)"
-                          variant="outlined"
-                          density="compact"
-                        >
-                          <template v-slot:append-inner>
-                            <v-menu
-                              v-model="item.menu"
-                              location="end"
-                              nudge-bottom="105"
-                              nudge-left="16"
-                              :close-on-content-click="false"
-                            >
-                              <template v-slot:activator="{ props }">
-                                <div
-                                  v-bind="props"
-                                  :style="{
-                                    backgroundColor: item.color,
-                                    cursor: 'pointer',
-                                    width: '30px',
-                                    height: '30px',
-                                    borderRadius: item.menu ? '50%' : '4px',
-                                    transition:
-                                      'border-radius 200ms ease-in-out',
-                                  }"
-                                ></div>
-                              </template>
-                              <v-card>
-                                <v-card-text class="pa-0">
-                                  <v-color-picker
-                                    v-model="item.color"
-                                    flat
-                                  ></v-color-picker>
-                                </v-card-text>
-                              </v-card>
-                            </v-menu>
-                          </template>
-                        </v-text-field>
-                      </v-col>
-                    </v-row>
-                  </td>
-                  <td>
-                    <v-dialog
-                      transition="dialog-bottom-transition"
-                      width="400px"
-                    >
-                      <template v-slot:activator="{ props }">
-                        <v-icon v-bind="props">mdi-pencil</v-icon>
-                      </template>
-                      <template v-slot:default="{ isActive }">
-                        <v-card>
-                          <v-toolbar color="primary" title="Chart Data">
-                            <v-spacer></v-spacer>
-                            <v-icon
-                              class="mr-3"
-                              @click="isActive.value = !isActive.value"
-                              >mdi-close</v-icon
-                            >
-                          </v-toolbar>
-                          <v-card-text>
-                            <div v-for="(s, idx) in item.data">
-                              <v-text-field
-                                v-model="s[idx]"
-                                variant="outlined"
-                                density="compact"
+                                <template v-slot:activator="{ props }">
+                                  <div
+                                    v-bind="props"
+                                    :style="{
+                                      backgroundColor: item.color,
+                                      cursor: 'pointer',
+                                      width: '30px',
+                                      height: '30px',
+                                      borderRadius: item.menu ? '50%' : '4px',
+                                      transition:
+                                        'border-radius 200ms ease-in-out',
+                                    }"
+                                  ></div>
+                                </template>
+                                <v-card>
+                                  <v-card-text class="pa-0">
+                                    <v-color-picker
+                                      v-model="item.color"
+                                      flat
+                                    ></v-color-picker>
+                                  </v-card-text>
+                                </v-card>
+                              </v-menu>
+                            </template>
+                          </v-text-field>
+                        </v-col>
+                      </v-row>
+                    </td>
+                    <td>
+                      <v-dialog
+                        transition="dialog-bottom-transition"
+                        width="400px"
+                      >
+                        <template v-slot:activator="{ props }">
+                          <v-icon v-bind="props">mdi-pencil</v-icon>
+                        </template>
+                        <template v-slot:default="{ isActive }">
+                          <v-card>
+                            <v-toolbar color="primary" title="Chart Data">
+                              <v-spacer></v-spacer>
+                              <v-icon
+                                class="mr-3"
+                                @click="isActive.value = !isActive.value"
+                                >mdi-close</v-icon
                               >
-                              </v-text-field>
-                            </div>
-                          </v-card-text>
-                        </v-card>
-                      </template>
-                    </v-dialog>
-                    <v-icon @click="deleteSeries(index)">mdi-delete</v-icon>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table> -->
+                            </v-toolbar>
+                            <v-card-text>
+                              <div v-for="(s, idx) in item.data">
+                                <v-text-field
+                                  v-model="s.value"
+                                  variant="outlined"
+                                  density="compact"
+                                >
+                                </v-text-field>
+                              </div>
+                            </v-card-text>
+                          </v-card>
+                        </template>
+                      </v-dialog>
+                      <v-icon @click="deleteSeries(index)">mdi-delete</v-icon>
+                    </td>
+                  </tr>
+                  <tr
+                    v-if="this.apexSeries"
+                    v-for="(item, index) in this.apexSeries"
+                    :key="item"
+                  >
+                    <td>
+                      <v-row>
+                        <v-col cols="8" class="mt-3">
+                          <v-text-field
+                            v-model="item.name"
+                            :placeholder="'Series ' + (index + 1)"
+                            variant="outlined"
+                            density="compact"
+                          >
+                            <template v-slot:append-inner>
+                              <v-menu
+                                v-model="item.menu"
+                                location="end"
+                                nudge-bottom="105"
+                                nudge-left="16"
+                                :close-on-content-click="false"
+                              >
+                                <template v-slot:activator="{ props }">
+                                  <div
+                                    v-bind="props"
+                                    :style="{
+                                      backgroundColor: item.color,
+                                      cursor: 'pointer',
+                                      width: '30px',
+                                      height: '30px',
+                                      borderRadius: item.menu ? '50%' : '4px',
+                                      transition:
+                                        'border-radius 200ms ease-in-out',
+                                    }"
+                                  ></div>
+                                </template>
+                                <v-card>
+                                  <v-card-text class="pa-0">
+                                    <v-color-picker
+                                      v-model="item.color"
+                                      flat
+                                    ></v-color-picker>
+                                  </v-card-text>
+                                </v-card>
+                              </v-menu>
+                            </template>
+                          </v-text-field>
+                        </v-col>
+                      </v-row>
+                    </td>
+                    <td>
+                      <v-dialog
+                        transition="dialog-bottom-transition"
+                        width="400px"
+                      >
+                        <template v-slot:activator="{ props }">
+                          <v-icon v-bind="props">mdi-pencil</v-icon>
+                        </template>
+                        <template v-slot:default="{ isActive }">
+                          <v-card>
+                            <v-toolbar color="primary" title="Chart Data">
+                              <v-spacer></v-spacer>
+                              <v-icon
+                                class="mr-3"
+                                @click="isActive.value = !isActive.value"
+                                >mdi-close</v-icon
+                              >
+                            </v-toolbar>
+                            <v-card-text>
+                              <div v-for="(s, idx) in item.data">
+                                <v-text-field
+                                  v-model="s[idx]"
+                                  variant="outlined"
+                                  density="compact"
+                                >
+                                </v-text-field>
+                              </div>
+                            </v-card-text>
+                          </v-card>
+                        </template>
+                      </v-dialog>
+                      <v-icon @click="deleteSeries(index)">mdi-delete</v-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table> -->
           </v-container>
         </v-card-text>
       </v-card>
@@ -761,17 +761,17 @@
               </v-col>
 
               <!-- <v-col>
-                <p class="pa-3">Tooltips</p>
-              </v-col>
-              <v-col>
-                <v-switch v-model="toogleSwitch"></v-switch>
-              </v-col>
-              <v-col>
-                <p class="pa-3">Legend</p>
-              </v-col>
-              <v-col>
-                <v-switch v-model="toogleSwitch"></v-switch>
-              </v-col> -->
+                  <p class="pa-3">Tooltips</p>
+                </v-col>
+                <v-col>
+                  <v-switch v-model="toogleSwitch"></v-switch>
+                </v-col>
+                <v-col>
+                  <p class="pa-3">Legend</p>
+                </v-col>
+                <v-col>
+                  <v-switch v-model="toogleSwitch"></v-switch>
+                </v-col> -->
             </v-row>
           </v-container>
         </v-card-text>
@@ -825,11 +825,11 @@
 </template>
 
 <script>
-import EChart from './EChart.vue'
-import ApexCharts from './ApexChart.vue'
-import ChartJS from './ChartJS.vue'
-import DateRange from '../controls/Daterange.vue'
-import { useSelectedChart } from '../../stores/fetchSelectedChart'
+import EChart from './charts/EChart.vue'
+import ApexCharts from './charts/ApexChart.vue'
+import ChartJS from './charts/ChartJS.vue'
+import DateRange from './controls/Daterange.vue'
+import { useSelectedChart } from '../stores/fetchSelectedChart'
 import { VDatePicker } from 'vuetify/labs/VDatePicker'
 import domtoimage from 'dom-to-image'
 import { saveAs } from 'file-saver'
@@ -866,9 +866,7 @@ export default {
     selectedChartsLength: Number,
     preview: Boolean,
     chartTitle: String,
-    desc: String,
-    widgets: Object,
-    selectedWidgets: Array
+    desc: String
   },
   data: () => {
     return {
@@ -1031,10 +1029,6 @@ export default {
     })
   },
   methods: {
-    // handleSavedWidgets(data) {
-    //   console.log('data: ', data)
-    // },
-
     handleChartDetails(event) {
       if (this.control === 'title') {
         this.title = event.target.value
@@ -1158,7 +1152,6 @@ export default {
 
       if (this.chartLib === 'eCharts') {
         this.chartsConfig = this.options
-        this.handleChartUpdate(this.chartId, this.chartsConfig)
       }
 
       if (val) {
@@ -1257,7 +1250,6 @@ export default {
 
       if (this.chartLib === 'apexCharts') {
         this.chartsConfig = this.apexOptions
-        this.handleChartUpdate(this.chartId, this.chartsConfig)
       }
     },
 
@@ -1321,25 +1313,6 @@ export default {
       }
       if (this.chartLib === 'chartjs') {
         this.chartsConfig = this.datacollection
-        this.handleChartUpdate(this.chartId, this.chartsConfig)
-      }
-    },
-
-    handleChartUpdate(id, data) {
-      const targetObject = this.selectedWidgets.find((item) => item.i === id)
-
-      if (targetObject) {
-        const chartUpdate = {
-          data
-        }
-        for (const key in chartUpdate) {
-          if (chartUpdate.hasOwnProperty(key)) {
-            targetObject[key] = chartUpdate[key]
-          }
-        }
-        store.getChartOptions(targetObject)
-      } else {
-        console.log('No object with index found')
       }
     },
 
