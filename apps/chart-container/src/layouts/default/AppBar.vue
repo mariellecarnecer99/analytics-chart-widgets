@@ -91,6 +91,8 @@
                 :control="item.selectedControl"
                 :selectedChartsLength="widgets.length"
                 :preview="previewDialog"
+                :chartTitle="mainTitle"
+                :desc="description"
               />
             </grid-item>
           </grid-layout>
@@ -443,6 +445,7 @@ export default {
         .get(`https://retoolapi.dev/4RV8By/reports/${id}`)
         .then((response) => {
           this.mainTitle = response.data.name
+          this.description = response.data.description
         })
         .catch(() => {})
         .finally()
