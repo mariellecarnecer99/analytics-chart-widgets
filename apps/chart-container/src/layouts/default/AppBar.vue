@@ -93,6 +93,8 @@
                 :preview="previewDialog"
                 :chartTitle="mainTitle"
                 :desc="description"
+                :widgets="item"
+                :selectedWidgets="widgets"
               />
             </grid-item>
           </grid-layout>
