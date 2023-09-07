@@ -15,7 +15,7 @@
     label="Chart Title"
     variant="outlined"
     density="compact"
-    @input="handleTitleChange"
+    @input="handleChartDetails"
   ></v-text-field>
   <v-text-field
     v-if="control === 'description'"
@@ -24,7 +24,7 @@
     label="Chart Description"
     variant="outlined"
     density="compact"
-    @input="handleDescChange"
+    @input="handleChartDetails"
   ></v-text-field>
   <div v-if="!control && !preview" class="custom-toolbox">
     <v-icon color="#676767" @click="editDialog = !editDialog">mdi-pencil-outline</v-icon>
@@ -864,7 +864,9 @@ export default {
     chartId: Number,
     control: String,
     selectedChartsLength: Number,
-    preview: Boolean
+    preview: Boolean,
+    chartTitle: String,
+    desc: String
   },
   data: () => {
     return {
@@ -1017,6 +1019,8 @@ export default {
     ]
   },
   mounted() {
+    this.title = this.chartTitle
+    this.description = this.desc
     this.handleOptions()
     this.handleApexOptions()
     this.handleChartjsOptions()
@@ -1025,12 +1029,17 @@ export default {
     })
   },
   methods: {
-    handleTitleChange(event) {
-      this.title = event.target.value
-    },
-
-    handleDescChange(event) {
-      this.description = event.target.value
+    handleChartDetails(event) {
+      if (this.control === 'title') {
+        this.title = event.target.value
+      } else if (this.control === 'description') {
+        this.description = event.target.value
+      }
+      const chartDetails = {
+        title: this.title,
+        desc: this.description
+      }
+      store.getChartDetails(chartDetails)
     },
 
     handleSelectedChart(val) {

@@ -24,6 +24,8 @@
           :chartId="item.i"
           :control="item.selectedControl"
           :selectedChartsLength="widgets.length"
+          :chartTitle="title"
+          :desc="description"
         />
         <span class="remove" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -43,7 +45,9 @@ export default {
   inject: ['eventBus'],
   data: () => {
     return {
-      savedWidget: []
+      savedWidget: [],
+      title: null,
+      description: null
     }
   },
   props: {
@@ -68,6 +72,8 @@ export default {
         .get(`https://retoolapi.dev/4RV8By/reports/${e}`)
         .then((response) => {
           this.savedWidget = response.data.widgets
+          this.title = response.data.name
+          this.description = response.data.description
           this.eventBus.emit('savedWidgets', this.savedWidget)
         })
         .catch(() => {})

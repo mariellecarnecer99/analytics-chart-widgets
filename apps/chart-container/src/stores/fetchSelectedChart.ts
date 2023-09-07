@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
 export const useSelectedChart = defineStore("selectedChart", {
-  state: () => ({ fetchChartOptions: {}, selectedDates: []}),
+  state: () => ({ fetchChartOptions: {}, selectedDates: [], cDetails: {}}),
   getters: {
     
   },
@@ -11,6 +11,9 @@ export const useSelectedChart = defineStore("selectedChart", {
     },
     getSelectedDates(val: []) {
       this.selectedDates = val;
+    },
+    getChartDetails(val: {}){
+      this.cDetails = val
     }
   },
 });
