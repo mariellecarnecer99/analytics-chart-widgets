@@ -410,7 +410,6 @@ export default {
         selectedLib: this.selectedChartLibrary
       }
       this.widgets.push(item)
-      console.log('this.widgets: ', this.widgets)
     },
 
     handleSaveChanges() {
