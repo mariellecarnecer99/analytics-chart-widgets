@@ -95,6 +95,7 @@
                 :desc="description"
                 :widgets="item"
                 :selectedWidgets="widgets"
+                :chartData="item.data"
               />
             </grid-item>
           </grid-layout>
@@ -409,6 +410,7 @@ export default {
         selectedLib: this.selectedChartLibrary
       }
       this.widgets.push(item)
+      console.log('this.widgets: ', this.widgets)
     },
 
     handleSaveChanges() {
@@ -451,6 +453,7 @@ export default {
       axios
         .get(`https://retoolapi.dev/4RV8By/reports/${id}`)
         .then((response) => {
+          this.widgets = response.data.widgets
           this.mainTitle = response.data.name
           this.description = response.data.description
         })

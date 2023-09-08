@@ -1,7 +1,43 @@
 <template>
   <div>
     <grid-layout
-      v-if="widgets"
+      v-if="savedWidget.length"
+      :layout="savedWidget"
+      :col-num="12"
+      :is-draggable="true"
+      :is-resizable="true"
+      :vertical-compact="true"
+      :use-css-transforms="true"
+    >
+      <grid-item
+        v-for="item in savedWidget"
+        :key="item.i"
+        :x="item.x"
+        :y="item.y"
+        :w="item.w"
+        :h="item.h"
+        :i="item.i"
+      >
+        <ChartData
+          :chartType="item.chart?.value"
+          :chartLib="item.selectedLib"
+          :chartId="item.i"
+          :control="item.selectedControl"
+          :selectedChartsLength="widgets.length"
+          :chartTitle="title"
+          :desc="description"
+          :widgets="item"
+          :selectedWidgets="widgets"
+          :savedWidgets="savedWidget"
+          :chartData="item.data"
+        />
+        <span class="remove" @click="removeItem(item.i)"
+          ><v-icon size="small">mdi-close</v-icon></span
+        >
+      </grid-item>
+    </grid-layout>
+    <grid-layout
+      v-else
       :layout="widgets"
       :col-num="12"
       :is-draggable="true"
@@ -28,6 +64,7 @@
           :desc="description"
           :widgets="item"
           :selectedWidgets="widgets"
+          :savedWidgets="savedWidget"
         />
         <span class="remove" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span

@@ -868,7 +868,9 @@ export default {
     chartTitle: String,
     desc: String,
     widgets: Object,
-    selectedWidgets: Array
+    selectedWidgets: Array,
+    savedWidgets: Array,
+    chartData: Object
   },
   data: () => {
     return {
@@ -1029,12 +1031,13 @@ export default {
     this.$nextTick(() => {
       window.dispatchEvent(new Event('resize'))
     })
+    if (this.$route.params.id) {
+      this.options = this.chartData ? this.chartData : this.options
+      this.apexOptions = this.chartData ? this.chartData : this.apexOptions
+      this.datacollection = this.chartData ? this.chartData : this.datacollection
+    }
   },
   methods: {
-    // handleSavedWidgets(data) {
-    //   console.log('data: ', data)
-    // },
-
     handleChartDetails(event) {
       if (this.control === 'title') {
         this.title = event.target.value
