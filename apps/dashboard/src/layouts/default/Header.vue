@@ -17,7 +17,7 @@
 export default {
   methods: {
     handleAddReport() {
-      this.$router.push({ name: 'Report' })
+      this.$router.push({ name: 'Add Report' })
     }
   }
 }
