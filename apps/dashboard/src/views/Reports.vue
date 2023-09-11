@@ -1,15 +1,5 @@
 <template>
   <div class="mt-5 pt-15 px-10">
-    <!-- <div class="mt-7">
-      <v-row justify="space-between" no-gutters>
-        <v-col cols="2">
-          <v-icon>mdi-tune</v-icon> <span class="filter">Filters</span></v-col
-        >
-        <v-col cols="2">
-          Assigned: <span class="filter">Everyone can edit</span>
-        </v-col>
-      </v-row>
-    </div> -->
     <v-list density="compact" lines="one">
       <v-list-subheader color="primary" class="pa-0" v-if="reports.length"
         >REPORTS</v-list-subheader
@@ -33,7 +23,7 @@
             variant="text"
             @click="handleEditReport(item.id)"
           ></v-btn>
-          <v-btn size="small" color="primary" icon="mdi-content-copy" variant="text"></v-btn>
+          <!-- <v-btn size="small" color="primary" icon="mdi-content-copy" variant="text"></v-btn> -->
           <v-dialog transition="dialog-bottom-transition" width="auto">
             <template v-slot:activator="{ props }">
               <v-btn
@@ -83,8 +73,7 @@ export default {
   data: () => {
     return {
       reports: [],
-      index: 0,
-      actionItems: [{ title: 'Clone' }, { title: 'Delete' }]
+      index: 0
     }
   },
   mounted() {
@@ -109,7 +98,7 @@ export default {
     handleDeleteItem(id) {
       axios
         .delete(`https://retoolapi.dev/4RV8By/reports/${id}`)
-        .then((response) => {
+        .then(() => {
           this.getReports()
         })
         .catch(() => {})
