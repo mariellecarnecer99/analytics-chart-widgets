@@ -10,7 +10,7 @@
     "dev": "npm-run-all --parallel dashboard container widgets",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Marielle Carnecer mcarnecer@startechup.com",
   "license": "ISC",
   "workspaces": [
     "apps/*",
