@@ -451,7 +451,6 @@ export default {
       getReport(id)
         .then((response) => {
           this.widgets.push(...response.data.widgets)
-          console.log('this.widgets: ', this.widgets)
           this.mainTitle = response.data.name
           this.description = response.data.description
         })

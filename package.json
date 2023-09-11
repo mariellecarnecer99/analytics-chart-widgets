@@ -11,7 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "chart"
+    "chart",
+    "widget"
   ],
   "author": "Marielle Carnecer <mcarnecer@startechup.com>",
   "license": "ISC",
