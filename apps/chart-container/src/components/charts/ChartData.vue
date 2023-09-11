@@ -1178,6 +1178,7 @@ export default {
 
       if (val) {
         this.options = val
+        this.chartsConfig = this.options
         // this.options.series = val
       } else {
         return this.options
@@ -1280,6 +1281,7 @@ export default {
 
       if (val) {
         this.apexOptions = val
+        this.chartsConfig = this.apexOptions
       } else {
         return this.apexOptions
       }
@@ -1351,6 +1353,7 @@ export default {
 
       if (val) {
         this.datacollection = val
+        this.chartsConfig = this.datacollection
       } else {
         return this.datacollection
       }
