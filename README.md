@@ -4,8 +4,8 @@ A great plugin which you can fully customize different charts and be able to gen
 
 ## Project setup
 
-# Installation
+### Installation
 
-# Usage
+### Usage
 
 ## Features List
