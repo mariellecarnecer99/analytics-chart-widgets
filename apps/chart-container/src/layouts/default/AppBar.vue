@@ -194,16 +194,6 @@
     </div>
   </v-navigation-drawer>
 
-  <v-navigation-drawer v-model="settingsDrawer" color="rgba(211,220,230,1)" app width="300">
-    <div id="sidebar">
-      <div class="d-flex justify-end sidebar-toggle mx-4 mt-3">
-        <div class="mb-2" @click="settingsDrawer = !settingsDrawer" id="btn-toggle">
-          <v-icon id="btn-toggle-icon" x-large>mdi-close</v-icon>
-        </div>
-      </div>
-    </div>
-  </v-navigation-drawer>
-
   <v-main>
     <ChartContainer :widgets="widgets" />
   </v-main>
@@ -233,7 +223,6 @@ export default {
     return {
       drawer: false,
       controlsDrawer: false,
-      settingsDrawer: false,
       tab: null,
       chartType: null,
       chartDataType: null,
@@ -255,7 +244,6 @@ export default {
           value: 'controls',
           icon: 'mdi-filter-variant-plus'
         },
-        // { title: 'Settings', value: 'settings', icon: 'mdi-cog' },
         { title: 'Analytics', value: 'analytics', icon: 'mdi-chart-bar' }
       ],
       charts: [
@@ -364,6 +352,16 @@ export default {
   mounted() {
     if (this.$route.params.id) {
       this.handleGetReportsById(this.$route.params.id)
+    } else {
+      const item = {
+        x: 0,
+        y: 0,
+        w: 3,
+        h: 1,
+        i: this.widgets.length,
+        selectedControl: 'title'
+      }
+      this.widgets.push(item)
     }
   },
   methods: {
@@ -388,7 +386,6 @@ export default {
     onClickDrawer(val) {
       this.drawer = val === 0
       this.controlsDrawer = val === 1
-      this.settingsDrawer = val === 2
     },
 
     controlSelected(e) {
@@ -440,8 +437,8 @@ export default {
         }
         axios
           .patch(`https://retoolapi.dev/4RV8By/reports/${this.$route.params.id}`, {
-            name: this.chartTitle,
-            description: this.chartDesc,
+            name: this.title,
+            description: this.desc,
             widgetCount: this.widgets.length,
             widgets: this.widgets
           })

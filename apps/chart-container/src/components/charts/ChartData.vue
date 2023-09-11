@@ -1034,19 +1034,27 @@ export default {
   mounted() {
     this.title = this.chartTitle
     this.description = this.desc
-    this.handleOptions()
-    this.handleApexOptions()
-    this.handleChartjsOptions()
+    // this.handleOptions()
+    // this.handleApexOptions()
+    // this.handleChartjsOptions()
     this.$nextTick(() => {
       window.dispatchEvent(new Event('resize'))
     })
-    if (this.$route.params.id) {
-      this.options = this.chartData ? this.chartData : this.options
-      this.apexOptions = this.chartData ? this.chartData : this.apexOptions
-      this.datacollection = this.chartData ? this.chartData : this.datacollection
+    if (this.chartData) {
+      this.handleGetReportsById(this.chartData)
+    } else {
+      this.handleOptions()
+      this.handleApexOptions()
+      this.handleChartjsOptions()
     }
   },
   methods: {
+    handleGetReportsById(data) {
+      this.handleOptions(data)
+      this.handleApexOptions(data)
+      this.handleChartjsOptions(data)
+    },
+
     handleChangedTitle(event) {
       store.getChartTitle(event.target.value)
     },
@@ -1169,11 +1177,14 @@ export default {
       }
 
       if (val) {
-        this.options.series = val
+        this.options = val
+        // this.options.series = val
+      } else {
+        return this.options
       }
     },
 
-    handleApexOptions() {
+    handleApexOptions(val) {
       this.isDataReady = true
       this.apexOptions = {
         title: {
@@ -1266,9 +1277,15 @@ export default {
         this.chartsConfig = this.apexOptions
         this.handleChartUpdate(this.chartId, this.chartsConfig)
       }
+
+      if (val) {
+        this.apexOptions = val
+      } else {
+        return this.apexOptions
+      }
     },
 
-    handleChartjsOptions() {
+    handleChartjsOptions(val) {
       // Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
       const plugin = {
         id: 'customCanvasBackgroundColor',
@@ -1330,6 +1347,12 @@ export default {
       if (this.chartLib === 'chartjs') {
         this.chartsConfig = this.datacollection
         this.handleChartUpdate(this.chartId, this.chartsConfig)
+      }
+
+      if (val) {
+        this.datacollection = val
+      } else {
+        return this.datacollection
       }
     },
 
