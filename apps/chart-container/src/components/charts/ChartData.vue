@@ -15,7 +15,7 @@
     label="Chart Title"
     variant="outlined"
     density="compact"
-    @input="handleChartDetails"
+    @input="handleChangedTitle"
   ></v-text-field>
   <v-text-field
     v-if="control === 'description'"
@@ -24,7 +24,7 @@
     label="Chart Description"
     variant="outlined"
     density="compact"
-    @input="handleChartDetails"
+    @input="handleChangedDesc"
   ></v-text-field>
   <div v-if="!control && !preview" class="custom-toolbox">
     <v-icon color="#676767" @click="editDialog = !editDialog">mdi-pencil-outline</v-icon>
@@ -869,7 +869,6 @@ export default {
     desc: String,
     widgets: Object,
     selectedWidgets: Array,
-    savedWidgets: Array,
     chartData: Object
   },
   data: () => {
@@ -1020,7 +1019,17 @@ export default {
       {
         handler: 'getDates'
       }
-    ]
+    ],
+    chartTitle: {
+      handler(newOption) {
+        this.title = newOption
+      }
+    },
+    desc: {
+      handler(newOption) {
+        this.description = newOption
+      }
+    }
   },
   mounted() {
     this.title = this.chartTitle
@@ -1038,17 +1047,12 @@ export default {
     }
   },
   methods: {
-    handleChartDetails(event) {
-      if (this.control === 'title') {
-        this.title = event.target.value
-      } else if (this.control === 'description') {
-        this.description = event.target.value
-      }
-      const chartDetails = {
-        title: this.title,
-        desc: this.description
-      }
-      store.getChartDetails(chartDetails)
+    handleChangedTitle(event) {
+      store.getChartTitle(event.target.value)
+    },
+
+    handleChangedDesc(event) {
+      store.getChartDesc(event.target.value)
     },
 
     handleSelectedChart(val) {

@@ -218,9 +218,10 @@ import scatter from '@/assets/scatter.png'
 import { useSelectedChart } from '../../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 const store = useSelectedChart()
-const { fetchChartOptions, cDetails } = storeToRefs(store)
+const { fetchChartOptions, title, desc } = storeToRefs(store)
 const getChartOptions = fetchChartOptions
-const getChartDetails = cDetails
+const getChartTitle = title
+const getChartDesc = desc
 import axios from 'axios'
 export default {
   name: 'AppBar',
@@ -337,22 +338,26 @@ export default {
       options: getChartOptions,
       modifiedOptions: [],
       embedAll: false,
-      chartDets: getChartDetails,
-      chartDetails: {}
+      title: getChartTitle,
+      desc: getChartDesc,
+      chartTitle: null,
+      chartDesc: null
     }
   },
-  // created() {
-  //   this.eventBus.on('savedWidgets', this.savedWidgets)
-  // },
   watch: {
     options: [
       {
         handler: 'getOptions'
       }
     ],
-    chartDets: [
+    title: [
       {
-        handler: 'handleChartDetails'
+        handler: 'handleChartTitle'
+      }
+    ],
+    desc: [
+      {
+        handler: 'handleChartDesc'
       }
     ]
   },
@@ -362,8 +367,12 @@ export default {
     }
   },
   methods: {
-    handleChartDetails(data) {
-      this.chartDetails = data
+    handleChartTitle(data) {
+      this.chartTitle = data
+    },
+
+    handleChartDesc(data) {
+      this.chartDesc = data
     },
 
     copyText() {
@@ -375,11 +384,6 @@ export default {
     getOptions(data) {
       this.modifiedOptions = data
     },
-
-    // savedWidgets(data) {
-    //   console.log('data: ', data)
-    //   // this.widgets = data
-    // },
 
     onClickDrawer(val) {
       this.drawer = val === 0
@@ -417,8 +421,8 @@ export default {
       if (!this.$route.params.id) {
         axios
           .post('https://retoolapi.dev/4RV8By/reports', {
-            name: this.chartDetails.title,
-            description: this.chartDetails.desc,
+            name: this.chartTitle,
+            description: this.chartDesc,
             widgetCount: this.widgets.length,
             widgets: this.widgets
           })
@@ -436,8 +440,8 @@ export default {
         }
         axios
           .patch(`https://retoolapi.dev/4RV8By/reports/${this.$route.params.id}`, {
-            name: this.chartDetails.title,
-            description: this.chartDetails.desc,
+            name: this.chartTitle,
+            description: this.chartDesc,
             widgetCount: this.widgets.length,
             widgets: this.widgets
           })
@@ -453,9 +457,6 @@ export default {
       axios
         .get(`https://retoolapi.dev/4RV8By/reports/${id}`)
         .then((response) => {
-          const savedWidgets = response.data.widgets
-          console.log('savedWidgets: ', savedWidgets)
-          // this.widgets = [...response.data.widgets, ...existingArray2];
           this.widgets.push(...response.data.widgets)
           console.log('this.widgets: ', this.widgets)
           this.mainTitle = response.data.name

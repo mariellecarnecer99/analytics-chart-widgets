@@ -1,41 +1,5 @@
 <template>
   <div>
-    <!-- <grid-layout
-      v-if="savedWidget.length"
-      :layout="savedWidget"
-      :col-num="12"
-      :is-draggable="true"
-      :is-resizable="true"
-      :vertical-compact="true"
-      :use-css-transforms="true"
-    >
-      <grid-item
-        v-for="item in savedWidget"
-        :key="item.i"
-        :x="item.x"
-        :y="item.y"
-        :w="item.w"
-        :h="item.h"
-        :i="item.i"
-      >
-        <ChartData
-          :chartType="item.chart?.value"
-          :chartLib="item.selectedLib"
-          :chartId="item.i"
-          :control="item.selectedControl"
-          :selectedChartsLength="widgets.length"
-          :chartTitle="title"
-          :desc="description"
-          :widgets="item"
-          :selectedWidgets="widgets"
-          :savedWidgets="savedWidget"
-          :chartData="item.data"
-        />
-        <span class="remove" @click="removeItem(item.i)"
-          ><v-icon size="small">mdi-close</v-icon></span
-        >
-      </grid-item>
-    </grid-layout> -->
     <grid-layout
       :layout="widgets"
       :col-num="12"
@@ -63,7 +27,6 @@
           :desc="description"
           :widgets="item"
           :selectedWidgets="widgets"
-          :savedWidgets="savedWidget"
           :chartData="item.data"
         />
         <span class="remove" @click="removeItem(item.i)"
@@ -84,7 +47,6 @@ export default {
   inject: ['eventBus'],
   data: () => {
     return {
-      savedWidget: [],
       title: null,
       description: null
     }
@@ -110,10 +72,8 @@ export default {
       axios
         .get(`https://retoolapi.dev/4RV8By/reports/${e}`)
         .then((response) => {
-          this.savedWidget = response.data.widgets
           this.title = response.data.name
           this.description = response.data.description
-          // this.eventBus.emit('savedWidgets', this.savedWidget)
         })
         .catch(() => {})
         .finally()
