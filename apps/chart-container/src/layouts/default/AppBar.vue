@@ -341,9 +341,9 @@ export default {
       chartDetails: {}
     }
   },
-  created() {
-    this.eventBus.on('savedWidgets', this.savedWidgets)
-  },
+  // created() {
+  //   this.eventBus.on('savedWidgets', this.savedWidgets)
+  // },
   watch: {
     options: [
       {
@@ -376,9 +376,10 @@ export default {
       this.modifiedOptions = data
     },
 
-    savedWidgets(data) {
-      this.widgets = data
-    },
+    // savedWidgets(data) {
+    //   console.log('data: ', data)
+    //   // this.widgets = data
+    // },
 
     onClickDrawer(val) {
       this.drawer = val === 0
@@ -452,7 +453,11 @@ export default {
       axios
         .get(`https://retoolapi.dev/4RV8By/reports/${id}`)
         .then((response) => {
-          this.widgets = response.data.widgets
+          const savedWidgets = response.data.widgets
+          console.log('savedWidgets: ', savedWidgets)
+          // this.widgets = [...response.data.widgets, ...existingArray2];
+          this.widgets.push(...response.data.widgets)
+          console.log('this.widgets: ', this.widgets)
           this.mainTitle = response.data.name
           this.description = response.data.description
         })

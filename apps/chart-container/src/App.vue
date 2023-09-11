@@ -1,6 +1,6 @@
 <template>
   <div>
-    <grid-layout
+    <!-- <grid-layout
       v-if="savedWidget.length"
       :layout="savedWidget"
       :col-num="12"
@@ -35,9 +35,8 @@
           ><v-icon size="small">mdi-close</v-icon></span
         >
       </grid-item>
-    </grid-layout>
+    </grid-layout> -->
     <grid-layout
-      v-else
       :layout="widgets"
       :col-num="12"
       :is-draggable="true"
@@ -65,6 +64,7 @@
           :widgets="item"
           :selectedWidgets="widgets"
           :savedWidgets="savedWidget"
+          :chartData="item.data"
         />
         <span class="remove" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -113,7 +113,7 @@ export default {
           this.savedWidget = response.data.widgets
           this.title = response.data.name
           this.description = response.data.description
-          this.eventBus.emit('savedWidgets', this.savedWidget)
+          // this.eventBus.emit('savedWidgets', this.savedWidget)
         })
         .catch(() => {})
         .finally()

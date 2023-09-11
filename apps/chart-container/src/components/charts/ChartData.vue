@@ -1322,6 +1322,7 @@ export default {
         },
         plugins: [plugin]
       }
+
       if (this.chartLib === 'chartjs') {
         this.chartsConfig = this.datacollection
         this.handleChartUpdate(this.chartId, this.chartsConfig)
@@ -1680,6 +1681,7 @@ export default {
         .then((response) => {
           const responseData = response.data
           this.apiData = responseData
+          console.log('this.apiData: ', this.apiData)
 
           // Get dimensions
           const allKeys = new Set()
