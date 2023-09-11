@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { getAllReports, deleteReport } from '../services/reports'
 export default {
   data: () => {
     return {
@@ -81,8 +81,7 @@ export default {
   },
   methods: {
     getReports() {
-      axios
-        .get('https://retoolapi.dev/4RV8By/reports')
+      getAllReports()
         .then((response) => {
           const responseData = response.data
           this.reports = responseData
@@ -96,8 +95,7 @@ export default {
     },
 
     handleDeleteItem(id) {
-      axios
-        .delete(`https://retoolapi.dev/4RV8By/reports/${id}`)
+      deleteReport(id)
         .then(() => {
           this.getReports()
         })

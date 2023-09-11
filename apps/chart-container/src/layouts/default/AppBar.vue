@@ -212,13 +212,12 @@ const { fetchChartOptions, title, desc } = storeToRefs(store)
 const getChartOptions = fetchChartOptions
 const getChartTitle = title
 const getChartDesc = desc
-import axios from 'axios'
+import { getReport, addReport, updateReport } from '../../../../dashboard/src/services/reports'
 export default {
   name: 'AppBar',
   components: {
     ChartData
   },
-  inject: ['eventBus'],
   data: () => {
     return {
       drawer: false,
@@ -416,13 +415,12 @@ export default {
 
     handleSaveChanges() {
       if (!this.$route.params.id) {
-        axios
-          .post('https://retoolapi.dev/4RV8By/reports', {
-            name: this.chartTitle,
-            description: this.chartDesc,
-            widgetCount: this.widgets.length,
-            widgets: this.widgets
-          })
+        addReport({
+          name: this.chartTitle,
+          description: this.chartDesc,
+          widgetCount: this.widgets.length,
+          widgets: this.widgets
+        })
           .then((response) => {
             this.$router.push({ path: '/' })
           })
@@ -435,13 +433,12 @@ export default {
         } else {
           console.log('Object with index not found in the array.')
         }
-        axios
-          .patch(`https://retoolapi.dev/4RV8By/reports/${this.$route.params.id}`, {
-            name: this.title,
-            description: this.desc,
-            widgetCount: this.widgets.length,
-            widgets: this.widgets
-          })
+        updateReport(this.$route.params.id, {
+          name: this.title,
+          description: this.desc,
+          widgetCount: this.widgets.length,
+          widgets: this.widgets
+        })
           .then((response) => {
             this.$router.push({ path: '/' })
           })
@@ -451,8 +448,7 @@ export default {
     },
 
     handleGetReportsById(id) {
-      axios
-        .get(`https://retoolapi.dev/4RV8By/reports/${id}`)
+      getReport(id)
         .then((response) => {
           this.widgets.push(...response.data.widgets)
           console.log('this.widgets: ', this.widgets)

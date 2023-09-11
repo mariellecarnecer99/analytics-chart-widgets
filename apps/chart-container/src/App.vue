@@ -39,7 +39,7 @@
 
 <script>
 import ChartData from './components/charts/ChartData.vue'
-import axios from 'axios'
+import { getReport } from '../../dashboard/src/services/reports'
 export default {
   components: {
     ChartData
@@ -69,8 +69,7 @@ export default {
     },
 
     handleGetReportsById(e) {
-      axios
-        .get(`https://retoolapi.dev/4RV8By/reports/${e}`)
+      getReport(e)
         .then((response) => {
           this.title = response.data.name
           this.description = response.data.description
