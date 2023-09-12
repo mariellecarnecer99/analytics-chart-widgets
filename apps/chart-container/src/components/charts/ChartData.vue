@@ -140,6 +140,21 @@
               </v-col> -->
             </v-row>
 
+            <v-row>
+              <v-col cols="4">
+                <p class="mb-3">Date control filter</p>
+                <VueDatePicker
+                  v-model="dateControl"
+                  placeholder="Select Date"
+                  format="MM/dd/yyyy"
+                  range
+                  menu-class-name="dp-custom-menu"
+                  teleport-center
+                  @update:model-value="handleDates"
+                />
+              </v-col>
+            </v-row>
+
             <p class="mt-5 mb-3">Data source</p>
             <v-row justify="end">
               <v-col>
@@ -886,7 +901,7 @@ export default {
       gridColorMenu: false,
       menuLabelColor: false,
       menuTitleColor: false,
-      dateValue: null,
+      dateControl: [],
       datemenu: false,
       modifiedType: null,
       numofseries: 1,
@@ -1672,6 +1687,7 @@ export default {
     },
 
     handleDates(date) {
+      console.log('date: ', date)
       if (date) {
         const dateMapped = date.map((item) => {
           return moment(item).format('L')
