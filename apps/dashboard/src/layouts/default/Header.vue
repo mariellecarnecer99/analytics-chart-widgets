@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <v-app-bar color="rgba(233, 73, 93)" class="flex-grow-0" dark>
       <v-app-bar-title>
         <v-icon icon="mdi-file-chart-outline" color="white" />
