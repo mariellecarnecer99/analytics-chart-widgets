@@ -172,7 +172,7 @@
                   ref="uploadedFile"
                   class="d-none"
                   type="file"
-                  accept="application/json,.csv"
+                  accept=".csv"
                   @change="onUploadChange"
                 />
                 <!-- <v-btn
@@ -190,7 +190,7 @@
                   ref="uploader"
                   class="d-none"
                   type="file"
-                  accept="application/json,.csv"
+                  accept=".csv"
                   @change="onFileChanged"
                 />
               </v-col>
@@ -1594,27 +1594,77 @@ export default {
 
     onUploadChange(e) {
       this.uploadedFile = e.target.files[0]
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        this.uploadedFile = JSON.parse(e.target.result)
+      try {
+        var reader = new FileReader()
+        reader.readAsBinaryString(this.uploadedFile)
+        reader.onload = (e) => {
+          var jsonData = []
+          var headers = []
+          var rows = e.target.result.split('\r\n')
+          for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].split(',')
+            var rowData = {}
+            for (var j = 0; j < cells.length; j++) {
+              if (i == 0) {
+                var headerName = cells[j].trim()
+                headers.push(headerName)
+              } else {
+                var key = headers[j]
+                if (key) {
+                  rowData[key] = cells[j].trim()
+                }
+              }
+            }
+            //skip the first row (header) data
+            if (i != 0) {
+              jsonData.push(rowData)
+            }
+          }
 
-        // Get dimensions
-        const allKeys = new Set()
-        for (const item of this.uploadedFile) {
-          const keys = Object.keys(item)
-          keys.forEach((key) => allKeys.add(key))
+          // Get dimensions
+          const allKeys = new Set()
+          for (const item of jsonData) {
+            const keys = Object.keys(item)
+            keys.forEach((key) => allKeys.add(key))
+          }
+          this.dimensions = Array.from(allKeys)
+          const keyToFind = 'createdAt'
+          const index = this.dimensions.indexOf(keyToFind)
+
+          this.defaultCategory = this.dimensions[index]
+          this.defaultMetric = this.dimensions[1]
+
+          this.getUniqueValues(jsonData, this.defaultCategory, this.defaultMetric)
+
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
         }
-        this.dimensions = Array.from(allKeys)
-        this.defaultCategory = this.dimensions[0]
-        this.defaultMetric = this.dimensions[1]
-
-        this.getUniqueValues(this.uploadedFile, this.defaultCategory, this.defaultMetric)
-
-        this.handleOptions()
-        this.handleApexOptions()
-        this.handleChartjsOptions()
+      } catch (e) {
+        console.error(e)
       }
-      reader.readAsText(e.target.files[0])
+      // const reader = new FileReader()
+      // reader.onload = (e) => {
+      //   this.uploadedFile = JSON.parse(e.target.result)
+      //   console.log('this.uploadedFile: ', this.uploadedFile)
+
+      //   // Get dimensions
+      //   const allKeys = new Set()
+      //   for (const item of this.uploadedFile) {
+      //     const keys = Object.keys(item)
+      //     keys.forEach((key) => allKeys.add(key))
+      //   }
+      //   this.dimensions = Array.from(allKeys)
+      //   this.defaultCategory = this.dimensions[0]
+      //   this.defaultMetric = this.dimensions[4]
+
+      //   this.getUniqueValues(this.uploadedFile, this.defaultCategory, this.defaultMetric)
+
+      //   this.handleOptions()
+      //   this.handleApexOptions()
+      //   this.handleChartjsOptions()
+      // }
+      // reader.readAsText(e.target.files[0])
       this.editDialog = false
     },
 
