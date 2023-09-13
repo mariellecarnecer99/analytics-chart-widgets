@@ -1687,7 +1687,6 @@ export default {
     },
 
     handleDates(date) {
-      console.log('date: ', date)
       if (date) {
         const dateMapped = date.map((item) => {
           return moment(item).format('L')
@@ -1718,6 +1717,7 @@ export default {
         this.handleApexOptions()
         this.handleChartjsOptions()
       }
+      this.getDates()
       return newDates
     },
 
@@ -1752,13 +1752,29 @@ export default {
     },
 
     getDates(e) {
-      axios
-        .get(
-          `https://retoolapi.dev/NuWQVD/data?createdAt_gte=${e[0]}&createdAt_lte=${e[e.length - 1]}`
-        )
-        .then((response) => {
+      if (this.dataUpload) {
+        let mappedData = this.dataUpload
+
+        if (e) {
+          const randomNumbers = []
+
+          let newDateFormat = e.map((x) => {
+            return (x = moment(x).format('L'))
+          })
+
+          let res = newDateFormat.map((x) => mappedData.find((date) => date == x))
+
+          this.dataUpload = res
+          // randomNumbers.push(Math.round(Math.random() * 100))
+          // this.seriesUpload = randomNumbers
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      } else {
+        if (this.apiData) {
           let mappedData = this.apiData.map((date) => {
-            const newDateFormat = moment(date.createdAt).format('YYYY-MM-DD')
+            const newDateFormat = moment(date.createdAt).format('L')
             return {
               ...date,
               newFormat: newDateFormat
@@ -1783,13 +1799,12 @@ export default {
           this.defaultMetric = this.dimensions[4]
 
           this.getUniqueValues(filteredData, this.defaultCategory, this.defaultMetric)
+        }
+      }
 
-          this.handleOptions()
-          this.handleApexOptions()
-          this.handleChartjsOptions()
-        })
-        .catch(() => {})
-        .finally()
+      this.handleOptions()
+      this.handleApexOptions()
+      this.handleChartjsOptions()
     },
 
     onJsonSave(e) {
