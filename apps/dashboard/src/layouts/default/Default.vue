@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import DefaultBar from "./AppBar.vue";
+import DefaultBar from './AppBar.vue'
 export default {
   components: {
-    DefaultBar,
-  },
-};
+    DefaultBar
+  }
+}
 </script>

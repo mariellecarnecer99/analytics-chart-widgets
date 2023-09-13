@@ -1765,8 +1765,6 @@ export default {
           let res = newDateFormat.map((x) => mappedData.find((date) => date == x))
 
           this.dataUpload = res
-          // randomNumbers.push(Math.round(Math.random() * 100))
-          // this.seriesUpload = randomNumbers
           this.handleOptions()
           this.handleApexOptions()
           this.handleChartjsOptions()
