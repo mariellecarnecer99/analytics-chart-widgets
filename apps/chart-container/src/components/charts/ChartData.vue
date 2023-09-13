@@ -1755,54 +1755,52 @@ export default {
       if (this.dataUpload) {
         let mappedData = this.dataUpload
 
-        if (e) {
-          const randomNumbers = []
+        const randomNumbers = []
 
-          let newDateFormat = e.map((x) => {
-            return (x = moment(x).format('L'))
-          })
+        let newDateFormat = e.map((x) => {
+          return (x = moment(x).format('L'))
+        })
 
-          let res = newDateFormat.map((x) => mappedData.find((date) => date == x))
+        let res = newDateFormat.map((x) => mappedData.find((date) => date == x))
 
-          this.dataUpload = res
-          this.handleOptions()
-          this.handleApexOptions()
-          this.handleChartjsOptions()
-        }
-      } else {
-        if (this.apiData) {
-          let mappedData = this.apiData.map((date) => {
-            const newDateFormat = moment(date.createdAt).format('L')
-            return {
-              ...date,
-              newFormat: newDateFormat
-            }
-          })
-
-          let res = e.map((x) => mappedData.find((date) => date.newFormat == x))
-
-          const filteredData = res.filter((item) => item !== undefined)
-
-          // Get dimensions
-          const allKeys = new Set()
-          for (const item of filteredData) {
-            const keys = Object.keys(item)
-            keys.forEach((key) => allKeys.add(key))
-          }
-          this.dimensions = Array.from(allKeys)
-          const keyToFind = 'createdAt'
-          const index = this.dimensions.indexOf(keyToFind)
-
-          this.defaultCategory = this.dimensions[index]
-          this.defaultMetric = this.dimensions[4]
-
-          this.getUniqueValues(filteredData, this.defaultCategory, this.defaultMetric)
-        }
+        this.dataUpload = res
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
       }
 
-      this.handleOptions()
-      this.handleApexOptions()
-      this.handleChartjsOptions()
+      if (this.apiData) {
+        let mappedData = this.apiData.map((date) => {
+          const newDateFormat = moment(date.createdAt).format('DD-MM-YYYY')
+          return {
+            ...date,
+            newFormat: newDateFormat
+          }
+        })
+
+        let res = e.map((x) => mappedData.find((date) => date.newFormat == x))
+
+        const filteredData = res.filter((item) => item !== undefined)
+
+        // Get dimensions
+        const allKeys = new Set()
+        for (const item of filteredData) {
+          const keys = Object.keys(item)
+          keys.forEach((key) => allKeys.add(key))
+        }
+        this.dimensions = Array.from(allKeys)
+        const keyToFind = 'createdAt'
+        const index = this.dimensions.indexOf(keyToFind)
+
+        this.defaultCategory = this.dimensions[index]
+        this.defaultMetric = this.dimensions[4]
+
+        this.getUniqueValues(filteredData, this.defaultCategory, this.defaultMetric)
+
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
     },
 
     onJsonSave(e) {
