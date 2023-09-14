@@ -26,7 +26,7 @@
       size="small"
       color="primary"
       :disabled="widgets.length ? false : true"
-      @click="previewDialog = !previewDialog"
+      @click="handlePreviewChanges"
       >Preview Changes</v-btn
     >
     <v-dialog v-model="embedAll" width="500px">
@@ -53,7 +53,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="previewDialog" width="1050px">
+    <!-- <v-dialog v-model="previewDialog" width="1050px">
       <v-card>
         <v-card-text>
           <v-row justify="space-between">
@@ -101,7 +101,7 @@
           </grid-layout>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
     <v-btn
       variant="flat"
       size="small"
@@ -456,6 +456,10 @@ export default {
         })
         .catch(() => {})
         .finally()
+    },
+
+    handlePreviewChanges() {
+      this.$router.push({ name: 'Preview Report', params: { id: this.$route.params.id } })
     }
   }
 }

@@ -14,7 +14,7 @@
     class="py-8"
     variant="plain"
     density="compact"
-    autofocus="true"
+    autofocus
     placeholder="Chart Title"
     @input="handleChangedTitle"
   ></v-text-field>
@@ -24,18 +24,18 @@
     class="py-8"
     variant="plain"
     density="compact"
-    autofocus="true"
+    autofocus
     placeholder="Chart Description"
     @input="handleChangedDesc"
   ></v-text-field>
-  <!-- <div v-if="!control && !preview" class="custom-toolbox">
+  <div v-if="!control && !preview" class="custom-toolbox">
     <v-icon color="#676767" @click="editDialog = !editDialog">mdi-pencil-outline</v-icon>
     <v-icon color="#676767" @click="jsonConfigDialog = !jsonConfigDialog">mdi-code-json</v-icon>
     <v-icon color="#676767" @click="appearanceDialog = !appearanceDialog">mdi-palette</v-icon>
     <v-icon color="#676767" @click="handleChartDom(chartId)">mdi-download-outline</v-icon>
     <v-icon color="#676767" @click="embedDialog = !embedDialog">mdi-import</v-icon>
     <v-icon color="#676767" @click="previewDialog = !previewDialog">mdi-eye</v-icon>
-  </div> -->
+  </div>
   <div class="toolbox-dialog">
     <v-dialog v-model="editDialog" width="750px" style="z-index: 0">
       <v-card>
