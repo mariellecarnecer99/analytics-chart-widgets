@@ -1,5 +1,5 @@
 <template>
-  <canvas :id="'chart' + id" ref="canvas"></canvas>
+  <canvas :id="'chart' + id" ref="canvas" class="mt-8"></canvas>
 </template>
 
 <script>

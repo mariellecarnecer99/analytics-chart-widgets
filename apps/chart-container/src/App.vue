@@ -3,9 +3,11 @@
     <grid-layout
       :layout="widgets"
       :col-num="12"
+      :row-height="100"
       :is-draggable="true"
       :is-resizable="true"
       :vertical-compact="true"
+      :auto-size="true"
       :use-css-transforms="true"
     >
       <grid-item
@@ -82,7 +84,7 @@ export default {
 </script>
 
 <style scoped>
-.layoutJSON {
+/* .layoutJSON {
   background: #ddd;
   border: 1px solid black;
   margin-top: 10px;
@@ -90,10 +92,9 @@ export default {
 }
 
 .vue-grid-item:not(.vue-grid-placeholder) {
-  /* background: #ccc; */
   border: 1px solid black;
   padding: 65px 0 35px 0;
-}
+} */
 
 .vue-grid-item.resizing {
   opacity: 0.9;

@@ -312,12 +312,12 @@ export default {
         {
           name: 'Chart Title',
           value: 'title',
-          icon: 'mdi-chart-bar'
+          icon: 'mdi-text-recognition'
         },
         {
           name: 'Chart Description',
           value: 'description',
-          icon: 'mdi-chart-bar'
+          icon: 'mdi-text-recognition'
         }
       ],
       previewDialog: false,
@@ -355,7 +355,7 @@ export default {
       const item = {
         x: 0,
         y: 0,
-        w: 3,
+        w: 2,
         h: 1,
         i: this.widgets.length,
         selectedControl: 'title'
@@ -392,7 +392,7 @@ export default {
       const item = {
         x: 0,
         y: 0,
-        w: 3,
+        w: this.selectedControl === 'daterange' ? 2 : 2,
         h: 1,
         i: this.widgets.length,
         selectedControl: this.selectedControl
@@ -461,7 +461,7 @@ export default {
 }
 </script>
 <style scoped>
-.layoutJSON {
+/* .layoutJSON {
   background: #ddd;
   border: 1px solid black;
   margin-top: 10px;
@@ -469,10 +469,9 @@ export default {
 }
 
 .vue-grid-item:not(.vue-grid-placeholder) {
-  /* background: #ccc; */
   border: 1px solid black;
   padding: 65px 0 35px 0;
-}
+} */
 
 .vue-grid-item.resizing {
   opacity: 0.9;
