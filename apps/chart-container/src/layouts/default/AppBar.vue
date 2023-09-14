@@ -1,6 +1,6 @@
 <template>
   <v-app-bar color="rgba(233, 73, 93)" class="flex-grow-0" dark>
-    <v-app-bar-title>
+    <v-app-bar-title @click="$router.push({ path: '/' })" class="cursor">
       <v-icon icon="mdi-chart-box" color="white" />
       <span class="ml-3" style="color: white">Charts Widget</span>
     </v-app-bar-title>
@@ -10,7 +10,15 @@
       <v-icon size="small" color="white">mdi-pencil</v-icon>
     </p>
     <v-spacer></v-spacer>
-    <v-btn class="mr-3" variant="outlined" size="small" color="primary" href="/">Cancel</v-btn>
+    <v-btn
+      v-if="$route.params?.id"
+      class="mr-3"
+      variant="outlined"
+      size="small"
+      color="primary"
+      @click="embedAll = !embedAll"
+      >Embed</v-btn
+    >
     <v-btn
       class="mr-3"
       variant="outlined"
@@ -20,6 +28,30 @@
       @click="previewDialog = !previewDialog"
       >Preview Changes</v-btn
     >
+    <v-dialog v-model="embedAll" width="500px">
+      <v-card>
+        <v-card-text>
+          <v-row justify="space-between">
+            <v-col cols="8">
+              <v-sheet class="my-2"><h3>Add report to your website</h3> </v-sheet>
+            </v-col>
+            <v-col cols="1">
+              <v-sheet class="my-2"
+                ><v-icon @click="embedAll = !embedAll">mdi-close</v-icon></v-sheet
+              >
+            </v-col>
+          </v-row>
+          <v-textarea
+            :model-value="`<chart-widget id='${$route.params?.id}'></chart-widget>`"
+            id="tocopy"
+            variant="outlined"
+            density="compact"
+            append-inner-icon="mdi-content-copy"
+            @click:append-inner="copyText"
+          ></v-textarea>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="previewDialog" width="1050px">
       <v-card>
         <v-card-text>
@@ -34,39 +66,6 @@
             </v-col>
           </v-row>
           <v-divider></v-divider>
-          <v-btn
-            v-if="$route.params?.id"
-            class="mt-3"
-            variant="outlined"
-            size="small"
-            color="primary"
-            @click="embedAll = !embedAll"
-            >Embed</v-btn
-          >
-          <v-dialog v-model="embedAll" width="500px">
-            <v-card>
-              <v-card-text>
-                <v-row justify="space-between">
-                  <v-col cols="8">
-                    <v-sheet class="my-2"><h3>Add widget to your website</h3> </v-sheet>
-                  </v-col>
-                  <v-col cols="1">
-                    <v-sheet class="my-2"
-                      ><v-icon @click="embedAll = !embedAll">mdi-close</v-icon></v-sheet
-                    >
-                  </v-col>
-                </v-row>
-                <v-textarea
-                  :model-value="`<chart-widget id='${$route.params?.id}'></chart-widget>`"
-                  id="tocopy"
-                  variant="outlined"
-                  density="compact"
-                  append-inner-icon="mdi-content-copy"
-                  @click:append-inner="copyText"
-                ></v-textarea>
-              </v-card-text>
-            </v-card>
-          </v-dialog>
           <grid-layout
             :layout="widgets"
             :col-num="12"
@@ -475,5 +474,9 @@ export default {
 
 .vue-grid-item.resizing {
   opacity: 0.9;
+}
+
+.cursor {
+  cursor: pointer;
 }
 </style>
