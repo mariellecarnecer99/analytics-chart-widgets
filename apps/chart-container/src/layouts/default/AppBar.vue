@@ -2,7 +2,8 @@
   <v-app-bar color="rgba(233, 73, 93)" class="flex-grow-0" dark>
     <v-app-bar-title @click="$router.push({ path: '/' })" class="cursor">
       <v-icon icon="mdi-chart-box" color="white" />
-      <span class="ml-3" style="color: white">Charts Widget</span>
+      <span v-if="$route.params?.id" class="ml-2" style="color: #ffffff">Edit Report</span>
+      <span v-else class="ml-2" style="color: #ffffff">Add Report</span>
     </v-app-bar-title>
     <v-spacer></v-spacer>
     <p v-if="mainTitle" style="color: white">
@@ -150,7 +151,7 @@
           >
           </v-select>
           <div v-if="selectedChartLibrary" class="chartType">
-            <h4 class="mb-4 ml-6">Simple</h4>
+            <!-- <h4 class="mb-4 ml-6">Simple</h4> -->
             <v-row class="mb-6" no-gutters>
               <v-col cols="3" v-for="item in charts" class="mb-5 d-flex justify-center">
                 <img
