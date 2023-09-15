@@ -1,7 +1,7 @@
 <template>
   <div class="mt-5 pt-15 px-10">
     <v-list density="compact" lines="one">
-      <v-list-subheader color="primary" class="pa-0" v-if="reports.length"
+      <v-list-subheader v-if="reports.length" color="primary" class="pa-0"
         >REPORTS</v-list-subheader
       >
 
