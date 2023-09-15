@@ -1,7 +1,51 @@
 <template>
-  <h2>Preview</h2>
+  <grid-layout
+    :layout="chartsData"
+    :col-num="12"
+    :is-draggable="false"
+    :is-resizable="false"
+    :vertical-compact="true"
+    :use-css-transforms="true"
+  >
+    <grid-item
+      v-for="item in chartsData"
+      :key="item.i"
+      :x="item.x"
+      :y="item.y"
+      :w="item.w"
+      :h="item.h"
+      :i="item.i"
+    >
+      <ChartData
+        :chartType="item.chart?.value"
+        :chartLib="item.selectedLib"
+        :chartId="item.i"
+        :control="item.selectedControl"
+        :selectedChartsLength="chartsData.length"
+        :widgets="item"
+        :selectedWidgets="chartsData"
+        :chartData="item.data"
+      />
+    </grid-item>
+  </grid-layout>
 </template>
 
 <script>
-//
+import ChartData from '../components/charts/ChartData.vue'
+import { useSelectedChart } from '../stores/fetchSelectedChart'
+import { storeToRefs } from 'pinia'
+const store = useSelectedChart()
+const { widgets } = storeToRefs(store)
+const getWidgets = widgets
+export default {
+  components: {
+    ChartData
+  },
+  data: () => {
+    return {
+      chartsData: getWidgets,
+      chartWidgets: []
+    }
+  }
+}
 </script>

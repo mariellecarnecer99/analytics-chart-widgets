@@ -26,7 +26,7 @@
       size="small"
       color="primary"
       :disabled="widgets.length ? false : true"
-      @click="handlePreviewChanges"
+      @click="handlePreviewChanges(widgets)"
       >Preview Changes</v-btn
     >
     <v-dialog v-model="embedAll" width="500px">
@@ -458,7 +458,8 @@ export default {
         .finally()
     },
 
-    handlePreviewChanges() {
+    handlePreviewChanges(data) {
+      store.getWidgets(data)
       this.$router.push({ name: 'Preview Report', params: { id: this.$route.params.id } })
     }
   }
