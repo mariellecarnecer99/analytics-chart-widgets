@@ -26,7 +26,7 @@
       size="small"
       color="primary"
       :disabled="widgets.length ? false : true"
-      @click="handlePreviewChanges(widgets)"
+      @click="previewDialog = !previewDialog"
       >Preview Changes</v-btn
     >
     <v-dialog v-model="embedAll" width="500px">
@@ -53,20 +53,20 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <!-- <v-dialog v-model="previewDialog" width="1050px">
+    <v-dialog
+      v-model="previewDialog"
+      fullscreen
+      :scrim="false"
+      transition="dialog-bottom-transition"
+    >
       <v-card>
         <v-card-text>
-          <v-row justify="space-between">
-            <v-col>
-              <v-sheet class="my-2"><h3>Preview</h3> </v-sheet>
-            </v-col>
-            <v-col cols="1">
-              <v-sheet class="my-2 ml-9"
-                ><v-icon @click="previewDialog = !previewDialog">mdi-close</v-icon></v-sheet
-              >
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
+          <v-toolbar height="20" color="white">
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="previewDialog = !previewDialog">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
           <grid-layout
             :layout="widgets"
             :col-num="12"
@@ -101,7 +101,7 @@
           </grid-layout>
         </v-card-text>
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
     <v-btn
       variant="flat"
       size="small"
@@ -456,11 +456,6 @@ export default {
         })
         .catch(() => {})
         .finally()
-    },
-
-    handlePreviewChanges(data) {
-      store.getWidgets(data)
-      this.$router.push({ name: 'Preview Report', params: { id: this.$route.params.id } })
     }
   }
 }

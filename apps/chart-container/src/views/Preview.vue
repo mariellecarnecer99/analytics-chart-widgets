@@ -35,8 +35,10 @@ import ChartData from '../components/charts/ChartData.vue'
 import { useSelectedChart } from '../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 const store = useSelectedChart()
-const { widgets } = storeToRefs(store)
+const { title, desc, widgets } = storeToRefs(store)
 const getWidgets = widgets
+// const getTitle = title
+// const getDesc = desc
 export default {
   components: {
     ChartData
@@ -44,7 +46,9 @@ export default {
   data: () => {
     return {
       chartsData: getWidgets,
-      chartWidgets: []
+      // chartTitle: getTitle,
+      // chartDesc: getDesc,
+      disabled: false
     }
   }
 }
