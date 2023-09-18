@@ -205,6 +205,7 @@ import line from '@/assets/line.png'
 import bar from '@/assets/bar.png'
 import pie from '@/assets/pie.png'
 import scatter from '@/assets/scatter.png'
+import table from '@/assets/table.png'
 import { useSelectedChart } from '../../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 const store = useSelectedChart()
@@ -265,6 +266,11 @@ export default {
           type: 'Scatter Chart',
           value: 'scatter',
           img: scatter
+        },
+        {
+          type: 'Table Chart',
+          value: 'table',
+          img: table
         }
       ],
       chartData: [

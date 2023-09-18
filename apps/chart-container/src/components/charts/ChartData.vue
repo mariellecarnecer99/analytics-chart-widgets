@@ -1,12 +1,18 @@
 <template>
-  <EChart v-if="chartLib === 'eCharts'" :option="options" :id="chartId" />
+  <EChart v-if="chartLib === 'eCharts'" :option="options" :id="chartId" :chartType="chartType" />
   <ApexCharts
     v-if="chartLib === 'apexCharts' && isDataReady === true"
     :option="apexOptions"
     :apexSeries="apexOptions.series"
     :id="chartId"
+    :chartType="chartType"
   />
-  <ChartJS v-if="chartLib === 'chartjs'" :id="chartId" :option="datacollection" />
+  <ChartJS
+    v-if="chartLib === 'chartjs'"
+    :id="chartId"
+    :option="datacollection"
+    :chartType="chartType"
+  />
   <DateRange v-if="control === 'daterange'" />
   <v-text-field
     v-if="control === 'title'"
@@ -1185,6 +1191,13 @@ export default {
             type: this.modifiedType ? this.modifiedType : this.chartType
             // areaStyle: {}
           }
+        ],
+        tableData: [
+          { value: 1048, name: 'Search Engine' },
+          { value: 735, name: 'Direct' },
+          { value: 580, name: 'Email' },
+          { value: 484, name: 'Union Ads' },
+          { value: 300, name: 'Video Ads' }
         ]
       }
 
@@ -1288,7 +1301,14 @@ export default {
                 {
                   data: this.seriesUpload ? this.seriesUpload : [10, 41, 35, 51, 49]
                 }
-              ]
+              ],
+        tableData: [
+          { value: 1048, name: 'Search Engine' },
+          { value: 735, name: 'Direct' },
+          { value: 580, name: 'Email' },
+          { value: 484, name: 'Union Ads' },
+          { value: 300, name: 'Video Ads' }
+        ]
       }
 
       if (this.chartLib === 'apexCharts') {
@@ -1360,6 +1380,13 @@ export default {
             }
           }
         },
+        tableData: [
+          { value: 1048, name: 'Search Engine' },
+          { value: 735, name: 'Direct' },
+          { value: 580, name: 'Email' },
+          { value: 484, name: 'Union Ads' },
+          { value: 300, name: 'Video Ads' }
+        ],
         plugins: [plugin]
       }
 
