@@ -23,6 +23,7 @@
           series: [{ data: [item.selectable.value], type: 'bar' }]
         }"
         class="chart-container"
+        autoresize
       ></v-chart>
     </template>
   </v-data-table>
