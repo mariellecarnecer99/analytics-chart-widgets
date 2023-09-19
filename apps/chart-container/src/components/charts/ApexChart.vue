@@ -11,9 +11,15 @@
       <apexchart
         type="bar"
         :id="'chart' + item.index"
-        :options="{ xaxis: { categories: [item.selectable.name] } }"
+        :options="{
+          chart: {
+            toolbar: {
+              show: false
+            }
+          },
+          xaxis: { categories: [item.selectable.name] }
+        }"
         :series="[{ data: [item.selectable.value] }]"
-        height="100%"
       ></apexchart>
     </template>
   </v-data-table>

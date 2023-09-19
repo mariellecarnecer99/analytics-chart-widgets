@@ -398,7 +398,7 @@ export default {
       const item = {
         x: 0,
         y: 0,
-        w: this.selectedControl === 'daterange' ? 2 : 2,
+        w: 2,
         h: 1,
         i: this.widgets.length,
         selectedControl: this.selectedControl

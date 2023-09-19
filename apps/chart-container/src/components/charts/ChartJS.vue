@@ -8,7 +8,11 @@
     item-key="name"
   >
     <template v-slot:item.chart="{ item }">
-      <canvas :id="'chart' + id" ref="canvas" class="mt-8"></canvas>
+      <Bar
+        :id="'chart' + item.index"
+        :options="{ responsive: true, plugins: { legend: false } }"
+        :data="{ labels: [item.selectable.name], datasets: [{ data: [item.selectable.value] }] }"
+      />
     </template>
   </v-data-table>
   <canvas
@@ -21,12 +25,14 @@
 </template>
 
 <script>
+import { Bar } from 'vue-chartjs'
 import Chart from 'chart.js/auto'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 export default {
   name: 'ChartJS',
   components: {
-    VDataTable
+    VDataTable,
+    Bar
   },
   props: {
     id: Number,
@@ -58,19 +64,6 @@ export default {
   methods: {
     getOptions(el) {
       // const ctx = document.getElementById("chart" + this.id);
-
-      if (el.type === 'table') {
-        el.type = 'bar'
-        const canvas = this.$refs.canvas
-
-        // var chartExist = Chart.getChart("chart" + this.id);
-        if (this.ctx != undefined) {
-          this.ctx.destroy()
-          this.ctx = new Chart(canvas, el)
-        } else {
-          this.ctx = new Chart(canvas, el)
-        }
-      }
       const canvas = this.$refs.canvas
 
       // var chartExist = Chart.getChart("chart" + this.id);
