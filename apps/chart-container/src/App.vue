@@ -65,9 +65,13 @@
                 </div>
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                <div class="text-h2 pa-4">
+                  <v-row no-gutters>
+                    <v-col v-for="item in charts" class="mr-5 d-flex justify-center">
+                      <img :src="item.img" style="width: 25px; height: 25px" />
+                    </v-col>
+                  </v-row>
+                </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -398,6 +402,11 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { getReport } from '../../dashboard/src/services/reports'
 import { Vue3JsonEditor } from 'vue3-json-editor'
+import line from './assets/line.png'
+import bar from './assets/bar.png'
+import pie from './assets/pie.png'
+import scatter from './assets/scatter.png'
+import table from './assets/table.png'
 export default {
   components: {
     ChartData,
@@ -442,7 +451,34 @@ export default {
       titleSwitch: false,
       gridLinesSwitch: false,
       tickLabelsSwitch: true,
-      tickMarkersSwitch: false
+      tickMarkersSwitch: false,
+      charts: [
+        {
+          type: 'Line Chart',
+          value: 'line',
+          img: line
+        },
+        {
+          type: 'Bar Chart',
+          value: 'bar',
+          img: bar
+        },
+        {
+          type: 'Pie Chart',
+          value: 'pie',
+          img: pie
+        },
+        {
+          type: 'Scatter Chart',
+          value: 'scatter',
+          img: scatter
+        },
+        {
+          type: 'Table Chart',
+          value: 'table',
+          img: table
+        }
+      ]
     }
   },
   props: {
