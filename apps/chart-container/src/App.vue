@@ -140,11 +140,236 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
+              <v-row class="my-0">
+                <v-col>
+                  <p class="mb-2">JSON Editor</p>
+                  <Vue3JsonEditor
+                    v-model="chartsConfig"
+                    :show-btns="true"
+                    :expandedOnStart="true"
+                    mode="code"
+                  />
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-window-item>
 
-        <v-window-item value="style"> Style </v-window-item>
+        <v-window-item value="style">
+          <v-row>
+            <v-col>
+              <h3 class="mb-3">Defaults</h3>
+              <v-row justify="start">
+                <v-col cols="6">
+                  <p class="pb-3">Plot Background</p>
+                  <v-text-field
+                    v-model="gridColor"
+                    hide-details
+                    class="ma-0 pa-0"
+                    variant="outlined"
+                    density="compact"
+                  >
+                    <template v-slot:append-inner>
+                      <v-menu
+                        v-model="gridColorMenu"
+                        location="end"
+                        nudge-bottom="105"
+                        nudge-left="16"
+                        :close-on-content-click="false"
+                      >
+                        <template v-slot:activator="{ props }">
+                          <div
+                            v-bind="props"
+                            :style="{
+                              backgroundColor: getGridColor,
+                              cursor: 'pointer',
+                              width: '30px',
+                              height: '30px',
+                              borderRadius: gridColorMenu ? '50%' : '4px',
+                              transition: 'border-radius 200ms ease-in-out'
+                            }"
+                          ></div>
+                        </template>
+                        <v-card>
+                          <v-card-text class="pa-0">
+                            <v-color-picker v-model="gridColor" flat></v-color-picker>
+                          </v-card-text>
+                        </v-card>
+                      </v-menu>
+                    </template>
+                  </v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                  <p class="pb-3">Font Type</p>
+                  <v-select
+                    v-model="fontType"
+                    :items="fonts"
+                    label="Select ..."
+                    variant="outlined"
+                    density="compact"
+                  ></v-select>
+                </v-col>
+              </v-row>
+
+              <v-row class="my-0">
+                <v-col cols="6">
+                  <p class="pb-3">Font Size</p>
+                  <v-text-field
+                    v-model="fontSize"
+                    type="number"
+                    variant="outlined"
+                    density="compact"
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                  <p class="pb-3">Font Color</p>
+                  <v-text-field
+                    v-model="labelColor"
+                    hide-details
+                    class="ma-0 pa-0"
+                    variant="outlined"
+                    density="compact"
+                  >
+                    <template v-slot:append-inner>
+                      <v-menu
+                        v-model="menuLabelColor"
+                        location="end"
+                        nudge-bottom="105"
+                        nudge-left="16"
+                        :close-on-content-click="false"
+                      >
+                        <template v-slot:activator="{ props }">
+                          <div
+                            v-bind="props"
+                            :style="{
+                              backgroundColor: labelColor,
+                              cursor: 'pointer',
+                              width: '30px',
+                              height: '30px',
+                              borderRadius: menuLabelColor ? '50%' : '4px',
+                              transition: 'border-radius 200ms ease-in-out'
+                            }"
+                          ></div>
+                        </template>
+                        <v-card>
+                          <v-card-text class="pa-0">
+                            <v-color-picker v-model="labelColor" flat></v-color-picker>
+                          </v-card-text>
+                        </v-card>
+                      </v-menu>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
+
+              <h3 class="mb-3">Title</h3>
+              <v-row justify="start">
+                <v-col cols="6">
+                  <p class="pb-3">Plot Title</p>
+                  <v-text-field
+                    v-model="mainTitle"
+                    variant="outlined"
+                    density="compact"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <p class="pb-3">Font Type</p>
+                  <v-select
+                    v-model="titleFontType"
+                    :items="fonts"
+                    label="Select ..."
+                    variant="outlined"
+                    density="compact"
+                  ></v-select>
+                </v-col>
+              </v-row>
+
+              <v-row class="my-0">
+                <v-col cols="6">
+                  <p class="pb-3">Font Size</p>
+                  <v-text-field
+                    v-model="titleFontSize"
+                    type="number"
+                    variant="outlined"
+                    density="compact"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <p class="pb-3">Font Color</p>
+                  <v-text-field
+                    v-model="titleColor"
+                    hide-details
+                    class="ma-0 pa-0"
+                    variant="outlined"
+                    density="compact"
+                  >
+                    <template v-slot:append-inner>
+                      <v-menu
+                        v-model="menuTitleColor"
+                        location="end"
+                        nudge-bottom="105"
+                        nudge-left="16"
+                        :close-on-content-click="false"
+                      >
+                        <template v-slot:activator="{ props }">
+                          <div
+                            v-bind="props"
+                            :style="{
+                              backgroundColor: titleColor,
+                              cursor: 'pointer',
+                              width: '30px',
+                              height: '30px',
+                              borderRadius: menuTitleColor ? '50%' : '4px',
+                              transition: 'border-radius 200ms ease-in-out'
+                            }"
+                          ></div>
+                        </template>
+                        <v-card>
+                          <v-card-text class="pa-0">
+                            <v-color-picker v-model="titleColor" flat></v-color-picker>
+                          </v-card-text>
+                        </v-card>
+                      </v-menu>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
+
+              <h3 class="mb-3">Visibility</h3>
+              <v-row column>
+                <v-col cols="3">
+                  <p class="py-4">Plot Title</p>
+                </v-col>
+                <v-col cols="3">
+                  <v-switch v-model="titleSwitch"></v-switch>
+                </v-col>
+
+                <v-col cols="3">
+                  <p class="py-4">Grid Lines</p>
+                </v-col>
+                <v-col cols="3">
+                  <v-switch v-model="gridLinesSwitch"></v-switch>
+                </v-col>
+
+                <v-col cols="3">
+                  <p class="py-4">Tick Labels</p>
+                </v-col>
+                <v-col>
+                  <v-switch v-model="tickLabelsSwitch"></v-switch>
+                </v-col>
+
+                <v-col cols="3">
+                  <p class="py-4">Tick Markers</p>
+                </v-col>
+                <v-col>
+                  <v-switch v-model="tickMarkersSwitch"></v-switch>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-window-item>
       </v-window>
     </v-container>
   </v-navigation-drawer>
@@ -155,10 +380,12 @@ import ChartData from './components/charts/ChartData.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { getReport } from '../../dashboard/src/services/reports'
+import { Vue3JsonEditor } from 'vue3-json-editor'
 export default {
   components: {
     ChartData,
-    VueDatePicker
+    VueDatePicker,
+    Vue3JsonEditor
   },
   inject: ['eventBus'],
   data: () => {
@@ -180,11 +407,35 @@ export default {
       selectedOrientation: null,
       dateControl: [],
       selectedApi: null,
-      isLoading: false
+      isLoading: false,
+      isSelecting: false,
+      chartsConfig: null,
+      gridColor: '#ccc',
+      gridColorMenu: false,
+      fonts: ['sans-serif', 'serif', 'monospace', 'Arial', 'Courier New', 'Helvetica'],
+      fontType: 'sans-serif',
+      fontSize: 12,
+      labelColor: '#333',
+      menuLabelColor: false,
+      mainTitle: 'My Chart',
+      titleFontType: 'sans-serif',
+      titleFontSize: 18,
+      titleColor: '#333',
+      menuTitleColor: false,
+      titleSwitch: false,
+      gridLinesSwitch: false,
+      tickLabelsSwitch: true,
+      tickMarkersSwitch: false
     }
   },
   props: {
     widgets: Array
+  },
+  computed: {
+    getGridColor() {
+      const { gridColor } = this
+      return gridColor
+    }
   },
   mounted() {
     if (this.$route.params.id) {
