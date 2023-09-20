@@ -19,6 +19,7 @@
         :h="item.h"
         :i="item.i"
         @click="handleSelectedChart(item.i)"
+        class="active"
       >
         <ChartData
           :chartType="item.chart?.value"
@@ -32,13 +33,13 @@
           :selectedWidgets="widgets"
           :chartData="item.data"
         />
-        <span class="remove" @click="removeItem(item.i)"
+        <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
         >
       </grid-item>
     </grid-layout>
   </div>
-  <v-navigation-drawer v-model="drawer" temporary location="right" :width="500">
+  <v-navigation-drawer v-if="widgets.length != 0" app permanent location="right" :width="400">
     <v-list-item
       prepend-icon="mdi-database-outline"
       title="Data & Properties"
@@ -460,11 +461,16 @@ export default {
   },
   methods: {
     removeItem(i) {
+      // console.log('val: ', val);
+      // console.log('i: ', i)
+      // if (e.key === 'Backspace') {
+      //   console.log('e.key: ', e.key)
       const index = this.widgets.map((item) => item.i).indexOf(i)
       this.widgets.splice(index, 1)
       this.widgets.forEach((item, index) => {
         item.i = index
       })
+      // }
     },
 
     handleGetReportsById(e) {
@@ -478,8 +484,16 @@ export default {
     },
 
     handleSelectedChart(id) {
-      if (id) {
-        this.drawer = true
+      const selectedChart = document.querySelectorAll('.active')
+
+      for (let i = 0; i < selectedChart.length; i++) {
+        selectedChart[i].style.border = `1px solid ${i === id ? '#463d6e' : 'transparent'}`
+      }
+
+      const deleteBtn = document.querySelectorAll('.deleteChart')
+
+      for (let i = 0; i < deleteBtn.length; i++) {
+        deleteBtn[i].style.display = `${i === id ? 'block' : 'none'}`
       }
     }
   }
@@ -508,6 +522,7 @@ export default {
   right: 2px;
   top: 0;
   cursor: pointer;
+  display: none;
 }
 
 .uploadData {
