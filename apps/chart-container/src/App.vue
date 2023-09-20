@@ -110,18 +110,14 @@
               <p class="mb-2">Data Source</p>
               <v-row>
                 <v-col>
-                  <v-btn
-                    variant="outlined"
-                    color="primary"
-                    class="uploadData ma-auto"
-                    :loading="isLoading"
+                  <v-btn variant="outlined" color="primary" class="uploadData" :loading="isLoading"
                     ><v-icon>mdi-upload</v-icon> Upload Data</v-btn
                   >
                   <input ref="uploadedFile" class="d-none" type="file" accept=".csv" />
                 </v-col>
               </v-row>
               <v-row class="my-0">
-                <v-col>
+                <v-col class="pt-2 pb-0">
                   <v-btn variant="text" color="primary" :loading="isSelecting"
                     ><v-icon size="large">mdi-plus-circle-outline</v-icon>
                     <span class="ml-2">Blend Data</span></v-btn
@@ -130,7 +126,7 @@
                 </v-col>
               </v-row>
               <v-row class="my-0">
-                <v-col>
+                <v-col class="pt-2 pb-0">
                   <v-text-field
                     v-model="selectedApi"
                     label="Service URL"
@@ -141,16 +137,36 @@
                 </v-col>
               </v-row>
               <v-row class="my-0">
-                <v-col>
+                <v-col class="pt-2 pb-0">
                   <p class="mb-2">JSON Editor</p>
-                  <Vue3JsonEditor
-                    v-model="chartsConfig"
-                    :show-btns="true"
-                    :expandedOnStart="true"
-                    mode="code"
-                  />
+                  <Vue3JsonEditor v-model="chartsConfig" :expandedOnStart="true" mode="code" />
                 </v-col>
               </v-row>
+            </v-col>
+          </v-row>
+          <v-row class="my-0">
+            <v-col>
+              <p class="mb-2">
+                Preview Chart
+                <span
+                  ><v-btn class="ml-3" size="small" color="primary"
+                    ><v-icon class="mr-1">mdi-download-outline</v-icon>Download</v-btn
+                  >
+                </span>
+              </p>
+            </v-col>
+          </v-row>
+          <v-row class="my-0">
+            <v-col>
+              <p class="mb-2">Insert code into website</p>
+              <v-textarea
+                model-value="<chart-widget id='${chartId}'></chart-widget>"
+                id="tocopy"
+                variant="outlined"
+                density="compact"
+                auto-grow
+                append-inner-icon="mdi-content-copy"
+              ></v-textarea>
             </v-col>
           </v-row>
         </v-window-item>
@@ -158,7 +174,7 @@
         <v-window-item value="style">
           <v-row>
             <v-col>
-              <h3 class="mb-3">Defaults</h3>
+              <h4 class="mb-3">Defaults</h4>
               <v-row justify="start">
                 <v-col cols="6">
                   <p class="pb-3">Plot Background</p>
@@ -264,7 +280,7 @@
                 </v-col>
               </v-row>
 
-              <h3 class="mb-3">Title</h3>
+              <h4 class="mb-3">Title</h4>
               <v-row justify="start">
                 <v-col cols="6">
                   <p class="pb-3">Plot Title</p>
@@ -337,7 +353,7 @@
                 </v-col>
               </v-row>
 
-              <h3 class="mb-3">Visibility</h3>
+              <h4 class="mb-3">Visibility</h4>
               <v-row column>
                 <v-col cols="3">
                   <p class="py-4">Plot Title</p>
@@ -495,7 +511,7 @@ export default {
 }
 
 .uploadData {
-  border: 2px dashed;
+  border: 1px dashed;
   width: inherit;
 }
 </style>
