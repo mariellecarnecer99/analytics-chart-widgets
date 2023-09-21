@@ -103,7 +103,7 @@
                 </v-dialog>
               </v-col>
 
-              <v-col cols="5" v-if="chartType != 'pie' || modifiedType != 'pie'">
+              <!-- <v-col cols="5" v-if="chartType != 'pie' || modifiedType != 'pie'">
                 <p class="mb-3">Orientation</p>
                 <v-tabs
                   v-model="selectedOrientation"
@@ -121,7 +121,7 @@
                     {{ item.type }}
                   </v-tab>
                 </v-tabs>
-              </v-col>
+              </v-col> -->
 
               <!-- <v-col cols="4">
                 <p class="mb-3">X</p>
@@ -892,7 +892,14 @@ export default {
     desc: String,
     widgets: Object,
     selectedWidgets: Array,
-    chartData: Object
+    chartData: Object,
+    modifiedChart: String,
+    selectedOrientation: String,
+    datexFilter: Array,
+    dateyFilter: Array,
+    chartJson: Object,
+    uploadedData: Object,
+    serviceUrl: Object
   },
   data: () => {
     return {
@@ -965,17 +972,7 @@ export default {
       uploadedFile: null,
       dataUpload: null,
       seriesUpload: null,
-      selectedOrientation: null,
-      chartOrientation: [
-        {
-          type: 'Vertical',
-          value: 'vertical'
-        },
-        {
-          type: 'Horizontal',
-          value: 'horizontal'
-        }
-      ],
+      chartOrientation: null,
       isDataReady: false,
       dimensions: [],
       defaultCategory: null,
@@ -1052,6 +1049,92 @@ export default {
       handler(newOption) {
         this.description = newOption
       }
+    },
+    modifiedChart: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.modifiedType = newOption
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
+    },
+    selectedOrientation: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.chartOrientation = newOption
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
+    },
+    datexFilter: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.dataUpload = newOption
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
+    },
+    dateyFilter: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.seriesUpload = newOption
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
+    },
+    chartJson: {
+      handler(newOption) {
+        if (newOption != null) {
+          if (this.chartLib === 'eCharts') {
+            this.options = newOption
+            this.chartsConfig = newOption
+          }
+          if (this.chartLib === 'apexCharts') {
+            this.apexOptions = newOption
+            this.chartsConfig = newOption
+          }
+          if (this.chartLib === 'chartjs') {
+            this.datacollection = newOption
+            this.chartsConfig = newOption
+          }
+        }
+      }
+    },
+    uploadedData: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.getUniqueValues(
+            newOption.uploadFile,
+            newOption.uploadedCategory,
+            newOption.uploadedMetric
+          )
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
+    },
+    serviceUrl: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.getUniqueValues(
+            newOption.defaultFile,
+            newOption.defaultCategory,
+            newOption.defaultMetric
+          )
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
     }
   },
   mounted() {
@@ -1093,12 +1176,12 @@ export default {
       this.handleChartjsOptions()
     },
 
-    handleGetOrientation(val) {
-      this.selectedOrientation = val
-      this.handleOptions()
-      this.handleApexOptions()
-      this.handleChartjsOptions()
-    },
+    // handleGetOrientation(val) {
+    //   this.selectedOrientation = val
+    //   this.handleOptions()
+    //   this.handleApexOptions()
+    //   this.handleChartjsOptions()
+    // },
 
     handleOptions(val) {
       this.options = {
@@ -1118,13 +1201,13 @@ export default {
         tooltip: {},
         legend: {},
         xAxis: {
-          type: this.selectedOrientation === 'horizontal' ? 'value' : 'category',
+          type: this.chartOrientation === 'horizontal' ? 'value' : 'category',
           // boundaryGap: false,
           show: this.chartType === 'pie' ? this.tickLabelsSwitch === false : this.tickLabelsSwitch,
           data:
             this.chartType === 'pie'
               ? null
-              : this.selectedOrientation === 'horizontal'
+              : this.chartOrientation === 'horizontal'
               ? ''
               : this.dataUpload
               ? this.dataUpload
@@ -1147,12 +1230,12 @@ export default {
           }
         },
         yAxis: {
-          type: this.selectedOrientation === 'horizontal' ? 'category' : 'value',
+          type: this.chartOrientation === 'horizontal' ? 'category' : 'value',
           show: this.chartType === 'pie' ? this.tickLabelsSwitch === false : this.tickLabelsSwitch,
           data:
             this.chartType === 'pie'
               ? null
-              : this.selectedOrientation === 'horizontal'
+              : this.chartOrientation === 'horizontal'
               ? this.dataUpload
                 ? this.dataUpload
                 : [
@@ -1251,7 +1334,7 @@ export default {
         },
         plotOptions: {
           bar: {
-            horizontal: this.selectedOrientation === 'horizontal' ? true : false
+            horizontal: this.chartOrientation === 'horizontal' ? true : false
           }
         },
         stroke: {
@@ -1363,7 +1446,7 @@ export default {
           ]
         },
         options: {
-          indexAxis: this.selectedOrientation === 'horizontal' ? 'y' : 'x',
+          indexAxis: this.chartOrientation === 'horizontal' ? 'y' : 'x',
           responsive: true,
           maintainAspectRatio: false,
           lineTension: 1,
@@ -1698,34 +1781,37 @@ export default {
     },
 
     getUniqueValues(data, key, metric) {
-      this.getType(data, key, metric)
-      // Get data from selected dimension
-      const uniqueValuesSet = new Set()
-      for (const item of data) {
-        uniqueValuesSet.add(item[key])
-      }
-      this.dataUpload = Array.from(uniqueValuesSet)
+      // this.getType(data, key, metric)
+      console.log(data)
+      if (data != undefined) {
+        // Get data from selected dimension
+        const uniqueValuesSet = new Set()
+        for (const item of data) {
+          uniqueValuesSet.add(item[key])
+        }
+        this.dataUpload = Array.from(uniqueValuesSet)
 
-      // Get unique values
-      const uniqueValuesMap = new Map()
+        // Get unique values
+        const uniqueValuesMap = new Map()
 
-      for (const item of data) {
-        const keyValue = item[key]
-        if (!uniqueValuesMap.has(keyValue)) {
-          uniqueValuesMap.set(keyValue, { ...item })
-        } else {
-          const existingItem = uniqueValuesMap.get(keyValue)
-          if (metric in item) {
-            existingItem[metric] += item[metric]
+        for (const item of data) {
+          const keyValue = item[key]
+          if (!uniqueValuesMap.has(keyValue)) {
+            uniqueValuesMap.set(keyValue, { ...item })
+          } else {
+            const existingItem = uniqueValuesMap.get(keyValue)
+            if (metric in item) {
+              existingItem[metric] += item[metric]
+            }
           }
         }
+
+        this.uniqueValues = Array.from(uniqueValuesMap.values())
+
+        this.seriesUpload = this.uniqueValues.map((item) => {
+          return item[metric]
+        })
       }
-
-      this.uniqueValues = Array.from(uniqueValuesMap.values())
-
-      this.seriesUpload = this.uniqueValues.map((item) => {
-        return item[metric]
-      })
     },
 
     getType(data, key, metric) {

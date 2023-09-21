@@ -32,6 +32,13 @@
           :widgets="item"
           :selectedWidgets="widgets"
           :chartData="item.data"
+          :modifiedChart="item.i === specificItemId ? modifiedChart : null"
+          :selectedOrientation="item.i === specificItemId ? selectedOrientation : null"
+          :datexFilter="item.i === specificItemId ? xDates : null"
+          :dateyFilter="item.i === specificItemId ? yRandom : null"
+          :chartJson="item.i === specificItemId ? chartJson : null"
+          :uploadedData="item.i === specificItemId ? uploadedData : null"
+          :serviceUrl="item.i === specificItemId ? serviceUrl : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -60,15 +67,26 @@
             <v-expansion-panel>
               <v-expansion-panel-title>
                 <div>
-                  <v-icon color="primary" size="large">mdi-chart-box-outline</v-icon>
-                  <span class="ml-2">Chart</span>
+                  <div v-if="chartImg">
+                    <img :src="chartImg" style="width: 25px" />
+                    <span class="ml-2">{{ chartName }}</span>
+                  </div>
+
+                  <div v-else>
+                    <v-icon size="large">mdi-chart-box-outline</v-icon>
+                    <span class="ml-2"> Chart</span>
+                  </div>
                 </div>
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <div class="text-h2 pa-4">
                   <v-row no-gutters>
                     <v-col v-for="item in charts" class="mr-5 d-flex justify-center">
-                      <img :src="item.img" style="width: 25px; height: 25px" />
+                      <img
+                        :src="item.img"
+                        style="width: 25px; height: 25px"
+                        @click="handleChartChange(item)"
+                      />
                     </v-col>
                   </v-row>
                 </div>
@@ -91,6 +109,7 @@
                   :border="true"
                   color="primary"
                   density="comfortable"
+                  @click="handleGetOrientation(item.value)"
                 >
                   {{ item.type }}
                 </v-tab>
@@ -107,6 +126,7 @@
                 range
                 menu-class-name="dp-custom-menu"
                 teleport-center
+                @update:model-value="handleDates"
               />
             </v-col>
           </v-row>
@@ -115,19 +135,40 @@
               <p class="mb-2">Data Source</p>
               <v-row>
                 <v-col>
-                  <v-btn variant="outlined" color="primary" class="uploadData" :loading="isLoading"
+                  <v-btn
+                    variant="outlined"
+                    color="primary"
+                    class="uploadData"
+                    :loading="isLoading"
+                    @click="handleUploadedFile"
                     ><v-icon>mdi-upload</v-icon> Upload Data</v-btn
                   >
-                  <input ref="uploadedFile" class="d-none" type="file" accept=".csv" />
+                  <input
+                    ref="uploadedFile"
+                    class="d-none"
+                    type="file"
+                    accept=".csv"
+                    @change="onUploadChange"
+                  />
                 </v-col>
               </v-row>
               <v-row class="my-0">
                 <v-col class="pt-2 pb-0">
-                  <v-btn variant="text" color="primary" :loading="isSelecting"
+                  <v-btn
+                    variant="text"
+                    color="primary"
+                    :loading="isSelecting"
+                    @click="handleFileImport"
                     ><v-icon size="large">mdi-plus-circle-outline</v-icon>
                     <span class="ml-2">Blend Data</span></v-btn
                   >
-                  <input ref="uploader" class="d-none" type="file" accept=".csv" />
+                  <input
+                    ref="uploader"
+                    class="d-none"
+                    type="file"
+                    accept=".csv"
+                    @change="onFileChanged"
+                  />
                 </v-col>
               </v-row>
               <v-row class="my-0">
@@ -138,13 +179,19 @@
                     variant="outlined"
                     density="compact"
                     clearable
+                    @update:modelValue="getApiData"
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-row class="my-0">
                 <v-col class="pt-2 pb-0">
                   <p class="mb-2">JSON Editor</p>
-                  <Vue3JsonEditor v-model="chartsConfig" :expandedOnStart="true" mode="code" />
+                  <Vue3JsonEditor
+                    v-model="chartsConfig"
+                    :expandedOnStart="true"
+                    mode="code"
+                    @json-change="onJsonChange"
+                  />
                 </v-col>
               </v-row>
             </v-col>
@@ -154,18 +201,27 @@
               <p class="mb-2">
                 Preview Chart
                 <span
-                  ><v-btn class="ml-3" size="small" color="primary"
+                  ><v-btn
+                    class="ml-3"
+                    size="small"
+                    color="primary"
+                    @click="handleDownloadChart(specificItemId)"
                     ><v-icon class="mr-1">mdi-download-outline</v-icon>Download</v-btn
                   >
                 </span>
               </p>
+              <PluggableWidget
+                :chartLib="selectedChartLib"
+                :option="chartsConfig"
+                :id="specificItemId"
+              />
             </v-col>
           </v-row>
           <v-row class="my-0">
             <v-col>
               <p class="mb-2">Insert code into website</p>
               <v-textarea
-                model-value="<chart-widget id='${chartId}'></chart-widget>"
+                :model-value="`<chart-widget id='${specificItemId}'></chart-widget>`"
                 id="tocopy"
                 variant="outlined"
                 density="compact"
@@ -407,6 +463,10 @@ import bar from './assets/bar.png'
 import pie from './assets/pie.png'
 import scatter from './assets/scatter.png'
 import table from './assets/table.png'
+import moment from 'moment'
+import domtoimage from 'dom-to-image'
+import { saveAs } from 'file-saver'
+import axios from 'axios'
 export default {
   components: {
     ChartData,
@@ -478,7 +538,20 @@ export default {
           value: 'table',
           img: table
         }
-      ]
+      ],
+      chartImg: null,
+      chartName: null,
+      modifiedChart: null,
+      specificItemId: null,
+      xDates: null,
+      yRandom: null,
+      chartJson: null,
+      uploadFile: [],
+      defaultCategory: null,
+      defaultMetric: null,
+      uploadedData: {},
+      serviceUrl: {},
+      selectedChartLib: null
     }
   },
   props: {
@@ -520,6 +593,9 @@ export default {
     },
 
     handleSelectedChart(id) {
+      this.specificItemId = id
+      this.handleChartJson(id)
+      this.handleChartLib(id)
       const selectedChart = document.querySelectorAll('.active')
 
       for (let i = 0; i < selectedChart.length; i++) {
@@ -531,6 +607,196 @@ export default {
       for (let i = 0; i < deleteBtn.length; i++) {
         deleteBtn[i].style.display = `${i === id ? 'block' : 'none'}`
       }
+    },
+
+    handleChartLib(id) {
+      const targetObject = this.widgets.find((item) => item.i === id)
+      this.selectedChartLib = targetObject?.selectedLib
+    },
+
+    handleChartChange(val) {
+      this.chartImg = val.img
+      this.chartName = val.type
+      this.modifiedChart = val.value
+    },
+
+    handleGetOrientation(val) {
+      this.selectedOrientation = val
+    },
+
+    handleDates(date) {
+      if (date) {
+        const dateMapped = date.map((item) => {
+          return moment(item).format('L')
+        })
+        this.getDaysBetweenDates(dateMapped)
+      }
+    },
+
+    getDaysBetweenDates(dates) {
+      const resultObject = {
+        startDate: dates[0],
+        endDate: dates[1]
+      }
+
+      const newDates = []
+      const randomNumbers = []
+      const currDate = moment(resultObject.startDate).startOf('day')
+      const lastDate = moment(resultObject.endDate).startOf('day')
+
+      while (currDate.clone().isSameOrBefore(lastDate)) {
+        newDates.push(currDate.format('L'))
+        currDate.add(1, 'days')
+        this.xDates = newDates
+        randomNumbers.push(Math.round(Math.random() * 100))
+        this.yRandom = randomNumbers
+      }
+      return newDates
+    },
+
+    handleDownloadChart(id) {
+      domtoimage.toBlob(document.getElementById('chart' + id)).then(function (blob) {
+        window.saveAs(blob, 'my-chart.png')
+      })
+    },
+
+    handleChartJson(id) {
+      const targetObject = this.widgets.find((item) => item.i === id)
+      this.chartsConfig = targetObject?.data
+    },
+
+    onJsonChange(e) {
+      this.chartJson = e
+    },
+
+    handleUploadedFile() {
+      this.isLoading = true
+
+      window.addEventListener(
+        'focus',
+        () => {
+          this.isLoading = false
+        },
+        { once: true }
+      )
+
+      this.$refs.uploadedFile.click()
+    },
+
+    onUploadChange(e) {
+      try {
+        var reader = new FileReader()
+        reader.readAsBinaryString(e.target.files[0])
+        reader.onload = (e) => {
+          var jsonData = []
+          var headers = []
+          var rows = e.target.result.split('\r\n')
+          for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].split(',')
+            var rowData = {}
+            for (var j = 0; j < cells.length; j++) {
+              if (i == 0) {
+                var headerName = cells[j].trim()
+                headers.push(headerName)
+              } else {
+                var key = headers[j]
+                if (key) {
+                  rowData[key] = cells[j].trim()
+                }
+              }
+            }
+            //skip the first row (header) data
+            if (i != 0) {
+              this.uploadFile.push(rowData)
+            }
+          }
+
+          // Get dimensions
+          const allKeys = new Set()
+          for (const item of this.uploadFile) {
+            const keys = Object.keys(item)
+            keys.forEach((key) => allKeys.add(key))
+          }
+          const dimensions = Array.from(allKeys)
+          const keyToFind = 'createdAt'
+          const index = dimensions.indexOf(keyToFind)
+
+          this.defaultCategory = dimensions[index]
+          this.defaultMetric = dimensions[1]
+
+          this.uploadedData = {
+            uploadFile: this.uploadFile,
+            uploadedCategory: this.defaultCategory,
+            uploadedMetric: this.defaultMetric
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    },
+
+    handleFileImport() {
+      this.isSelecting = true
+
+      window.addEventListener(
+        'focus',
+        () => {
+          this.isSelecting = false
+        },
+        { once: true }
+      )
+
+      this.$refs.uploader.click()
+    },
+
+    onFileChanged(e) {
+      // this.selectedFile = e.target.files[0]
+      // this.getRandomColor()
+      // const reader = new FileReader()
+      // reader.onload = (e) => {
+      //   this.selectedFile = JSON.parse(e.target.result)
+      //   this.apexOptions.xaxis.categories = this.selectedFile.map((row) => row['label'])
+      //   this.options.xAxis.data = this.selectedFile.map((row) => row['label'])
+      //   const blendData = {
+      //     name: this.seriesName,
+      //     color: '#' + this.randomColor,
+      //     data: this.selectedFile,
+      //     type: this.modifiedType ? this.modifiedType : this.chartType
+      //   }
+      //   this.options.series.push(blendData)
+      //   this.apexOptions.series.push(blendData)
+      // }
+      // reader.readAsText(e.target.files[0])
+    },
+
+    getApiData(api) {
+      axios
+        .get(api)
+        .then((response) => {
+          const responseData = response.data
+          this.apiData = responseData
+
+          // Get dimensions
+          const allKeys = new Set()
+          for (const item of responseData) {
+            const keys = Object.keys(item)
+            keys.forEach((key) => allKeys.add(key))
+          }
+          const dimensions = Array.from(allKeys)
+          const keyToFind = 'createdAt'
+          const index = dimensions.indexOf(keyToFind)
+
+          this.defaultCategory = dimensions[index]
+          this.defaultMetric = dimensions[4]
+
+          this.serviceUrl = {
+            defaultFile: responseData,
+            defaultCategory: this.defaultCategory,
+            defaultMetric: this.defaultMetric
+          }
+        })
+        .catch(() => {})
+        .finally()
     }
   }
 }
