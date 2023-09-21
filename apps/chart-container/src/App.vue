@@ -39,6 +39,18 @@
           :chartJson="item.i === specificItemId ? chartJson : null"
           :uploadedData="item.i === specificItemId ? uploadedData : null"
           :serviceUrl="item.i === specificItemId ? serviceUrl : null"
+          :bgColor="item.i === specificItemId ? gridColor : null"
+          :bgSwitch="item.i === specificItemId ? gridLinesSwitch : false"
+          :chartFont="item.i === specificItemId ? fontType : null"
+          :chartFontSize="item.i === specificItemId ? fontSize : null"
+          :chartFontColor="item.i === specificItemId ? labelColor : null"
+          :chartPlotTitle="item.i === specificItemId ? mainTitle : null"
+          :chartPlotTitleSwitch="item.i === specificItemId ? titleSwitch : false"
+          :chartPlotTitleFont="item.i === specificItemId ? titleFontType : null"
+          :chartPlotTitleFontSize="item.i === specificItemId ? titleFontSize : null"
+          :chartPlotTitleFontColor="item.i === specificItemId ? titleColor : null"
+          :chartTickLabelsSwitch="item.i === specificItemId ? tickLabelsSwitch : null"
+          :chartTickMarkersSwitch="item.i === specificItemId ? tickMarkersSwitch : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -803,18 +815,6 @@ export default {
 </script>
 
 <style scoped>
-/* .layoutJSON {
-  background: #ddd;
-  border: 1px solid black;
-  margin-top: 10px;
-  padding: 10px;
-}
-
-.vue-grid-item:not(.vue-grid-placeholder) {
-  border: 1px solid black;
-  padding: 65px 0 35px 0;
-} */
-
 .vue-grid-item.resizing {
   opacity: 0.9;
 }

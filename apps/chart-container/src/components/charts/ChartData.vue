@@ -43,7 +43,7 @@
     <v-icon color="#676767" @click="previewDialog = !previewDialog">mdi-eye</v-icon>
   </div> -->
   <div class="toolbox-dialog">
-    <v-dialog v-model="editDialog" width="750px" style="z-index: 0">
+    <!-- <v-dialog v-model="editDialog" width="750px" style="z-index: 0">
       <v-card>
         <v-card-text>
           <v-row justify="space-between">
@@ -103,7 +103,7 @@
                 </v-dialog>
               </v-col>
 
-              <!-- <v-col cols="5" v-if="chartType != 'pie' || modifiedType != 'pie'">
+              <v-col cols="5" v-if="chartType != 'pie' || modifiedType != 'pie'">
                 <p class="mb-3">Orientation</p>
                 <v-tabs
                   v-model="selectedOrientation"
@@ -121,9 +121,9 @@
                     {{ item.type }}
                   </v-tab>
                 </v-tabs>
-              </v-col> -->
+              </v-col>
 
-              <!-- <v-col cols="4">
+              <v-col cols="4">
                 <p class="mb-3">X</p>
                 <v-select
                   v-model="xAxisData"
@@ -145,7 +145,7 @@
                   density="compact"
                   @update:modelValue="selectedYaxisData"
                 ></v-select>
-              </v-col> -->
+              </v-col>
             </v-row>
 
             <v-row>
@@ -175,7 +175,6 @@
                   ><v-icon>mdi-upload</v-icon> Upload Data</v-btn
                 >
 
-                <!-- Create a File Input that will be hidden but triggered with JavaScript -->
                 <input
                   ref="uploadedFile"
                   class="d-none"
@@ -183,17 +182,16 @@
                   accept=".csv"
                   @change="onUploadChange"
                 />
-                <!-- <v-btn
+                <v-btn
                   class="mr-3"
                   color="primary"
                   @click="handleNumberOfSeries"
                   ><v-icon>mdi-plus</v-icon> Add Series</v-btn
-                > -->
+                >
                 <v-btn color="primary" size="large" :loading="isSelecting" @click="handleFileImport"
                   ><v-icon>mdi-plus</v-icon> Blend Data</v-btn
                 >
 
-                <!-- Create a File Input that will be hidden but triggered with JavaScript -->
                 <input
                   ref="uploader"
                   class="d-none"
@@ -328,7 +326,7 @@
               </div>
             </div>
 
-            <!-- <v-table
+            <v-table
               v-if="this.options.series.length != 0"
               fixed-header
               height="250px"
@@ -510,13 +508,13 @@
                   </td>
                 </tr>
               </tbody>
-            </v-table> -->
+            </v-table>
           </v-container>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
-    <v-dialog v-model="jsonConfigDialog" width="750px" style="z-index: 0">
+    <!-- <v-dialog v-model="jsonConfigDialog" width="750px" style="z-index: 0">
       <v-card>
         <v-card-text>
           <v-row justify="space-between">
@@ -541,9 +539,9 @@
           </v-container>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
-    <v-dialog v-model="appearanceDialog" width="750px" style="z-index: 0">
+    <!-- <v-dialog v-model="appearanceDialog" width="750px" style="z-index: 0">
       <v-card>
         <v-card-text>
           <v-row>
@@ -783,7 +781,7 @@
                 <v-switch v-model="tickMarkersSwitch"></v-switch>
               </v-col>
 
-              <!-- <v-col>
+              <v-col>
                 <p class="pa-3">Tooltips</p>
               </v-col>
               <v-col>
@@ -794,14 +792,14 @@
               </v-col>
               <v-col>
                 <v-switch v-model="toogleSwitch"></v-switch>
-              </v-col> -->
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
-    <v-dialog v-model="embedDialog" width="500px" style="z-index: 0">
+    <!-- <v-dialog v-model="embedDialog" width="500px" style="z-index: 0">
       <v-card>
         <v-card-text>
           <v-row justify="space-between">
@@ -824,9 +822,9 @@
           ></v-textarea>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
-    <v-dialog v-model="previewDialog" width="750px" style="z-index: 0">
+    <!-- <v-dialog v-model="previewDialog" width="750px" style="z-index: 0">
       <v-card>
         <v-card-text>
           <v-row justify="space-between">
@@ -843,7 +841,7 @@
           <PluggableWidget :chartLib="chartLib" :option="chartsConfig" :id="chartId" />
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -899,7 +897,19 @@ export default {
     dateyFilter: Array,
     chartJson: Object,
     uploadedData: Object,
-    serviceUrl: Object
+    serviceUrl: Object,
+    bgColor: String,
+    bgSwitch: Boolean,
+    chartFont: String,
+    chartFontSize: String,
+    chartFontColor: String,
+    chartPlotTitle: String,
+    chartPlotTitleSwitch: Boolean,
+    chartPlotTitleFont: String,
+    chartPlotTitleFontSize: String,
+    chartPlotTitleFontColor: String,
+    chartTickLabelsSwitch: Boolean,
+    chartTickMarkersSwitch: Boolean
   },
   data: () => {
     return {
@@ -921,20 +931,20 @@ export default {
       modifiedType: null,
       numofseries: 1,
       color: '#1976D2FF',
-      gridColor: '#ccc',
-      fontType: 'sans-serif',
-      titleFontType: 'sans-serif',
-      titleFontSize: 18,
+      gridColor: null,
+      fontType: null,
+      titleFontType: null,
+      titleFontSize: null,
       titlePosition: 'right',
-      mainTitle: 'My Chart',
+      mainTitle: null,
       xAxisData: [],
-      titleSwitch: false,
-      tickLabelsSwitch: true,
-      tickMarkersSwitch: false,
-      gridLinesSwitch: false,
-      fontSize: 12,
-      labelColor: '#333',
-      titleColor: '#333',
+      titleSwitch: null,
+      tickLabelsSwitch: null,
+      tickMarkersSwitch: null,
+      gridLinesSwitch: null,
+      fontSize: null,
+      labelColor: null,
+      titleColor: null,
       xCategories: ['Days', 'Number', 'Category', 'Time'],
       yAxisData: [],
       yCategories: ['Default', 'Days', 'Precipitation', 'Temperature', 'Category'],
@@ -1026,14 +1036,14 @@ export default {
       description: null
     }
   },
-  computed: {
-    getGridColor() {
-      const { gridColor } = this
-      this.handleOptions()
-      this.handleApexOptions()
-      return gridColor
-    }
-  },
+  // computed: {
+  //   getGridColor() {
+  //     const { gridColor } = this
+  //     this.handleOptions()
+  //     this.handleApexOptions()
+  //     return gridColor
+  //   }
+  // },
   watch: {
     selectedDates: [
       {
@@ -1134,6 +1144,102 @@ export default {
           this.handleApexOptions()
           this.handleChartjsOptions()
         }
+      }
+    },
+    bgColor: {
+      handler(newOption) {
+        this.gridColor = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    bgSwitch: {
+      handler(newOption) {
+        this.gridLinesSwitch = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartFont: {
+      handler(newOption) {
+        this.fontType = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartFontSize: {
+      handler(newOption) {
+        this.fontSize = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartFontColor: {
+      handler(newOption) {
+        this.labelColor = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartPlotTitle: {
+      handler(newOption) {
+        this.mainTitle = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartPlotTitleSwitch: {
+      handler(newOption) {
+        this.titleSwitch = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartPlotTitleFont: {
+      handler(newOption) {
+        this.titleFontType = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartPlotTitleFontSize: {
+      handler(newOption) {
+        this.titleFontSize = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartPlotTitleFontColor: {
+      handler(newOption) {
+        this.titleColor = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartTickLabelsSwitch: {
+      handler(newOption) {
+        this.tickLabelsSwitch = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+    },
+    chartTickMarkersSwitch: {
+      handler(newOption) {
+        this.tickMarkersSwitch = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
       }
     }
   },
@@ -1782,7 +1888,6 @@ export default {
 
     getUniqueValues(data, key, metric) {
       // this.getType(data, key, metric)
-      console.log(data)
       if (data != undefined) {
         // Get data from selected dimension
         const uniqueValuesSet = new Set()
