@@ -4,7 +4,7 @@ A great plugin which you can fully customize different charts and be able to gen
 
 ## Demo
 
-[Have fun!] (https://analytics-chart-widgets-dashboard.vercel.app/)
+[Have fun!](https://analytics-chart-widgets-dashboard.vercel.app)
 
 ## Project setup
 
