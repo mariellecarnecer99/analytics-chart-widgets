@@ -20,7 +20,12 @@ npm i analytics-chart-widgets
 
 ### Usage
 
-## Features List
+    import AnalyticsChartWidgets from 'analytics-chart-widgets';
+    import 'analytics-chart-widgets/dashboard/dist/index-31637949.js'
+
+    Vue.component('analytics-chart-widgets', AnalyticsChartWidgets);
+
+## Features
 
 - Can add more than one chart(with different charting libraries) in your reports
 - Can edit your charts simultaneously
