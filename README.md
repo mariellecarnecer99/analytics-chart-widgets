@@ -6,6 +6,12 @@ A great plugin which you can fully customize different charts and be able to gen
 
 ### Installation
 
+**Using yarn**
+yarn add analytics-chart-widgets
+
+**Using npm**
+npm i analytics-chart-widgets
+
 ### Usage
 
 ## Features List
