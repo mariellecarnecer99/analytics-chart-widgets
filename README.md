@@ -2,6 +2,10 @@
 
 A great plugin which you can fully customize different charts and be able to generate a code which can be embedded to any website
 
+## Demo
+
+[Have fun!] (https://analytics-chart-widgets-dashboard.vercel.app/)
+
 ## Project setup
 
 ### Installation
@@ -18,23 +22,23 @@ npm i analytics-chart-widgets
 
 ## Features List
 
-- You can add more than one chart(with different charting libraries) in your reports.
-- You can edit your charts simultaneously
-- You can add your own data for the charts
+- Can add more than one chart(with different charting libraries) in your reports
+- Can edit your charts simultaneously
+- Can add your own data for the charts
   - Upload data source(csv)
   - Input service url
   - Blend data
 - Date control filter for each charts
 - Date control that filter out all the configured charts
 - JSON editor for each charts
-- You can add styles to your charts
+- Can add styles to your charts
 - Preview configured chart
 - Download chart as image
-- You will have a full control of your data and controls
+- Will have a full control of your chart data and controls
   - Date range control
   - Chart title
   - Chart description
-- You can embed your chart/report into your website
+- Can embed your chart/report into your website
 - Charts can be draggable and resizable
 - Reports Dashboard
   - Can add, edit and delete report
