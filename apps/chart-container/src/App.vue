@@ -38,6 +38,8 @@
           :dateyFilter="item.i === specificItemId ? yRandom : null"
           :chartJson="item.i === specificItemId ? chartJson : null"
           :uploadedData="item.i === specificItemId ? uploadedData : null"
+          :selectedDimensions="item.i === specificItemId ? selectedDimensions : null"
+          :selectedMetrics="item.i === specificItemId ? selectedMetrics : null"
           :serviceUrl="item.i === specificItemId ? serviceUrl : null"
           :bgColor="item.i === specificItemId ? gridColor : null"
           :bgSwitch="item.i === specificItemId ? gridLinesSwitch : false"
@@ -183,6 +185,123 @@
                   />
                 </v-col>
               </v-row>
+
+              <div v-if="uploadFile.length != 0" class="concept-type">
+                <div class="mt-4">
+                  <p class="mb-3">Dimension</p>
+                  <v-select
+                    v-model="defaultCategory"
+                    :items="dimensions"
+                    item-title="type"
+                    item-value="value"
+                    return-object
+                    density="compact"
+                    variant="outlined"
+                    @update:modelValue="selectedDimension"
+                  >
+                    <template v-slot:prepend>
+                      <v-icon v-on:click="dimensionMenu = !dimensionMenu">mdi-pencil</v-icon>
+                      <v-dialog
+                        v-model="dimensionMenu"
+                        transition="dialog-bottom-transition"
+                        width="450px"
+                        style="z-index: 0"
+                      >
+                        <v-card>
+                          <v-toolbar
+                            color="primary"
+                            :title="newCatName ? newCatName : defaultCategory"
+                          ></v-toolbar>
+                          <v-card-text>
+                            <v-text-field
+                              v-model="newCatName"
+                              label="Name"
+                              variant="outlined"
+                              density="compact"
+                              class="mt-3"
+                            ></v-text-field>
+                            <i v-if="newCatName" class="mt-0"
+                              >Source field: {{ defaultCategory }}</i
+                            >
+                            <v-select
+                              v-model="dimensionsemanticType"
+                              :items="semanticTypes"
+                              item-title="type"
+                              item-value="value"
+                              return-object
+                              label="Type"
+                              density="compact"
+                              variant="outlined"
+                              @update:modelValue="getSemanticType"
+                            >
+                            </v-select>
+                          </v-card-text>
+                        </v-card>
+                      </v-dialog>
+                    </template>
+                  </v-select>
+                </div>
+
+                <div class="mt-4">
+                  <p class="mb-3">Metric</p>
+                  <v-select
+                    v-model="defaultMetric"
+                    :items="dimensions"
+                    item-title="type"
+                    item-value="value"
+                    return-object
+                    density="compact"
+                    variant="outlined"
+                    @update:modelValue="selectedMetric"
+                  >
+                    <template v-slot:prepend>
+                      <v-icon v-on:click="metricMenu = !metricMenu">mdi-pencil</v-icon>
+                      <v-dialog
+                        v-model="metricMenu"
+                        transition="dialog-bottom-transition"
+                        width="450px"
+                        style="z-index: 0"
+                      >
+                        <v-card>
+                          <v-toolbar
+                            color="primary"
+                            :title="newMetricName ? newMetricName : defaultMetric"
+                          ></v-toolbar>
+                          <v-card-text>
+                            <v-text-field
+                              v-model="newMetricName"
+                              label="Name"
+                              variant="outlined"
+                              density="compact"
+                              class="mt-3"
+                            ></v-text-field>
+                            <i v-if="newMetricName" class="mt-0"
+                              >Source field: {{ defaultMetric }}</i
+                            >
+
+                            <p>Aggregation</p>
+                            <v-checkbox v-model="aggregationType" label="Count"></v-checkbox>
+
+                            <v-select
+                              v-model="metricsemanticType"
+                              :items="semanticTypes"
+                              item-title="type"
+                              item-value="value"
+                              return-object
+                              label="Type"
+                              density="compact"
+                              variant="outlined"
+                              @update:modelValue="getSemanticType"
+                            >
+                            </v-select>
+                          </v-card-text>
+                        </v-card>
+                      </v-dialog>
+                    </template>
+                  </v-select>
+                </div>
+              </div>
+
               <v-row class="my-0">
                 <v-col class="pt-2 pb-0">
                   <v-text-field
@@ -563,7 +682,18 @@ export default {
       defaultMetric: null,
       uploadedData: {},
       serviceUrl: {},
-      selectedChartLib: null
+      selectedChartLib: null,
+      dimensions: [],
+      selectedDimensions: {},
+      selectedMetrics: {},
+      dimensionMenu: false,
+      metricMenu: false,
+      newCatName: null,
+      newMetricName: null,
+      dimensionsemanticType: null,
+      semanticTypes: ['Text', 'Numeric'],
+      aggregationType: true,
+      metricsemanticType: null
     }
   },
   props: {
@@ -696,9 +826,10 @@ export default {
     },
 
     onUploadChange(e) {
+      this.uploadFile = e.target.files[0]
       try {
         var reader = new FileReader()
-        reader.readAsBinaryString(e.target.files[0])
+        reader.readAsBinaryString(this.uploadFile)
         reader.onload = (e) => {
           var jsonData = []
           var headers = []
@@ -719,25 +850,25 @@ export default {
             }
             //skip the first row (header) data
             if (i != 0) {
-              this.uploadFile.push(rowData)
+              jsonData.push(rowData)
             }
           }
 
           // Get dimensions
           const allKeys = new Set()
-          for (const item of this.uploadFile) {
+          for (const item of jsonData) {
             const keys = Object.keys(item)
             keys.forEach((key) => allKeys.add(key))
           }
-          const dimensions = Array.from(allKeys)
+          this.dimensions = Array.from(allKeys)
           const keyToFind = 'createdAt'
-          const index = dimensions.indexOf(keyToFind)
+          const index = this.dimensions.indexOf(keyToFind)
 
-          this.defaultCategory = dimensions[index]
-          this.defaultMetric = dimensions[1]
+          this.defaultCategory = this.dimensions[index]
+          this.defaultMetric = this.dimensions[1]
 
           this.uploadedData = {
-            uploadFile: this.uploadFile,
+            uploadFile: jsonData,
             uploadedCategory: this.defaultCategory,
             uploadedMetric: this.defaultMetric
           }
@@ -745,6 +876,28 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    },
+
+    selectedDimension(e) {
+      this.selectedDimensions = {
+        uploadFile: this.uploadFile,
+        uploadedCategory: e,
+        uploadedMetric: this.defaultMetric
+      }
+      // this.getUniqueValues(this.uploadedFile, e, this.defaultMetric)
+    },
+
+    selectedMetric(e) {
+      // this.getUniqueValues(this.uploadedFile, this.defaultCategory, e)
+      this.selectedMetrics = {
+        uploadFile: this.uploadFile,
+        uploadedCategory: this.defaultCategory,
+        uploadedMetric: e
+      }
+    },
+
+    getSemanticType(e) {
+      this.dimensionsemanticType = e.value
     },
 
     handleFileImport() {

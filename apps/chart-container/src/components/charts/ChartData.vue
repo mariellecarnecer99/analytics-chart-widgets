@@ -20,7 +20,6 @@
     class="py-8"
     variant="plain"
     density="compact"
-    autofocus
     placeholder="Chart Title"
     @input="handleChangedTitle"
   ></v-text-field>
@@ -30,7 +29,6 @@
     class="py-8"
     variant="plain"
     density="compact"
-    autofocus
     placeholder="Chart Description"
     @input="handleChangedDesc"
   ></v-text-field>
@@ -897,6 +895,8 @@ export default {
     dateyFilter: Array,
     chartJson: Object,
     uploadedData: Object,
+    selectedDimensions: Object,
+    selectedMetrics: Object,
     serviceUrl: Object,
     bgColor: String,
     bgSwitch: Boolean,
@@ -1119,6 +1119,34 @@ export default {
       }
     },
     uploadedData: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.getUniqueValues(
+            newOption.uploadFile,
+            newOption.uploadedCategory,
+            newOption.uploadedMetric
+          )
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
+    },
+    selectedDimensions: {
+      handler(newOption) {
+        if (newOption != null) {
+          this.getUniqueValues(
+            newOption.uploadFile,
+            newOption.uploadedCategory,
+            newOption.uploadedMetric
+          )
+          this.handleOptions()
+          this.handleApexOptions()
+          this.handleChartjsOptions()
+        }
+      }
+    },
+    selectedMetrics: {
       handler(newOption) {
         if (newOption != null) {
           this.getUniqueValues(
