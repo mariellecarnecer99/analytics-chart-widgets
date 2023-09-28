@@ -22,12 +22,7 @@ const routes = [
     path: '/report/:id',
     name: 'Edit Report',
     component: () => import('../../../chart-container/src/layouts/default/Default.vue'),
-  },
-  // {
-  //   path: '/report/:id/preview',
-  //   name: 'Preview Report',
-  //   component: () => import('../../../chart-container/src/layouts/default/PreviewReport.vue'),
-  // },
+  }
 ]
 
 const router = createRouter({
