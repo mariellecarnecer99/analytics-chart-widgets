@@ -28,7 +28,6 @@
           :control="item.selectedControl"
           :selectedChartsLength="widgets.length"
           :chartTitle="title"
-          :desc="description"
           :widgets="item"
           :selectedWidgets="widgets"
           :chartData="item.data"
@@ -575,7 +574,6 @@ export default {
   data: () => {
     return {
       title: null,
-      description: null,
       drawer: false,
       tab: null,
       chartOrientation: [
@@ -694,7 +692,6 @@ export default {
       getReport(e)
         .then((response) => {
           this.title = response.data.name
-          this.description = response.data.description
         })
         .catch(() => {})
         .finally()

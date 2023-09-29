@@ -10,7 +10,6 @@
         :key="i"
         :value="item"
         :title="item.name"
-        :subtitle="item.description"
         prepend-icon="mdi-file"
         color="primary"
         class="reportsList"

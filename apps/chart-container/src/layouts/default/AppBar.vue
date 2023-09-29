@@ -92,7 +92,6 @@
                 :selectedChartsLength="widgets.length"
                 :preview="previewDialog"
                 :chartTitle="mainTitle"
-                :desc="description"
                 :widgets="item"
                 :selectedWidgets="widgets"
                 :chartData="item.data"
@@ -212,10 +211,9 @@ import html2canvas from 'html2canvas'
 import { useSelectedChart } from '../../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 const store = useSelectedChart()
-const { fetchChartOptions, title, desc } = storeToRefs(store)
+const { fetchChartOptions, title } = storeToRefs(store)
 const getChartOptions = fetchChartOptions
 const getChartTitle = title
-const getChartDesc = desc
 import { getReport, addReport, updateReport } from '../../../../dashboard/src/services/reports'
 export default {
   name: 'AppBar',
@@ -231,7 +229,6 @@ export default {
       chartDataType: null,
       dialog: false,
       mainTitle: null,
-      description: null,
       layout: [],
       index: 0,
       selectedChartLibrary: null,
@@ -319,13 +316,8 @@ export default {
           icon: 'mdi-calendar-range'
         },
         {
-          name: 'Chart Title',
-          value: 'title',
-          icon: 'mdi-text-recognition'
-        },
-        {
-          name: 'Chart Description',
-          value: 'description',
+          name: 'Text',
+          value: 'text',
           icon: 'mdi-text-recognition'
         }
       ],
@@ -335,9 +327,7 @@ export default {
       modifiedOptions: [],
       embedAll: false,
       title: getChartTitle,
-      desc: getChartDesc,
-      chartTitle: null,
-      chartDesc: null
+      chartTitle: null
     }
   },
   watch: {
@@ -349,11 +339,6 @@ export default {
     title: [
       {
         handler: 'handleChartTitle'
-      }
-    ],
-    desc: [
-      {
-        handler: 'handleChartDesc'
       }
     ]
   },
@@ -375,10 +360,6 @@ export default {
   methods: {
     handleChartTitle(data) {
       this.chartTitle = data
-    },
-
-    handleChartDesc(data) {
-      this.chartDesc = data
     },
 
     copyText() {
@@ -426,7 +407,6 @@ export default {
       if (!this.$route.params.id) {
         addReport({
           name: this.chartTitle,
-          description: this.chartDesc,
           widgetCount: this.widgets.length,
           widgets: this.widgets
         })
@@ -444,7 +424,6 @@ export default {
         }
         updateReport(this.$route.params.id, {
           name: this.title,
-          description: this.desc,
           widgetCount: this.widgets.length,
           widgets: this.widgets
         })
@@ -461,7 +440,6 @@ export default {
         .then((response) => {
           this.widgets.push(...response.data.widgets)
           this.mainTitle = response.data.name
-          this.description = response.data.description
         })
         .catch(() => {})
         .finally()

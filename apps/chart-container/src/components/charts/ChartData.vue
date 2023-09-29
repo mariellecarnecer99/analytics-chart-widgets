@@ -15,22 +15,12 @@
   />
   <DateRange v-if="control === 'daterange'" />
   <v-text-field
-    v-if="control === 'title'"
+    v-if="control === 'text'"
     v-model="title"
     class="py-8"
     variant="plain"
     density="compact"
-    placeholder="Chart Title"
     @input="handleChangedTitle"
-  ></v-text-field>
-  <v-text-field
-    v-if="control === 'description'"
-    v-model="description"
-    class="py-8"
-    variant="plain"
-    density="compact"
-    placeholder="Chart Description"
-    @input="handleChangedDesc"
   ></v-text-field>
   <!-- <div v-if="!control && !preview" class="custom-toolbox">
     <v-icon color="#676767" @click="editDialog = !editDialog">mdi-pencil-outline</v-icon>
@@ -885,7 +875,6 @@ export default {
     selectedChartsLength: Number,
     preview: Boolean,
     chartTitle: String,
-    desc: String,
     widgets: Object,
     selectedWidgets: Array,
     chartData: Object,
@@ -1032,8 +1021,7 @@ export default {
       apiData: null,
       chartsConfig: null,
       selectedApi: null,
-      title: null,
-      description: null
+      title: null
     }
   },
   // computed: {
@@ -1053,11 +1041,6 @@ export default {
     chartTitle: {
       handler(newOption) {
         this.title = newOption
-      }
-    },
-    desc: {
-      handler(newOption) {
-        this.description = newOption
       }
     },
     modifiedChart: {
@@ -1273,7 +1256,6 @@ export default {
   },
   mounted() {
     this.title = this.chartTitle
-    this.description = this.desc
     // this.handleOptions()
     // this.handleApexOptions()
     // this.handleChartjsOptions()
@@ -1297,10 +1279,6 @@ export default {
 
     handleChangedTitle(event) {
       store.getChartTitle(event.target.value)
-    },
-
-    handleChangedDesc(event) {
-      store.getChartDesc(event.target.value)
     },
 
     handleSelectedChart(val) {
