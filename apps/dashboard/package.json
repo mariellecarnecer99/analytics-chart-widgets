@@ -22,6 +22,7 @@
     "dom-to-image": "^2.6.0",
     "echarts": "^5.4.3",
     "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
     "http-server": "^14.1.1",
     "moment": "^2.29.4",
     "pinia": "^2.1.6",

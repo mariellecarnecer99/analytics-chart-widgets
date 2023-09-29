@@ -108,31 +108,9 @@
             </v-expansion-panel>
           </v-expansion-panels>
 
-          <v-row>
-            <v-col>
-              <p class="mt-5 mb-2">Orientation</p>
-              <v-tabs
-                v-model="selectedOrientation"
-                fixed-tabs
-                active-class="active-tab white--text"
-              >
-                <v-tab
-                  v-for="item in chartOrientation"
-                  :key="item.value"
-                  :value="item.value"
-                  :border="true"
-                  color="primary"
-                  density="comfortable"
-                  @click="handleGetOrientation(item.value)"
-                >
-                  {{ item.type }}
-                </v-tab>
-              </v-tabs>
-            </v-col>
-          </v-row>
           <v-row class="my-0">
             <v-col>
-              <p class="mb-2">Date control filter</p>
+              <p class="pt-3 mb-2">Default date control</p>
               <VueDatePicker
                 v-model="dateControl"
                 placeholder="Select Date"
@@ -314,38 +292,6 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <v-row class="my-0">
-                <v-col class="pt-2 pb-0">
-                  <p class="mb-2">JSON Editor</p>
-                  <Vue3JsonEditor
-                    v-model="chartsConfig"
-                    :expandedOnStart="true"
-                    mode="code"
-                    @json-change="onJsonChange"
-                  />
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-          <v-row class="my-0">
-            <v-col>
-              <p class="mb-2">
-                Preview Chart
-                <span
-                  ><v-btn
-                    class="ml-3"
-                    size="small"
-                    color="primary"
-                    @click="handleDownloadChart(specificItemId)"
-                    ><v-icon class="mr-1">mdi-download-outline</v-icon>Download</v-btn
-                  >
-                </span>
-              </p>
-              <PluggableWidget
-                :chartLib="selectedChartLib"
-                :option="chartsConfig"
-                :id="specificItemId"
-              />
             </v-col>
           </v-row>
           <v-row class="my-0">
@@ -367,6 +313,29 @@
           <v-row>
             <v-col>
               <h4 class="mb-3">Defaults</h4>
+              <v-row class="my-0">
+                <v-col cols="12">
+                  <p class="pb-3">Orientation</p>
+                  <v-tabs
+                    v-model="selectedOrientation"
+                    fixed-tabs
+                    active-class="active-tab white--text"
+                  >
+                    <v-tab
+                      v-for="item in chartOrientation"
+                      :key="item.value"
+                      :value="item.value"
+                      :border="true"
+                      color="primary"
+                      density="comfortable"
+                      @click="handleGetOrientation(item.value)"
+                    >
+                      {{ item.type }}
+                    </v-tab>
+                  </v-tabs>
+                </v-col>
+              </v-row>
+
               <v-row justify="start">
                 <v-col cols="6">
                   <p class="pb-3">Plot Background</p>
@@ -595,8 +564,6 @@ import pie from './assets/pie.png'
 import scatter from './assets/scatter.png'
 import table from './assets/table.png'
 import moment from 'moment'
-import domtoimage from 'dom-to-image'
-import { saveAs } from 'file-saver'
 import axios from 'axios'
 export default {
   components: {
@@ -626,7 +593,6 @@ export default {
       selectedApi: null,
       isLoading: false,
       isSelecting: false,
-      chartsConfig: null,
       gridColor: '#ccc',
       gridColorMenu: false,
       fonts: ['sans-serif', 'serif', 'monospace', 'Arial', 'Courier New', 'Helvetica'],
@@ -736,7 +702,6 @@ export default {
 
     handleSelectedChart(id) {
       this.specificItemId = id
-      this.handleChartJson(id)
       this.handleChartLib(id)
       const selectedChart = document.querySelectorAll('.active')
 
@@ -794,17 +759,6 @@ export default {
         this.yRandom = randomNumbers
       }
       return newDates
-    },
-
-    handleDownloadChart(id) {
-      domtoimage.toBlob(document.getElementById('chart' + id)).then(function (blob) {
-        window.saveAs(blob, 'my-chart.png')
-      })
-    },
-
-    handleChartJson(id) {
-      const targetObject = this.widgets.find((item) => item.i === id)
-      this.chartsConfig = targetObject?.data
     },
 
     onJsonChange(e) {

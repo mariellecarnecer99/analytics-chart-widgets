@@ -63,11 +63,11 @@
         <v-card-text>
           <v-toolbar height="20" color="white">
             <v-spacer></v-spacer>
-            <v-btn icon dark @click="previewDialog = !previewDialog">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+            <v-icon class="mr-1" @click="handleDownloadChart">mdi-download</v-icon>
+            <v-icon @click="previewDialog = !previewDialog">mdi-close</v-icon>
           </v-toolbar>
           <grid-layout
+            id="to_save"
             :layout="widgets"
             :col-num="12"
             :is-draggable="false"
@@ -206,6 +206,9 @@ import bar from '@/assets/bar.png'
 import pie from '@/assets/pie.png'
 import scatter from '@/assets/scatter.png'
 import table from '@/assets/table.png'
+import domtoimage from 'dom-to-image'
+import { saveAs } from 'file-saver'
+import html2canvas from 'html2canvas'
 import { useSelectedChart } from '../../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 const store = useSelectedChart()
@@ -462,6 +465,14 @@ export default {
         })
         .catch(() => {})
         .finally()
+    },
+
+    handleDownloadChart() {
+      html2canvas(document.querySelector('#to_save')).then((canvas) => {
+        canvas.toBlob(function (blob) {
+          window.saveAs(blob, 'my-report.jpg')
+        })
+      })
     }
   }
 }
