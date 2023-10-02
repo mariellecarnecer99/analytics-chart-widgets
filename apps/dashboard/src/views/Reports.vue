@@ -105,9 +105,6 @@ export default {
 </script>
 
 <style scoped>
-.filter {
-  color: #463c6e;
-}
 .iconDelete {
   display: block;
   margin: 20px auto;

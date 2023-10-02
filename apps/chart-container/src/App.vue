@@ -95,7 +95,7 @@
                         ><v-icon>mdi-upload</v-icon> Upload Data</v-btn
                       >
                       <input
-                        ref="uploadedFile"
+                        id="uploadedFile"
                         class="d-none"
                         type="file"
                         accept=".csv"
@@ -114,7 +114,7 @@
                         <span class="ml-2">Blend Data</span></v-btn
                       >
                       <input
-                        ref="uploader"
+                        id="uploader"
                         class="d-none"
                         type="file"
                         accept=".csv"
@@ -815,7 +815,8 @@ export default {
         { once: true }
       )
 
-      this.$refs.uploadedFile.click()
+      let fileUpload = document.getElementById('uploadedFile')
+      fileUpload.click()
     },
 
     onUploadChange(e) {
@@ -904,7 +905,8 @@ export default {
         { once: true }
       )
 
-      this.$refs.uploader.click()
+      let fileUpload = document.getElementById('uploader')
+      fileUpload.click()
     },
 
     onFileChanged(e) {
