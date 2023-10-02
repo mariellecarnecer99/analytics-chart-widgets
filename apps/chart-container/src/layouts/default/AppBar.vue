@@ -150,7 +150,6 @@
           >
           </v-select>
           <div v-if="selectedChartLibrary" class="chartType">
-            <!-- <h4 class="mb-4 ml-6">Simple</h4> -->
             <v-row class="mb-6" no-gutters>
               <v-col cols="3" v-for="item in charts" class="mb-5 d-flex justify-center">
                 <img

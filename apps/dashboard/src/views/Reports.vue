@@ -22,7 +22,6 @@
             variant="text"
             @click="handleEditReport(item.id)"
           ></v-btn>
-          <!-- <v-btn size="small" color="primary" icon="mdi-content-copy" variant="text"></v-btn> -->
           <v-dialog transition="dialog-bottom-transition" width="auto">
             <template v-slot:activator="{ props }">
               <v-btn

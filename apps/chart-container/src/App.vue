@@ -73,10 +73,221 @@
       <v-tab value="style"> Style </v-tab>
     </v-tabs>
 
-    <v-container fluid>
-      <v-window v-model="tab">
-        <v-window-item value="setup">
-          <v-expansion-panels>
+    <v-window v-model="tab">
+      <v-window-item value="setup">
+        <v-expansion-panels variant="accordion">
+          <v-expansion-panel v-for="i in setupItems" :key="i">
+            <v-expansion-panel-title>
+              {{ i.title }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text v-if="i.value === 'dataSource'">
+              <v-row class="my-0">
+                <v-col>
+                  <p class="mb-2">Data Source</p>
+                  <v-row>
+                    <v-col>
+                      <v-btn
+                        variant="outlined"
+                        color="primary"
+                        class="uploadData"
+                        :loading="isLoading"
+                        @click="handleUploadedFile"
+                        ><v-icon>mdi-upload</v-icon> Upload Data</v-btn
+                      >
+                      <input
+                        ref="uploadedFile"
+                        class="d-none"
+                        type="file"
+                        accept=".csv"
+                        @change="onUploadChange"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row class="my-0">
+                    <v-col class="pt-2 pb-0">
+                      <v-btn
+                        variant="text"
+                        color="primary"
+                        :loading="isSelecting"
+                        @click="handleFileImport"
+                        ><v-icon size="large">mdi-plus-circle-outline</v-icon>
+                        <span class="ml-2">Blend Data</span></v-btn
+                      >
+                      <input
+                        ref="uploader"
+                        class="d-none"
+                        type="file"
+                        accept=".csv"
+                        @change="onFileChanged"
+                      />
+                    </v-col>
+                  </v-row>
+
+                  <div v-if="uploadFile.length != 0" class="concept-type">
+                    <div class="mt-4">
+                      <p class="mb-3">Dimension</p>
+                      <v-select
+                        v-model="defaultCategory"
+                        :items="dimensions"
+                        item-title="type"
+                        item-value="value"
+                        return-object
+                        density="compact"
+                        variant="outlined"
+                        @update:modelValue="selectedDimension"
+                      >
+                        <template v-slot:prepend>
+                          <v-icon v-on:click="dimensionMenu = !dimensionMenu">mdi-pencil</v-icon>
+                          <v-dialog
+                            v-model="dimensionMenu"
+                            transition="dialog-bottom-transition"
+                            width="450px"
+                            style="z-index: 0"
+                          >
+                            <v-card>
+                              <v-toolbar
+                                color="primary"
+                                :title="newCatName ? newCatName : defaultCategory"
+                              ></v-toolbar>
+                              <v-card-text>
+                                <v-text-field
+                                  v-model="newCatName"
+                                  label="Name"
+                                  variant="outlined"
+                                  density="compact"
+                                  class="mt-3"
+                                ></v-text-field>
+                                <i v-if="newCatName" class="mt-0"
+                                  >Source field: {{ defaultCategory }}</i
+                                >
+                                <v-select
+                                  v-model="dimensionsemanticType"
+                                  :items="semanticTypes"
+                                  item-title="type"
+                                  item-value="value"
+                                  return-object
+                                  label="Type"
+                                  density="compact"
+                                  variant="outlined"
+                                  @update:modelValue="getSemanticType"
+                                >
+                                </v-select>
+                              </v-card-text>
+                            </v-card>
+                          </v-dialog>
+                        </template>
+                      </v-select>
+                    </div>
+
+                    <div class="mt-4">
+                      <p class="mb-3">Metric</p>
+                      <v-select
+                        v-model="defaultMetric"
+                        :items="dimensions"
+                        item-title="type"
+                        item-value="value"
+                        return-object
+                        density="compact"
+                        variant="outlined"
+                        @update:modelValue="selectedMetric"
+                      >
+                        <template v-slot:prepend>
+                          <v-icon v-on:click="metricMenu = !metricMenu">mdi-pencil</v-icon>
+                          <v-dialog
+                            v-model="metricMenu"
+                            transition="dialog-bottom-transition"
+                            width="450px"
+                            style="z-index: 0"
+                          >
+                            <v-card>
+                              <v-toolbar
+                                color="primary"
+                                :title="newMetricName ? newMetricName : defaultMetric"
+                              ></v-toolbar>
+                              <v-card-text>
+                                <v-text-field
+                                  v-model="newMetricName"
+                                  label="Name"
+                                  variant="outlined"
+                                  density="compact"
+                                  class="mt-3"
+                                ></v-text-field>
+                                <i v-if="newMetricName" class="mt-0"
+                                  >Source field: {{ defaultMetric }}</i
+                                >
+
+                                <p>Aggregation</p>
+                                <v-checkbox v-model="aggregationType" label="Count"></v-checkbox>
+
+                                <v-select
+                                  v-model="metricsemanticType"
+                                  :items="semanticTypes"
+                                  item-title="type"
+                                  item-value="value"
+                                  return-object
+                                  label="Type"
+                                  density="compact"
+                                  variant="outlined"
+                                  @update:modelValue="getSemanticType"
+                                >
+                                </v-select>
+                              </v-card-text>
+                            </v-card>
+                          </v-dialog>
+                        </template>
+                      </v-select>
+                    </div>
+                  </div>
+
+                  <v-row class="">
+                    <v-col class="pt-2 pb-0">
+                      <v-text-field
+                        v-model="selectedApi"
+                        label="Service URL"
+                        variant="outlined"
+                        density="compact"
+                        clearable
+                        @update:modelValue="getApiData"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-expansion-panel-text>
+            <v-expansion-panel-text v-if="i.value === 'defaultDate'">
+              <v-row class="my-0">
+                <v-col>
+                  <p class="mb-2">Default date control</p>
+                  <VueDatePicker
+                    v-model="dateControl"
+                    placeholder="Select Date"
+                    format="MM/dd/yyyy"
+                    range
+                    menu-class-name="dp-custom-menu"
+                    teleport-center
+                    @update:model-value="handleDates"
+                  />
+                </v-col>
+              </v-row>
+            </v-expansion-panel-text>
+            <v-expansion-panel-text v-if="i.value === 'code'">
+              <v-row class="my-0">
+                <v-col>
+                  <p class="mb-2">Insert code into website</p>
+                  <v-textarea
+                    :model-value="`<chart-widget id='${specificItemId}'></chart-widget>`"
+                    id="tocopy"
+                    variant="outlined"
+                    density="compact"
+                    auto-grow
+                    append-inner-icon="mdi-content-copy"
+                  ></v-textarea>
+                </v-col>
+              </v-row>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <!-- <v-expansion-panels>
             <v-expansion-panel>
               <v-expansion-panel-title>
                 <div>
@@ -105,216 +316,19 @@
                 </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
-          </v-expansion-panels>
+          </v-expansion-panels> -->
+      </v-window-item>
 
-          <v-row class="my-0">
-            <v-col>
-              <p class="pt-3 mb-2">Default date control</p>
-              <VueDatePicker
-                v-model="dateControl"
-                placeholder="Select Date"
-                format="MM/dd/yyyy"
-                range
-                menu-class-name="dp-custom-menu"
-                teleport-center
-                @update:model-value="handleDates"
-              />
-            </v-col>
-          </v-row>
-          <v-row class="my-0">
-            <v-col>
-              <p class="mb-2">Data Source</p>
-              <v-row>
-                <v-col>
-                  <v-btn
-                    variant="outlined"
-                    color="primary"
-                    class="uploadData"
-                    :loading="isLoading"
-                    @click="handleUploadedFile"
-                    ><v-icon>mdi-upload</v-icon> Upload Data</v-btn
-                  >
-                  <input
-                    ref="uploadedFile"
-                    class="d-none"
-                    type="file"
-                    accept=".csv"
-                    @change="onUploadChange"
-                  />
-                </v-col>
-              </v-row>
-              <v-row class="my-0">
-                <v-col class="pt-2 pb-0">
-                  <v-btn
-                    variant="text"
-                    color="primary"
-                    :loading="isSelecting"
-                    @click="handleFileImport"
-                    ><v-icon size="large">mdi-plus-circle-outline</v-icon>
-                    <span class="ml-2">Blend Data</span></v-btn
-                  >
-                  <input
-                    ref="uploader"
-                    class="d-none"
-                    type="file"
-                    accept=".csv"
-                    @change="onFileChanged"
-                  />
-                </v-col>
-              </v-row>
-
-              <div v-if="uploadFile.length != 0" class="concept-type">
-                <div class="mt-4">
-                  <p class="mb-3">Dimension</p>
-                  <v-select
-                    v-model="defaultCategory"
-                    :items="dimensions"
-                    item-title="type"
-                    item-value="value"
-                    return-object
-                    density="compact"
-                    variant="outlined"
-                    @update:modelValue="selectedDimension"
-                  >
-                    <template v-slot:prepend>
-                      <v-icon v-on:click="dimensionMenu = !dimensionMenu">mdi-pencil</v-icon>
-                      <v-dialog
-                        v-model="dimensionMenu"
-                        transition="dialog-bottom-transition"
-                        width="450px"
-                        style="z-index: 0"
-                      >
-                        <v-card>
-                          <v-toolbar
-                            color="primary"
-                            :title="newCatName ? newCatName : defaultCategory"
-                          ></v-toolbar>
-                          <v-card-text>
-                            <v-text-field
-                              v-model="newCatName"
-                              label="Name"
-                              variant="outlined"
-                              density="compact"
-                              class="mt-3"
-                            ></v-text-field>
-                            <i v-if="newCatName" class="mt-0"
-                              >Source field: {{ defaultCategory }}</i
-                            >
-                            <v-select
-                              v-model="dimensionsemanticType"
-                              :items="semanticTypes"
-                              item-title="type"
-                              item-value="value"
-                              return-object
-                              label="Type"
-                              density="compact"
-                              variant="outlined"
-                              @update:modelValue="getSemanticType"
-                            >
-                            </v-select>
-                          </v-card-text>
-                        </v-card>
-                      </v-dialog>
-                    </template>
-                  </v-select>
-                </div>
-
-                <div class="mt-4">
-                  <p class="mb-3">Metric</p>
-                  <v-select
-                    v-model="defaultMetric"
-                    :items="dimensions"
-                    item-title="type"
-                    item-value="value"
-                    return-object
-                    density="compact"
-                    variant="outlined"
-                    @update:modelValue="selectedMetric"
-                  >
-                    <template v-slot:prepend>
-                      <v-icon v-on:click="metricMenu = !metricMenu">mdi-pencil</v-icon>
-                      <v-dialog
-                        v-model="metricMenu"
-                        transition="dialog-bottom-transition"
-                        width="450px"
-                        style="z-index: 0"
-                      >
-                        <v-card>
-                          <v-toolbar
-                            color="primary"
-                            :title="newMetricName ? newMetricName : defaultMetric"
-                          ></v-toolbar>
-                          <v-card-text>
-                            <v-text-field
-                              v-model="newMetricName"
-                              label="Name"
-                              variant="outlined"
-                              density="compact"
-                              class="mt-3"
-                            ></v-text-field>
-                            <i v-if="newMetricName" class="mt-0"
-                              >Source field: {{ defaultMetric }}</i
-                            >
-
-                            <p>Aggregation</p>
-                            <v-checkbox v-model="aggregationType" label="Count"></v-checkbox>
-
-                            <v-select
-                              v-model="metricsemanticType"
-                              :items="semanticTypes"
-                              item-title="type"
-                              item-value="value"
-                              return-object
-                              label="Type"
-                              density="compact"
-                              variant="outlined"
-                              @update:modelValue="getSemanticType"
-                            >
-                            </v-select>
-                          </v-card-text>
-                        </v-card>
-                      </v-dialog>
-                    </template>
-                  </v-select>
-                </div>
-              </div>
-
-              <v-row class="my-0">
-                <v-col class="pt-2 pb-0">
-                  <v-text-field
-                    v-model="selectedApi"
-                    label="Service URL"
-                    variant="outlined"
-                    density="compact"
-                    clearable
-                    @update:modelValue="getApiData"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-          <v-row class="my-0">
-            <v-col>
-              <p class="mb-2">Insert code into website</p>
-              <v-textarea
-                :model-value="`<chart-widget id='${specificItemId}'></chart-widget>`"
-                id="tocopy"
-                variant="outlined"
-                density="compact"
-                auto-grow
-                append-inner-icon="mdi-content-copy"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-        </v-window-item>
-
-        <v-window-item value="style">
-          <v-row>
-            <v-col>
-              <h4 class="mb-3">Defaults</h4>
+      <v-window-item value="style">
+        <v-expansion-panels variant="accordion">
+          <v-expansion-panel v-for="i in styleItems" :key="i">
+            <v-expansion-panel-title>
+              {{ i.title }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text v-if="i.value === 'defaults'">
               <v-row class="my-0">
                 <v-col cols="12">
-                  <p class="pb-3">Orientation</p>
+                  <p class="mb-3">Orientation</p>
                   <v-tabs
                     v-model="selectedOrientation"
                     fixed-tabs
@@ -439,9 +453,9 @@
                   </v-text-field>
                 </v-col>
               </v-row>
-
-              <h4 class="mb-3">Title</h4>
-              <v-row justify="start">
+            </v-expansion-panel-text>
+            <v-expansion-panel-text v-if="i.value === 'title'">
+              <v-row class="my-0">
                 <v-col cols="6">
                   <p class="pb-3">Plot Title</p>
                   <v-text-field
@@ -512,9 +526,9 @@
                   </v-text-field>
                 </v-col>
               </v-row>
-
-              <h4 class="mb-3">Visibility</h4>
-              <v-row column>
+            </v-expansion-panel-text>
+            <v-expansion-panel-text v-if="i.value === 'visibility'">
+              <v-row column class="my-0">
                 <v-col cols="3">
                   <p class="py-4">Plot Title</p>
                 </v-col>
@@ -543,11 +557,11 @@
                   <v-switch v-model="tickMarkersSwitch"></v-switch>
                 </v-col>
               </v-row>
-            </v-col>
-          </v-row>
-        </v-window-item>
-      </v-window>
-    </v-container>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-window-item>
+    </v-window>
   </v-navigation-drawer>
 </template>
 
@@ -657,7 +671,35 @@ export default {
       dimensionsemanticType: null,
       semanticTypes: ['Text', 'Numeric'],
       aggregationType: true,
-      metricsemanticType: null
+      metricsemanticType: null,
+      setupItems: [
+        {
+          title: 'Data source',
+          value: 'dataSource'
+        },
+        {
+          title: 'Default date control',
+          value: 'defaultDate'
+        },
+        {
+          title: 'Code',
+          value: 'code'
+        }
+      ],
+      styleItems: [
+        {
+          title: 'Defaults',
+          value: 'defaults'
+        },
+        {
+          title: 'Title',
+          value: 'title'
+        },
+        {
+          title: 'Visibility',
+          value: 'visibility'
+        }
+      ]
     }
   },
   props: {
