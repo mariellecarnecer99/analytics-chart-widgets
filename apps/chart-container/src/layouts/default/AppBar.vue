@@ -111,70 +111,52 @@
     >
   </v-app-bar>
 
-  <v-navigation-drawer color="rgba(71,181,155)" class="bg-grey-lighten-2" rail app>
-    <v-list color="rgba(70,60,110)" dense nav>
-      <v-list-item
-        v-for="(item, index) in sideMenuItems"
-        :key="index"
-        @click="onClickDrawer(index)"
-        :prepend-icon="item.icon"
-        :title="item.title"
-        :value="item.value"
-      >
-        <v-tooltip activator="parent" location="right">
-          {{ item.title }}
-        </v-tooltip>
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
+  <v-app-bar color="gray" dark fixed>
+    <v-menu transition="slide-x-transition" :close-on-content-click="false">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" variant="outlined" class="text-capitalize ma-3">
+          <v-icon size="large" class="mx-1">mdi-chart-box-plus-outline</v-icon> Add a chart
+        </v-btn>
+      </template>
+      <template v-slot:default="{ isActive }">
+        <v-card width="300px">
+          <v-card-text class="pa-6">
+            <v-select
+              v-model="selectedChartLibrary"
+              :items="chartLibraries"
+              label="Select Charting Libraries"
+              variant="outlined"
+              class="mt-3"
+              item-title="type"
+              item-value="value"
+              density="compact"
+            >
+            </v-select>
+            <div v-if="selectedChartLibrary" class="chartType">
+              <v-row class="mb-6" no-gutters>
+                <v-col cols="3" v-for="item in charts" class="mb-5 d-flex justify-center">
+                  <img
+                    :src="item.img"
+                    style="width: 25px; height: 25px"
+                    @click="selectedChart(item), (isActive.value = !isActive.value)"
+                  />
+                </v-col>
+              </v-row>
+            </div>
+          </v-card-text>
+        </v-card>
+      </template>
+    </v-menu>
 
-  <v-navigation-drawer v-model="drawer" color="rgba(211,220,230,1)" app width="300">
-    <div id="sidebar">
-      <div class="d-flex justify-end sidebar-toggle mx-4 mt-3">
-        <div class="" @click="drawer = !drawer" id="btn-toggle">
-          <v-icon id="btn-toggle-icon" x-large>mdi-close</v-icon>
-        </div>
-      </div>
-      <div class="sidebar-body">
-        <div class="chartType">
-          <h3 class="chartType-title mb-4 ml-6">Charts</h3>
-          <v-select
-            v-model="selectedChartLibrary"
-            :items="chartLibraries"
-            label="Select Charting Libraries"
-            variant="outlined"
-            class="mx-6"
-            item-title="type"
-            item-value="value"
-            density="compact"
-          >
-          </v-select>
-          <div v-if="selectedChartLibrary" class="chartType">
-            <v-row class="mb-6" no-gutters>
-              <v-col cols="3" v-for="item in charts" class="mb-5 d-flex justify-center">
-                <img
-                  :src="item.img"
-                  style="width: 25px; height: 25px"
-                  @click="selectedChart(item)"
-                />
-              </v-col>
-            </v-row>
-          </div>
-        </div>
-      </div>
-    </div>
-  </v-navigation-drawer>
+    <v-menu transition="slide-x-transition">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" variant="outlined" class="text-capitalize ml-0">
+          <v-icon size="large" class="mx-1">mdi-filter-variant-plus</v-icon> Add a control
+        </v-btn>
+      </template>
 
-  <v-navigation-drawer v-model="controlsDrawer" color="rgba(211,220,230,1)" app width="300">
-    <div id="sidebar">
-      <div class="d-flex justify-end sidebar-toggle mx-4 mt-3">
-        <div class="mb-2" @click="controlsDrawer = !controlsDrawer" id="btn-toggle">
-          <v-icon id="btn-toggle-icon" x-large>mdi-close</v-icon>
-        </div>
-      </div>
-      <div class="sidebar-body">
-        <div class="data mx-5 mb-4">
-          <h3 class="data-title mb-3">Controls</h3>
+      <v-card width="250px">
+        <v-card-text>
           <v-row v-for="i in controls" class="mt-0">
             <v-col>
               <v-card
@@ -187,11 +169,10 @@
               </v-card>
             </v-col>
           </v-row>
-        </div>
-      </div>
-    </div>
-  </v-navigation-drawer>
-
+        </v-card-text>
+      </v-card>
+    </v-menu>
+  </v-app-bar>
   <v-main>
     <ChartContainer :widgets="widgets" />
   </v-main>
