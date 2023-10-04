@@ -111,10 +111,10 @@
     >
   </v-app-bar>
 
-  <v-app-bar color="gray" dark fixed>
+  <v-app-bar color="gray" dark fixed :elevation="1">
     <v-menu transition="slide-x-transition" :close-on-content-click="false">
       <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" variant="outlined" class="text-capitalize ma-3">
+        <v-btn v-bind="props" class="text-capitalize">
           <v-icon size="large" class="mx-1">mdi-chart-box-plus-outline</v-icon> Add a chart
         </v-btn>
       </template>
@@ -148,9 +148,11 @@
       </template>
     </v-menu>
 
+    <v-divider class="" inset vertical></v-divider>
+
     <v-menu transition="slide-x-transition">
       <template v-slot:activator="{ props }">
-        <v-btn v-bind="props" variant="outlined" class="text-capitalize ml-0">
+        <v-btn v-bind="props" class="text-capitalize">
           <v-icon size="large" class="mx-1">mdi-filter-variant-plus</v-icon> Add a control
         </v-btn>
       </template>

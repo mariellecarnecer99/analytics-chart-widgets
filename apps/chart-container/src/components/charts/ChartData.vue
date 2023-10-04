@@ -1391,8 +1391,8 @@ export default {
           { value: 1048, name: 'Search Engine' },
           { value: 735, name: 'Direct' },
           { value: 580, name: 'Email' },
-          { value: 484, name: 'Union Ads' },
-          { value: 300, name: 'Video Ads' }
+          { value: 484, name: 'Direct' },
+          { value: 300, name: 'Email' }
         ]
       }
 
@@ -1501,8 +1501,8 @@ export default {
           { value: 1048, name: 'Search Engine' },
           { value: 735, name: 'Direct' },
           { value: 580, name: 'Email' },
-          { value: 484, name: 'Union Ads' },
-          { value: 300, name: 'Video Ads' }
+          { value: 484, name: 'Direct' },
+          { value: 300, name: 'Email' }
         ]
       }
 
@@ -1579,8 +1579,8 @@ export default {
           { value: 1048, name: 'Search Engine' },
           { value: 735, name: 'Direct' },
           { value: 580, name: 'Email' },
-          { value: 484, name: 'Union Ads' },
-          { value: 300, name: 'Video Ads' }
+          { value: 484, name: 'Direct' },
+          { value: 300, name: 'Email' }
         ],
         plugins: [plugin]
       }

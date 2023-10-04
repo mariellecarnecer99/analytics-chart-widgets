@@ -3,12 +3,12 @@
     v-if="chartType === 'table'"
     :headers="headers"
     :items="option?.tableData"
+    item-key="name"
     class="elevation-1"
     density="compact"
-    item-key="name"
   >
     <template v-slot:item.chart="{ item }">
-      <v-chart
+      <!-- <v-chart
         :id="'chart' + item.index"
         :option="{
           tooltip: {},
@@ -24,31 +24,69 @@
         }"
         class="chart-container"
         autoresize
-      ></v-chart>
+      ></v-chart> -->
     </template>
   </v-data-table>
   <v-chart v-if="chartType != 'table'" :id="'chart' + id" :option="option" autoresize />
 </template>
 
-<script setup>
+<script>
 import { VDataTable } from 'vuetify/labs/VDataTable'
-const props = defineProps({
-  option: Object,
-  id: Number,
-  chartType: String
-})
-
-const headers = [
-  {
-    title: 'Title',
-    align: 'start',
-    sortable: false,
-    key: 'name'
+export default {
+  components: {
+    VDataTable
   },
-  { title: 'Value', align: 'start', key: 'value' },
-  { title: 'Chart', align: 'center', sortable: false, key: 'chart' }
-]
+  props: {
+    option: Object,
+    id: Number,
+    chartType: String
+  },
+  data: () => {
+    return {
+      aggregatedData: {},
+      headers: [
+        {
+          title: 'Title',
+          align: 'start',
+          sortable: false,
+          key: 'name'
+        },
+        { title: 'Value', align: 'start', key: 'value' }
+        // { title: 'Chart', align: 'center', sortable: false, key: 'chart' }
+      ]
+    }
+  },
+  watch: {
+    option: [
+      {
+        handler: 'aggregateTableValues'
+      }
+    ]
+  },
+  methods: {
+    aggregateTableValues(e) {
+      e.tableData.forEach((item) => {
+        const { name, value } = item
+
+        // If the name exists in the aggregatedData object, add the value to it
+        if (this.aggregatedData[name]) {
+          this.aggregatedData[name] += value
+        } else {
+          // If the name doesn't exist, create a new entry with the value
+          this.aggregatedData[name] = value
+        }
+      })
+
+      // Convert the aggregated data back to an array of objects
+      this.option.tableData = Object.keys(this.aggregatedData).map((name) => ({
+        name,
+        value: this.aggregatedData[name]
+      }))
+    }
+  }
+}
 </script>
+
 <style>
 .chart-container {
   height: 400px;

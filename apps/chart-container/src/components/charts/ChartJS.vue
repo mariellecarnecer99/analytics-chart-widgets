@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table-virtual
     v-if="chartType === 'table'"
     :headers="headers"
     :items="option?.tableData"
@@ -8,13 +8,13 @@
     item-key="name"
   >
     <template v-slot:item.chart="{ item }">
-      <Bar
+      <!-- <Bar
         :id="'chart' + item.index"
         :options="{ responsive: true, plugins: { legend: false } }"
         :data="{ labels: [item.selectable.name], datasets: [{ data: [item.selectable.value] }] }"
-      />
+      /> -->
     </template>
-  </v-data-table>
+  </v-data-table-virtual>
   <canvas
     v-if="chartType != 'table'"
     :id="'chart' + id"
@@ -25,14 +25,14 @@
 </template>
 
 <script>
-import { Bar } from 'vue-chartjs'
+// import { Bar } from 'vue-chartjs'
 import Chart from 'chart.js/auto'
-import { VDataTable } from 'vuetify/labs/VDataTable'
+import { VDataTableVirtual } from 'vuetify/labs/VDataTable'
 export default {
   name: 'ChartJS',
   components: {
-    VDataTable,
-    Bar
+    VDataTableVirtual
+    // Bar
   },
   props: {
     id: Number,
@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       ctx: null,
+      aggregatedData: {},
       headers: [
         {
           title: 'Title',
@@ -63,16 +64,33 @@ export default {
   },
   methods: {
     getOptions(el) {
-      // const ctx = document.getElementById("chart" + this.id);
-      const canvas = this.$refs.canvas
+      el.tableData.forEach((item) => {
+        const { name, value } = item
 
-      // var chartExist = Chart.getChart("chart" + this.id);
-      if (this.ctx != undefined) {
-        this.ctx.destroy()
-        this.ctx = new Chart(canvas, el)
-      } else {
-        this.ctx = new Chart(canvas, el)
-      }
+        // If the name exists in the aggregatedData object, add the value to it
+        if (this.aggregatedData[name]) {
+          this.aggregatedData[name] += value
+        } else {
+          // If the name doesn't exist, create a new entry with the value
+          this.aggregatedData[name] = value
+        }
+      })
+
+      // Convert the aggregated data back to an array of objects
+      this.option.tableData = Object.keys(this.aggregatedData).map((name) => ({
+        name,
+        value: this.aggregatedData[name]
+      }))
+      // // const ctx = document.getElementById("chart" + this.id);
+      // const canvas = this.$refs.canvas
+
+      // // var chartExist = Chart.getChart("chart" + this.id);
+      // if (this.ctx != undefined) {
+      //   this.ctx.destroy()
+      //   this.ctx = new Chart(canvas, el)
+      // } else {
+      //   this.ctx = new Chart(canvas, el)
+      // }
     }
   }
 }
