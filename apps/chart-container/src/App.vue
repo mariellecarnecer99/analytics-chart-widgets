@@ -553,8 +553,15 @@
                 <v-col cols="3">
                   <p class="py-4">Tick Markers</p>
                 </v-col>
-                <v-col>
+                <v-col cols="3">
                   <v-switch v-model="tickMarkersSwitch"></v-switch>
+                </v-col>
+
+                <v-col cols="3">
+                  <p class="py-4">Display Dates</p>
+                </v-col>
+                <v-col>
+                  <v-switch v-model="datesSwitch"></v-switch>
                 </v-col>
               </v-row>
             </v-expansion-panel-text>
@@ -621,6 +628,7 @@ export default {
       gridLinesSwitch: false,
       tickLabelsSwitch: true,
       tickMarkersSwitch: false,
+      datesSwitch: false,
       charts: [
         {
           type: 'Line Chart',

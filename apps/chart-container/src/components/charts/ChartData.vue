@@ -1369,7 +1369,7 @@ export default {
         },
         series: [
           {
-            name: this.seriesName,
+            name: 'Referer of a Website',
             color: this.chartType === 'pie' ? null : this.color,
             data:
               this.chartType === 'pie'
@@ -1434,6 +1434,11 @@ export default {
             show: false
           }
         },
+        legend: {
+          show: true,
+          showForSingleSeries: true,
+          position: 'top'
+        },
         noData: {
           text: 'No data to display',
           align: 'center',
@@ -1494,6 +1499,7 @@ export default {
               : [10, 41, 35, 51, 49]
             : [
                 {
+                  name: 'Referer of a Website',
                   data: this.seriesUpload ? this.seriesUpload : [10, 41, 35, 51, 49]
                 }
               ],
@@ -1547,7 +1553,7 @@ export default {
             : ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
           datasets: [
             {
-              label: this.titleSwitch === true ? this.mainTitle : null,
+              label: 'Referer of a Website',
               backgroundColor: this.color,
               borderColor: this.color,
               borderWidth: 3,
@@ -1563,9 +1569,11 @@ export default {
           maintainAspectRatio: false,
           lineTension: 1,
           plugins: {
-            legend: this.chartType === 'pie' ? true : false,
+            legend: {
+              display: true
+            },
             title: {
-              display: false,
+              display: this.titleSwitch === true ? true : false,
               text: this.mainTitle,
               color: this.titleColor,
               font: {

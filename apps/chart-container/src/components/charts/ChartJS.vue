@@ -81,16 +81,16 @@ export default {
         name,
         value: this.aggregatedData[name]
       }))
-      // // const ctx = document.getElementById("chart" + this.id);
-      // const canvas = this.$refs.canvas
+      // const ctx = document.getElementById("chart" + this.id);
+      const canvas = this.$refs.canvas
 
-      // // var chartExist = Chart.getChart("chart" + this.id);
-      // if (this.ctx != undefined) {
-      //   this.ctx.destroy()
-      //   this.ctx = new Chart(canvas, el)
-      // } else {
-      //   this.ctx = new Chart(canvas, el)
-      // }
+      // var chartExist = Chart.getChart("chart" + this.id);
+      if (this.ctx != undefined) {
+        this.ctx.destroy()
+        this.ctx = new Chart(canvas, el)
+      } else {
+        this.ctx = new Chart(canvas, el)
+      }
     }
   }
 }
