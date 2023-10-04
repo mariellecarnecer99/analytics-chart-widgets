@@ -52,6 +52,7 @@
           :chartPlotTitleFontColor="item.i === specificItemId ? titleColor : null"
           :chartTickLabelsSwitch="item.i === specificItemId ? tickLabelsSwitch : null"
           :chartTickMarkersSwitch="item.i === specificItemId ? tickMarkersSwitch : null"
+          :chartLegendSwitch="item.i === specificItemId ? legendSwitch : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -528,42 +529,35 @@
               </v-row>
             </v-expansion-panel-text>
             <v-expansion-panel-text v-if="i.value === 'visibility'">
-              <v-row column class="my-0">
-                <v-col cols="3">
-                  <p class="py-4">Plot Title</p>
-                </v-col>
-                <v-col cols="3">
-                  <v-switch v-model="titleSwitch"></v-switch>
-                </v-col>
+              <v-switch
+                v-model="titleSwitch"
+                class="ma-0 pa-0"
+                hint="This will display the default chart title of the selected chart."
+                color="primary"
+                persistent-hint
+              >
+                <template #label> Plot Title </template>
+              </v-switch>
 
-                <v-col cols="3">
-                  <p class="py-4">Grid Lines</p>
-                </v-col>
-                <v-col cols="3">
-                  <v-switch v-model="gridLinesSwitch"></v-switch>
-                </v-col>
+              <v-switch
+                v-model="gridLinesSwitch"
+                class="ma-0 pa-0"
+                hint="This will allow you to customize the background color of the selected chart."
+                color="primary"
+                persistent-hint
+              >
+                <template #label> Grid Lines </template>
+              </v-switch>
 
-                <v-col cols="3">
-                  <p class="py-4">Tick Labels</p>
-                </v-col>
-                <v-col>
-                  <v-switch v-model="tickLabelsSwitch"></v-switch>
-                </v-col>
-
-                <v-col cols="3">
-                  <p class="py-4">Tick Markers</p>
-                </v-col>
-                <v-col cols="3">
-                  <v-switch v-model="tickMarkersSwitch"></v-switch>
-                </v-col>
-
-                <v-col cols="3">
-                  <p class="py-4">Display Dates</p>
-                </v-col>
-                <v-col>
-                  <v-switch v-model="datesSwitch"></v-switch>
-                </v-col>
-              </v-row>
+              <v-switch
+                v-model="legendSwitch"
+                class="ma-0 pa-0"
+                hint="This will allow you to show/hide the legend of the selected chart"
+                color="primary"
+                persistent-hint
+              >
+                <template #label> Legend </template>
+              </v-switch>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -626,6 +620,7 @@ export default {
       menuTitleColor: false,
       titleSwitch: false,
       gridLinesSwitch: false,
+      legendSwitch: false,
       tickLabelsSwitch: true,
       tickMarkersSwitch: false,
       datesSwitch: false,

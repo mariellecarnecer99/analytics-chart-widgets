@@ -898,7 +898,8 @@ export default {
     chartPlotTitleFontSize: String,
     chartPlotTitleFontColor: String,
     chartTickLabelsSwitch: Boolean,
-    chartTickMarkersSwitch: Boolean
+    chartTickMarkersSwitch: Boolean,
+    chartLegendSwitch: Boolean
   },
   data: () => {
     return {
@@ -931,6 +932,7 @@ export default {
       tickLabelsSwitch: null,
       tickMarkersSwitch: null,
       gridLinesSwitch: null,
+      legendSwitch: false,
       fontSize: null,
       labelColor: null,
       titleColor: null,
@@ -1252,6 +1254,14 @@ export default {
         this.handleApexOptions()
         this.handleChartjsOptions()
       }
+    },
+    chartLegendSwitch: {
+      handler(newOption) {
+        this.legendSwitch = newOption
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
     }
   },
   mounted() {
@@ -1311,7 +1321,7 @@ export default {
           show: this.gridLinesSwitch
         },
         tooltip: {},
-        legend: {},
+        legend: { show: this.legendSwitch === true ? true : false },
         xAxis: {
           type: this.chartOrientation === 'horizontal' ? 'value' : 'category',
           // boundaryGap: false,
@@ -1435,8 +1445,8 @@ export default {
           }
         },
         legend: {
-          show: true,
-          showForSingleSeries: true,
+          show: this.legendSwitch === true ? true : false,
+          showForSingleSeries: this.legendSwitch === true ? true : false,
           position: 'top'
         },
         noData: {
@@ -1570,7 +1580,7 @@ export default {
           lineTension: 1,
           plugins: {
             legend: {
-              display: true
+              display: this.legendSwitch === true ? true : false
             },
             title: {
               display: this.titleSwitch === true ? true : false,
