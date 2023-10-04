@@ -1,4 +1,10 @@
 <template>
+  <div v-if="chartDatesSwitch === true" class="selectedDates d-flex mt-2 ml-3 text-center">
+    <v-icon class="mt-1" color="primary">mdi-calendar</v-icon>
+    <v-chip v-for="item in datexFilter" class="ma-1" color="primary" size="small" label>
+      {{ item }}
+    </v-chip>
+  </div>
   <v-data-table
     v-if="chartType === 'table'"
     :headers="headers"
@@ -39,7 +45,9 @@ export default {
   props: {
     option: Object,
     id: Number,
-    chartType: String
+    chartType: String,
+    datexFilter: Object,
+    chartDatesSwitch: Boolean
   },
   data: () => {
     return {

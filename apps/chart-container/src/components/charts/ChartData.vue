@@ -1,17 +1,28 @@
 <template>
-  <EChart v-if="chartLib === 'eCharts'" :option="options" :id="chartId" :chartType="chartType" />
+  <EChart
+    v-if="chartLib === 'eCharts'"
+    :option="options"
+    :id="chartId"
+    :chartType="chartType"
+    :datexFilter="datexFilter"
+    :chartDatesSwitch="chartDatesSwitch"
+  />
   <ApexCharts
     v-if="chartLib === 'apexCharts' && isDataReady === true"
     :option="apexOptions"
     :apexSeries="apexOptions.series"
     :id="chartId"
     :chartType="chartType"
+    :datexFilter="datexFilter"
+    :chartDatesSwitch="chartDatesSwitch"
   />
   <ChartJS
     v-if="chartLib === 'chartjs'"
     :id="chartId"
     :option="datacollection"
     :chartType="chartType"
+    :datexFilter="datexFilter"
+    :chartDatesSwitch="chartDatesSwitch"
   />
   <DateRange v-if="control === 'daterange'" />
   <v-text-field
@@ -890,16 +901,17 @@ export default {
     bgColor: String,
     bgSwitch: Boolean,
     chartFont: String,
-    chartFontSize: String,
+    chartFontSize: Number,
     chartFontColor: String,
     chartPlotTitle: String,
     chartPlotTitleSwitch: Boolean,
     chartPlotTitleFont: String,
-    chartPlotTitleFontSize: String,
+    chartPlotTitleFontSize: Number,
     chartPlotTitleFontColor: String,
     chartTickLabelsSwitch: Boolean,
     chartTickMarkersSwitch: Boolean,
-    chartLegendSwitch: Boolean
+    chartLegendSwitch: Boolean,
+    chartDatesSwitch: Boolean
   },
   data: () => {
     return {
@@ -1263,6 +1275,11 @@ export default {
         this.handleChartjsOptions()
       }
     }
+    // chartDatesSwitch: {
+    //   handler(newOption) {
+    //     console.log('newOption: ', newOption)
+    //   }
+    // }
   },
   mounted() {
     this.title = this.chartTitle
@@ -1325,7 +1342,7 @@ export default {
         xAxis: {
           type: this.chartOrientation === 'horizontal' ? 'value' : 'category',
           // boundaryGap: false,
-          show: this.chartType === 'pie' ? this.tickLabelsSwitch === false : this.tickLabelsSwitch,
+          show: this.chartType === 'pie' ? false : true,
           data:
             this.chartType === 'pie'
               ? null
@@ -1346,14 +1363,11 @@ export default {
             fontFamily: this.fontType,
             interval: 0,
             rotate: 25 //If the label names are too long you can manage this by rotating the label.
-          },
-          axisTick: {
-            show: this.tickMarkersSwitch
           }
         },
         yAxis: {
           type: this.chartOrientation === 'horizontal' ? 'category' : 'value',
-          show: this.chartType === 'pie' ? this.tickLabelsSwitch === false : this.tickLabelsSwitch,
+          show: this.chartType === 'pie' ? false : true,
           data:
             this.chartType === 'pie'
               ? null
@@ -1372,9 +1386,6 @@ export default {
             fontSize: this.fontSize,
             color: this.labelColor,
             fontFamily: this.fontType
-          },
-          axisTick: {
-            show: this.tickMarkersSwitch
           }
         },
         series: [

@@ -53,6 +53,7 @@
           :chartTickLabelsSwitch="item.i === specificItemId ? tickLabelsSwitch : null"
           :chartTickMarkersSwitch="item.i === specificItemId ? tickMarkersSwitch : null"
           :chartLegendSwitch="item.i === specificItemId ? legendSwitch : null"
+          :chartDatesSwitch="item.i === specificItemId ? datesSwitch : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -558,6 +559,16 @@
               >
                 <template #label> Legend </template>
               </v-switch>
+
+              <v-switch
+                v-model="datesSwitch"
+                class="ma-0 pa-0"
+                hint="This will allow you to show/hide the dates(if there is) of the selected chart"
+                color="primary"
+                persistent-hint
+              >
+                <template #label> Dates </template>
+              </v-switch>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -797,6 +808,7 @@ export default {
         newDates.push(currDate.format('L'))
         currDate.add(1, 'days')
         this.xDates = newDates
+        this.datesSwitch = true
         randomNumbers.push(Math.round(Math.random() * 100))
         this.yRandom = randomNumbers
       }
