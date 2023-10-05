@@ -18,7 +18,7 @@
         :w="item.w"
         :h="item.h"
         :i="item.i"
-        @click="handleSelectedChart(item.i)"
+        @click="handleSelectedChart(item)"
         class="active"
       >
         <ChartData
@@ -61,12 +61,21 @@
       </grid-item>
     </grid-layout>
   </div>
-  <v-navigation-drawer v-if="widgets.length != 0" app permanent location="right" :width="400">
-    <v-list-item
-      prepend-icon="mdi-database-outline"
-      title="Data & Properties"
-      class="my-2"
-    ></v-list-item>
+
+  <v-navigation-drawer v-if="dateConfig" app permanent location="right" :width="400">
+    <v-list-item title="Date range control Properties" class="my-2"></v-list-item>
+
+    <v-divider></v-divider>
+  </v-navigation-drawer>
+
+  <v-navigation-drawer v-if="textConfig" app permanent location="right" :width="400">
+    <v-list-item title="Text Properties" class="my-2"></v-list-item>
+
+    <v-divider></v-divider>
+  </v-navigation-drawer>
+
+  <v-navigation-drawer v-if="chartConfig" app permanent location="right" :width="400">
+    <v-list-item title="Data & Properties" class="my-2"></v-list-item>
 
     <v-divider></v-divider>
 
@@ -730,7 +739,10 @@ export default {
           value: 'visibility'
         }
       ],
-      apiDates: []
+      apiDates: [],
+      chartConfig: false,
+      dateConfig: false,
+      textConfig: false
     }
   },
   props: {
@@ -770,19 +782,24 @@ export default {
         .finally()
     },
 
-    handleSelectedChart(id) {
-      this.specificItemId = id
-      this.handleChartLib(id)
+    handleSelectedChart(item) {
+      this.dateConfig = item.selectedControl === 'daterange'
+      this.textConfig = item.selectedControl === 'text'
+      this.chartConfig =
+        item.chart && item.selectedControl !== 'daterange' && item.selectedControl !== 'text'
+
+      this.specificItemId = item.i
+      this.handleChartLib(item.i)
       const selectedChart = document.querySelectorAll('.active')
 
       for (let i = 0; i < selectedChart.length; i++) {
-        selectedChart[i].style.border = `1px solid ${i === id ? '#463d6e' : 'transparent'}`
+        selectedChart[i].style.border = `1px solid ${i === item.i ? '#463d6e' : 'transparent'}`
       }
 
       const deleteBtn = document.querySelectorAll('.deleteChart')
 
       for (let i = 0; i < deleteBtn.length; i++) {
-        deleteBtn[i].style.display = `${i === id ? 'block' : 'none'}`
+        deleteBtn[i].style.display = `${i === item.i ? 'block' : 'none'}`
       }
     },
 
