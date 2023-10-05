@@ -66,12 +66,68 @@
     <v-list-item title="Date range control Properties" class="my-2"></v-list-item>
 
     <v-divider></v-divider>
+
+    <v-tabs v-model="tab" fixed-tabs color="primary">
+      <v-tab value="setup"> Setup </v-tab>
+      <v-tab value="style"> Style </v-tab>
+    </v-tabs>
+
+    <v-window v-model="tab">
+      <v-window-item value="setup">
+        <v-expansion-panels variant="accordion">
+          <v-expansion-panel>
+            <v-expansion-panel-title> Default date range </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-select
+                v-model="selectedDateRange"
+                :items="dateRange"
+                variant="outlined"
+                class="mt-3"
+                item-title="type"
+                item-value="value"
+                density="compact"
+              ></v-select>
+
+              <VueDatePicker
+                v-model="defaultDateRange"
+                placeholder="Select Date"
+                format="MM/dd/yyyy"
+                range
+                menu-class-name="dp-custom-menu"
+                text-input
+                position="left"
+              />
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-window-item>
+
+      <v-window-item value="style">
+        <v-expansion-panels variant="accordion">
+          <v-expansion-panel v-for="i in dateRangeStyle" :key="i">
+            <v-expansion-panel-title>
+              {{ i.title }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text> </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-window-item>
+    </v-window>
   </v-navigation-drawer>
 
   <v-navigation-drawer v-if="textConfig" app permanent location="right" :width="400">
     <v-list-item title="Text Properties" class="my-2"></v-list-item>
 
     <v-divider></v-divider>
+
+    <v-expansion-panels variant="accordion">
+      <v-expansion-panel v-for="i in textStyle" :key="i">
+        <v-expansion-panel-title>
+          {{ i.title }}
+        </v-expansion-panel-title>
+        <v-expansion-panel-text> </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </v-navigation-drawer>
 
   <v-navigation-drawer v-if="chartConfig" app permanent location="right" :width="400">
@@ -742,7 +798,147 @@ export default {
       apiDates: [],
       chartConfig: false,
       dateConfig: false,
-      textConfig: false
+      textConfig: false,
+      selectedDateRange: '28days',
+      dateRange: [
+        {
+          type: 'Fixed',
+          value: 'fixed'
+        },
+        {
+          type: 'Last 7 days',
+          value: '7days'
+        },
+        {
+          type: 'Last 14 days',
+          value: '14days'
+        },
+        {
+          type: 'Last 28 days',
+          value: '28days'
+        },
+        {
+          type: 'Last 30 days',
+          value: '30days'
+        },
+        {
+          type: 'Today',
+          value: 'today'
+        },
+        {
+          type: 'Yesterday',
+          value: 'yesterday'
+        },
+        {
+          type: 'This week(starts Sunday)',
+          value: 'thisWeekSunday'
+        },
+        {
+          type: 'This week to date(starts Sunday)',
+          value: 'thisWeekToDateSunday'
+        },
+        {
+          type: 'Last week(starts Sunday)',
+          value: 'lastWeekSunday'
+        },
+        {
+          type: 'This week(starts Monday)',
+          value: 'thisWeekMonday'
+        },
+        {
+          type: 'This week to date(starts Monday)',
+          value: 'thisWeekToDateMonday'
+        },
+        {
+          type: 'Last week(starts Monday)',
+          value: 'lastWeekMonday'
+        },
+        {
+          type: 'This month',
+          value: 'thisMonth'
+        },
+        {
+          type: 'This month to date',
+          value: 'thisMonthToDate'
+        },
+        {
+          type: 'Last month',
+          value: 'lastMonth'
+        },
+        {
+          type: 'This quarter',
+          value: 'thisQuarter'
+        },
+        {
+          type: 'This quarter to date',
+          value: 'thisQuarterToDate'
+        },
+        {
+          type: 'Last quarter',
+          value: 'lastQuarter'
+        },
+        {
+          type: 'This year',
+          value: 'thisYear'
+        },
+        {
+          type: 'This year to date',
+          value: 'thisYearToDate'
+        },
+        {
+          type: 'Last year',
+          value: 'lastYear'
+        },
+        {
+          type: 'Auto date range',
+          value: 'autoDateRange'
+        },
+        {
+          type: 'Advanced',
+          value: 'advanced'
+        }
+      ],
+      defaultDateRange: [],
+      dateRangeStyle: [
+        {
+          title: 'Date Range Picker',
+          value: 'dateRangePicker'
+        },
+        {
+          title: 'Header',
+          value: 'header'
+        },
+        {
+          title: 'Label',
+          value: 'label'
+        },
+        {
+          title: 'Background and Border',
+          value: 'bgBorder'
+        },
+        {
+          title: 'Padding',
+          value: 'padding'
+        }
+      ],
+      textStyle: [
+        {
+          title: 'Font and Paragraph',
+          value: 'fontParagraph'
+        },
+        {
+          title: 'Overflow settings',
+          value: 'overflowSettings'
+        },
+        {
+          title: 'Background and Border',
+          value: 'bgBorder'
+        },
+        {
+          title: 'Padding',
+          value: 'padding'
+        }
+      ]
     }
   },
   props: {
