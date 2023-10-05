@@ -241,7 +241,7 @@
                     </div>
                   </div>
 
-                  <v-row class="">
+                  <v-row>
                     <v-col class="pt-2 pb-0">
                       <v-text-field
                         v-model="selectedApi"
@@ -251,6 +251,22 @@
                         clearable
                         @update:modelValue="getApiData"
                       ></v-text-field>
+                    </v-col>
+                  </v-row>
+
+                  <v-row v-if="selectedApi">
+                    <v-col>
+                      <p class="mb-2">API date control</p>
+                      <VueDatePicker
+                        v-model="apiDates"
+                        placeholder="Select Date"
+                        format="MM/dd/yyyy"
+                        range
+                        menu-class-name="dp-custom-menu"
+                        text-input
+                        position="left"
+                        @update:model-value="handleDates"
+                      />
                     </v-col>
                   </v-row>
                 </v-col>
@@ -266,7 +282,7 @@
                     format="MM/dd/yyyy"
                     range
                     menu-class-name="dp-custom-menu"
-                    teleport-center
+                    position="left"
                     @update:model-value="handleDates"
                   />
                 </v-col>
@@ -713,7 +729,8 @@ export default {
           title: 'Visibility',
           value: 'visibility'
         }
-      ]
+      ],
+      apiDates: []
     }
   },
   props: {
@@ -950,6 +967,27 @@ export default {
         .then((response) => {
           const responseData = response.data
           this.apiData = responseData
+
+          if (this.apiData) {
+            let startDate = new Date(responseData[0].createdAt)
+            let endDate = new Date(responseData[0].createdAt)
+
+            responseData.forEach((item) => {
+              const currentDate = new Date(item.createdAt)
+              if (currentDate < startDate) {
+                startDate = currentDate
+              }
+              if (currentDate > endDate) {
+                endDate = currentDate
+              }
+            })
+
+            const startDateLocaleDateString = startDate.toLocaleDateString()
+            const endDateLocaleDateString = endDate.toLocaleDateString()
+
+            this.apiDates.push(startDateLocaleDateString)
+            this.apiDates.push(endDateLocaleDateString)
+          }
 
           // Get dimensions
           const allKeys = new Set()
