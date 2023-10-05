@@ -63,7 +63,11 @@
   </div>
 
   <v-navigation-drawer v-if="dateConfig" app permanent location="right" :width="400">
-    <v-list-item title="Date range control Properties" class="my-2"></v-list-item>
+    <v-list-item
+      title="Date range control Properties"
+      class="my-2"
+      prepend-icon="mdi-calendar-range"
+    ></v-list-item>
 
     <v-divider></v-divider>
 
@@ -113,10 +117,15 @@
         </v-expansion-panels>
       </v-window-item>
     </v-window>
+    <v-divider></v-divider>
   </v-navigation-drawer>
 
   <v-navigation-drawer v-if="textConfig" app permanent location="right" :width="400">
-    <v-list-item title="Text Properties" class="my-2"></v-list-item>
+    <v-list-item
+      title="Text Properties"
+      class="my-2"
+      prepend-icon="mdi-text-recognition"
+    ></v-list-item>
 
     <v-divider></v-divider>
 
@@ -131,7 +140,7 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer v-if="chartConfig" app permanent location="right" :width="400">
-    <v-list-item title="Data & Properties" class="my-2"></v-list-item>
+    <v-list-item title="Chart" class="my-2" prepend-icon="mdi-chart-box-outline"></v-list-item>
 
     <v-divider></v-divider>
 
@@ -655,6 +664,7 @@
         </v-expansion-panels>
       </v-window-item>
     </v-window>
+    <v-divider></v-divider>
   </v-navigation-drawer>
 </template>
 
