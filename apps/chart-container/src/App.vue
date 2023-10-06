@@ -900,14 +900,6 @@ export default {
         {
           type: 'Last year',
           value: 'lastYear'
-        },
-        {
-          type: 'Auto date range',
-          value: 'autoDateRange'
-        },
-        {
-          type: 'Advanced',
-          value: 'advanced'
         }
       ],
       defaultDateRange: [],
