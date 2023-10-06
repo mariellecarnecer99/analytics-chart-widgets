@@ -986,6 +986,24 @@ export default {
         this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeekMonday')
       } else if (e === 'lastWeekMonday') {
         this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeekLastWeek')
+      } else if (e === 'thisMonth') {
+        this.defaultDateRange = this.calculateDateRangeWeek('month')
+      } else if (e === 'thisMonthToDate') {
+        this.defaultDateRange = this.calculateDateRangeMonth(1, 'month')
+      } else if (e === 'lastMonth') {
+        this.defaultDateRange = this.calculateDateRangeLastMonth(1, 'month')
+      } else if (e === 'thisQuarter') {
+        this.defaultDateRange = this.calculateDateRangeWeek('quarter')
+      } else if (e === 'thisQuarterToDate') {
+        this.defaultDateRange = this.calculateDateRangeQuarter()
+      } else if (e === 'lastQuarter') {
+        this.defaultDateRange = this.calculateDateRangeLastQuarter()
+      } else if (e === 'thisYear') {
+        this.defaultDateRange = this.calculateDateRangeWeek('year')
+      } else if (e === 'thisYearToDate') {
+        this.defaultDateRange = this.calculateDateRangeYear()
+      } else if (e === 'lastYear') {
+        this.defaultDateRange = this.calculateDateRangeLastYear()
       }
     },
 
@@ -1023,6 +1041,71 @@ export default {
           ? currentDate.clone().subtract(1, 'week').startOf('isoWeek').format('YYYY-MM-DD')
           : currentDate.clone().startOf(week).subtract(days, 'days').format('YYYY-MM-DD')
       return [startDate, endDate]
+    },
+
+    calculateDateRangeMonth(days, month) {
+      const currentDate = moment()
+      const endDate = currentDate.subtract(days, 'days').format('YYYY-MM-DD')
+      const startDate = currentDate.clone().startOf(month).format('YYYY-MM-DD')
+      return [startDate, endDate]
+    },
+
+    calculateDateRangeLastMonth(days, month) {
+      const currentDate = moment()
+      const endDate = currentDate.clone().subtract(days, 'month').endOf(month).format('YYYY-MM-DD')
+      const startDate = currentDate
+        .clone()
+        .subtract(days, 'month')
+        .startOf(month)
+        .format('YYYY-MM-DD')
+      return [startDate, endDate]
+    },
+
+    calculateDateRangeQuarter() {
+      const currentDate = moment()
+      const thisQuarterStartDate = currentDate.clone().startOf('year').month(9).date(1)
+      const thisQuarterToDateEndDate = currentDate.clone().subtract(1, 'day').format('YYYY-MM-DD')
+      const thisQuarterToDateStartDate = thisQuarterStartDate.format('YYYY-MM-DD')
+      return [thisQuarterToDateStartDate, thisQuarterToDateEndDate]
+    },
+
+    calculateDateRangeLastQuarter() {
+      const currentDate = moment()
+      const lastQuarterStartDate = currentDate
+        .clone()
+        .subtract(3, 'months')
+        .startOf('quarter')
+        .format('YYYY-MM-DD')
+
+      const lastQuarterEndDate = currentDate
+        .clone()
+        .startOf('quarter')
+        .subtract(1, 'day')
+        .format('YYYY-MM-DD')
+
+      return [lastQuarterStartDate, lastQuarterEndDate]
+    },
+
+    calculateDateRangeYear() {
+      const currentDate = moment()
+      const thisYearToDateStartDate = currentDate.clone().startOf('year').format('YYYY-MM-DD')
+      const thisYearToDateEndDate = currentDate.clone().subtract(1, 'day').format('YYYY-MM-DD')
+      return [thisYearToDateStartDate, thisYearToDateEndDate]
+    },
+
+    calculateDateRangeLastYear() {
+      const currentDate = moment()
+      const lastYearStartDate = currentDate
+        .clone()
+        .subtract(1, 'year')
+        .startOf('year')
+        .format('YYYY-MM-DD')
+      const lastYearEndDate = currentDate
+        .clone()
+        .subtract(1, 'year')
+        .endOf('year')
+        .format('YYYY-MM-DD')
+      return [lastYearStartDate, lastYearEndDate]
     },
 
     removeItem(i) {
