@@ -1129,17 +1129,15 @@ export default {
 
     selectedDimension(e) {
       this.selectedDimensions = {
-        uploadFile: this.uploadFile,
+        uploadFile: this.uploadedData.uploadFile,
         uploadedCategory: e,
         uploadedMetric: this.defaultMetric
       }
-      // this.getUniqueValues(this.uploadedFile, e, this.defaultMetric)
     },
 
     selectedMetric(e) {
-      // this.getUniqueValues(this.uploadedFile, this.defaultCategory, e)
       this.selectedMetrics = {
-        uploadFile: this.uploadFile,
+        uploadFile: this.uploadedData.uploadFile,
         uploadedCategory: this.defaultCategory,
         uploadedMetric: e
       }
