@@ -54,6 +54,7 @@
           :chartTickMarkersSwitch="item.i === specificItemId ? tickMarkersSwitch : null"
           :chartLegendSwitch="item.i === specificItemId ? legendSwitch : null"
           :chartDatesSwitch="item.i === specificItemId ? datesSwitch : null"
+          :dateRange="item.i === specificItemId ? defaultDateRange : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -90,6 +91,7 @@
                 item-title="type"
                 item-value="value"
                 density="compact"
+                @update:model-value="handleSelectedDateRange"
               ></v-select>
 
               <VueDatePicker
@@ -809,7 +811,7 @@ export default {
       chartConfig: false,
       dateConfig: false,
       textConfig: false,
-      selectedDateRange: '28days',
+      selectedDateRange: 'fixed',
       dateRange: [
         {
           type: 'Fixed',
@@ -964,8 +966,73 @@ export default {
     if (this.$route.query.id) {
       this.handleGetReportsById(this.$route.query.id)
     }
+    this.handleSelectedDateRange(this.selectedDateRange)
   },
   methods: {
+    handleSelectedDateRange(e) {
+      if (e === '7days') {
+        this.defaultDateRange = this.calculateDateRangeDays(7)
+      } else if (e === '14days') {
+        this.defaultDateRange = this.calculateDateRangeDays(14)
+      } else if (e === '28days') {
+        this.defaultDateRange = this.calculateDateRangeDays(28)
+      } else if (e === '30days') {
+        this.defaultDateRange = this.calculateDateRangeDays(30)
+      } else if (e === 'today') {
+        this.defaultDateRange = this.calculateDateRangeDays(0)
+      } else if (e === 'yesterday') {
+        this.defaultDateRange = this.calculateDateRangeDays(1)
+      } else if (e === 'thisWeekSunday') {
+        this.defaultDateRange = this.calculateDateRangeWeek('week')
+      } else if (e === 'thisWeekToDateSunday') {
+        this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeek')
+      } else if (e === 'lastWeekSunday') {
+        this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'week')
+      } else if (e === 'thisWeekMonday') {
+        this.defaultDateRange = this.calculateDateRangeWeek('isoWeek')
+      } else if (e === 'thisWeekToDateMonday') {
+        this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeekMonday')
+      } else if (e === 'lastWeekMonday') {
+        this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeekLastWeek')
+      }
+    },
+
+    calculateDateRangeDays(days) {
+      const currentDate = moment()
+      const endDate =
+        days === 0
+          ? currentDate.format('YYYY-MM-DD')
+          : currentDate.clone().subtract(1, 'days').format('YYYY-MM-DD')
+      const startDate = currentDate.clone().subtract(days, 'days').format('YYYY-MM-DD')
+      return [startDate, endDate]
+    },
+
+    calculateDateRangeWeek(week) {
+      const currentDate = moment()
+      const endDate = currentDate.clone().endOf(week).format('YYYY-MM-DD')
+      const startDate = currentDate.clone().startOf(week).format('YYYY-MM-DD')
+      return [startDate, endDate]
+    },
+
+    calculateDateRangeWeekDays(days, week) {
+      const currentDate = moment()
+      const endDate =
+        week === 'week'
+          ? currentDate.clone().subtract(days, 'week').endOf(week).format('YYYY-MM-DD')
+          : week === 'isoWeekLastWeek'
+          ? currentDate.clone().subtract(1, 'week').endOf('isoWeek').format('YYYY-MM-DD')
+          : currentDate.clone().subtract(days, 'days').format('YYYY-MM-DD')
+      const startDate =
+        week === 'week'
+          ? currentDate.clone().subtract(days, 'week').startOf(week).format('YYYY-MM-DD')
+          : week === 'isoWeekMonday'
+          ? currentDate.clone().startOf('isoWeek').format('YYYY-MM-DD')
+          : week === 'isoWeekLastWeek'
+          ? currentDate.clone().subtract(1, 'week').startOf('isoWeek').format('YYYY-MM-DD')
+          : currentDate.clone().startOf(week).subtract(days, 'days').format('YYYY-MM-DD')
+      return [startDate, endDate]
+    },
+
     removeItem(i) {
       // console.log('val: ', val);
       // console.log('i: ', i)

@@ -8,6 +8,4 @@
   </v-app-bar>
 </template>
 
-<script>
-//
-</script>
+<script></script>

@@ -24,7 +24,7 @@
     :datexFilter="datexFilter"
     :chartDatesSwitch="chartDatesSwitch"
   />
-  <DateRange v-if="control === 'daterange'" />
+  <DateRange v-if="control === 'daterange'" :dateRange="dateRange" />
   <v-text-field
     v-if="control === 'text'"
     v-model="title"
@@ -911,7 +911,8 @@ export default {
     chartTickLabelsSwitch: Boolean,
     chartTickMarkersSwitch: Boolean,
     chartLegendSwitch: Boolean,
-    chartDatesSwitch: Boolean
+    chartDatesSwitch: Boolean,
+    dateRange: Array
   },
   data: () => {
     return {
