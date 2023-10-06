@@ -2,7 +2,7 @@
   <v-app-bar color="rgba(233, 73, 93)" class="flex-grow-0" dark>
     <v-app-bar-title @click="$router.push({ path: '/' })" class="cursor">
       <v-icon icon="mdi-chart-box" color="white" />
-      <span v-if="$route.params?.id" class="ml-2" style="color: #ffffff">Edit Report</span>
+      <span v-if="$route.query?.id" class="ml-2" style="color: #ffffff">Edit Report</span>
       <span v-else class="ml-2" style="color: #ffffff">Add Report</span>
     </v-app-bar-title>
     <v-spacer></v-spacer>
@@ -12,7 +12,7 @@
     </p>
     <v-spacer></v-spacer>
     <v-btn
-      v-if="$route.params?.id"
+      v-if="$route.query?.id"
       class="mr-3"
       variant="outlined"
       size="small"
@@ -43,7 +43,7 @@
             </v-col>
           </v-row>
           <v-textarea
-            :model-value="`<chart-widget id='${$route.params?.id}'></chart-widget>`"
+            :model-value="`<chart-widget id='${$route.query?.id}'></chart-widget>`"
             id="tocopy"
             variant="outlined"
             density="compact"
@@ -325,8 +325,8 @@ export default {
     ]
   },
   mounted() {
-    if (this.$route.params.id) {
-      this.handleGetReportsById(this.$route.params.id)
+    if (this.$route.query.id) {
+      this.handleGetReportsById(this.$route.query.id)
     } else {
       const item = {
         x: 0,
@@ -334,7 +334,7 @@ export default {
         w: 2,
         h: 1,
         i: this.widgets.length,
-        selectedControl: 'title'
+        selectedControl: 'text'
       }
       this.widgets.push(item)
     }
@@ -386,7 +386,7 @@ export default {
     },
 
     handleSaveChanges() {
-      if (!this.$route.params.id) {
+      if (!this.$route.query.id) {
         addReport({
           name: this.chartTitle,
           widgetCount: this.widgets.length,
@@ -404,7 +404,7 @@ export default {
         } else {
           console.log('Object with index not found in the array.')
         }
-        updateReport(this.$route.params.id, {
+        updateReport(this.$route.query.id, {
           name: this.title,
           widgetCount: this.widgets.length,
           widgets: this.widgets

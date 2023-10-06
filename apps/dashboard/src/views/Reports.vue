@@ -89,7 +89,7 @@ export default {
     },
 
     handleEditReport(e) {
-      this.$router.push({ name: 'Edit Report', params: { id: e } })
+      this.$router.push({ path: '/report', query: { id: e } })
     },
 
     handleDeleteItem(id) {

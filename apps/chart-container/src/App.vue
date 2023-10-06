@@ -961,8 +961,8 @@ export default {
     }
   },
   mounted() {
-    if (this.$route.params.id) {
-      this.handleGetReportsById(this.$route.params.id)
+    if (this.$route.query.id) {
+      this.handleGetReportsById(this.$route.query.id)
     }
   },
   methods: {

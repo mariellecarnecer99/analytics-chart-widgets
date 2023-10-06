@@ -15,12 +15,7 @@ const routes = [
   },
   {
     path: '/report',
-    name: 'Add Report',
-    component: () => import('../../../chart-container/src/layouts/default/Default.vue'),
-  },
-  { 
-    path: '/report/:id',
-    name: 'Edit Report',
+    name: 'Report',
     component: () => import('../../../chart-container/src/layouts/default/Default.vue'),
   }
 ]
