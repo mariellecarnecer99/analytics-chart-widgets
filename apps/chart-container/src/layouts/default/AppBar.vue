@@ -191,8 +191,9 @@ import html2canvas from 'html2canvas'
 import { useSelectedChart } from '../../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 const store = useSelectedChart()
-const { fetchChartOptions } = storeToRefs(store)
+const { fetchChartOptions, fetchControlOptions } = storeToRefs(store)
 const getChartOptions = fetchChartOptions
+const getControlOptions = fetchControlOptions
 import { getReport, addReport, updateReport } from '../../../../dashboard/src/services/reports'
 export default {
   name: 'AppBar',
@@ -304,13 +305,20 @@ export default {
       widgets: [],
       options: getChartOptions,
       modifiedOptions: [],
-      embedAll: false
+      embedAll: false,
+      controlOptions: getControlOptions,
+      modifiedControls: []
     }
   },
   watch: {
     options: [
       {
         handler: 'getOptions'
+      }
+    ],
+    controlOptions: [
+      {
+        handler: 'getControls'
       }
     ]
   },
@@ -324,6 +332,16 @@ export default {
       const input = document.getElementById('tocopy')
       input.select()
       document.execCommand('copy')
+    },
+
+    getControls(data) {
+      const textObject = this.widgets.find((obj) => obj.selectedControl === 'text')
+
+      if (textObject) {
+        textObject.text = data
+      }
+
+      this.modifiedControls = textObject
     },
 
     getOptions(data) {
@@ -343,7 +361,8 @@ export default {
         w: 2,
         h: 1,
         i: this.widgets.length,
-        selectedControl: this.selectedControl
+        selectedControl: this.selectedControl,
+        text: ''
       }
       this.widgets.push(item)
     },
@@ -362,6 +381,24 @@ export default {
     },
 
     handleSaveChanges() {
+      // Iterate through the second array
+      for (let i = 0; i < this.widgets.length; i++) {
+        const item = this.widgets[i]
+
+        if (
+          item.h === this.modifiedControls.h &&
+          item.i === this.modifiedControls.i &&
+          item.w === this.modifiedControls.w &&
+          item.x === this.modifiedControls.x
+        ) {
+          item.y = this.modifiedControls.y
+          item.text = this.modifiedControls.text
+          item.moved = this.modifiedControls.moved
+          item.selectedControl = this.modifiedControls.selectedControl
+        }
+      }
+
+      console.log(this.widgets)
       if (!this.$route.query.id) {
         addReport({
           name: this.mainTitle,

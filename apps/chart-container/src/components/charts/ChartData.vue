@@ -1276,7 +1276,7 @@ export default {
       handler(newOption) {
         this.textColor = newOption
         console.log('this.textColor: ', this.textColor)
-        store.getControlOptions(this.textColor)
+        // store.getControlOptions(this.textColor)
       }
     }
   },
@@ -1303,8 +1303,8 @@ export default {
     },
 
     handleChangedText(event) {
-      console.log('event: ', event)
-      // store.getChartTitle(event.target.value)
+      this.text = event.target.value
+      store.getControlOptions(this.text)
     },
 
     handleSelectedChart(val) {
