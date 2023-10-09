@@ -27,11 +27,11 @@
   <DateRange v-if="control === 'daterange'" :dateRange="dateRange" />
   <v-text-field
     v-if="control === 'text'"
-    v-model="title"
+    v-model="text"
     class="py-8"
     variant="plain"
     density="compact"
-    @input="handleChangedTitle"
+    @input="handleChangedText"
   ></v-text-field>
   <!-- <div v-if="!control && !preview" class="custom-toolbox">
     <v-icon color="#676767" @click="editDialog = !editDialog">mdi-pencil-outline</v-icon>
@@ -885,7 +885,6 @@ export default {
     control: String,
     selectedChartsLength: Number,
     preview: Boolean,
-    chartTitle: String,
     widgets: Object,
     selectedWidgets: Array,
     chartData: Object,
@@ -912,7 +911,8 @@ export default {
     chartTickMarkersSwitch: Boolean,
     chartLegendSwitch: Boolean,
     chartDatesSwitch: Boolean,
-    dateRange: Array
+    dateRange: Array,
+    textControlColor: String
   },
   data: () => {
     return {
@@ -1036,7 +1036,8 @@ export default {
       apiData: null,
       chartsConfig: null,
       selectedApi: null,
-      title: null
+      text: null,
+      textColor: null
     }
   },
   // computed: {
@@ -1053,11 +1054,6 @@ export default {
         handler: 'getDates'
       }
     ],
-    chartTitle: {
-      handler(newOption) {
-        this.title = newOption
-      }
-    },
     modifiedChart: {
       handler(newOption) {
         if (newOption != null) {
@@ -1275,15 +1271,16 @@ export default {
         this.handleApexOptions()
         this.handleChartjsOptions()
       }
+    },
+    textControlColor: {
+      handler(newOption) {
+        this.textColor = newOption
+        console.log('this.textColor: ', this.textColor)
+        store.getControlOptions(this.textColor)
+      }
     }
-    // chartDatesSwitch: {
-    //   handler(newOption) {
-    //     console.log('newOption: ', newOption)
-    //   }
-    // }
   },
   mounted() {
-    this.title = this.chartTitle
     // this.handleOptions()
     // this.handleApexOptions()
     // this.handleChartjsOptions()
@@ -1305,8 +1302,9 @@ export default {
       this.handleChartjsOptions(data)
     },
 
-    handleChangedTitle(event) {
-      store.getChartTitle(event.target.value)
+    handleChangedText(event) {
+      console.log('event: ', event)
+      // store.getChartTitle(event.target.value)
     },
 
     handleSelectedChart(val) {

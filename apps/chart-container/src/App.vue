@@ -27,7 +27,6 @@
           :chartId="item.i"
           :control="item.selectedControl"
           :selectedChartsLength="widgets.length"
-          :chartTitle="title"
           :widgets="item"
           :selectedWidgets="widgets"
           :chartData="item.data"
@@ -55,6 +54,7 @@
           :chartLegendSwitch="item.i === specificItemId ? legendSwitch : null"
           :chartDatesSwitch="item.i === specificItemId ? datesSwitch : null"
           :dateRange="item.i === specificItemId ? defaultDateRange : null"
+          :textControlColor="item.i === specificItemId ? textColor : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -114,7 +114,52 @@
             <v-expansion-panel-title>
               {{ i.title }}
             </v-expansion-panel-title>
-            <v-expansion-panel-text> </v-expansion-panel-text>
+            <v-expansion-panel-text v-if="i.value === 'header'">
+              <!-- <v-text-field
+                v-model="daterangeColor"
+                hide-details
+                class="mt-5"
+                variant="outlined"
+                density="compact"
+              >
+                <template v-slot:append-inner>
+                  <v-menu
+                    v-model="menudaterangeColor"
+                    location="end"
+                    nudge-bottom="105"
+                    nudge-left="16"
+                    :close-on-content-click="false"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <div
+                        v-bind="props"
+                        :style="{
+                          backgroundColor: daterangeColor,
+                          cursor: 'pointer',
+                          width: '30px',
+                          height: '30px',
+                          borderRadius: menudaterangeColor ? '50%' : '4px',
+                          transition: 'border-radius 200ms ease-in-out'
+                        }"
+                      ></div>
+                    </template>
+                    <v-card>
+                      <v-card-text class="pa-0">
+                        <v-color-picker v-model="daterangeColor" flat></v-color-picker>
+                      </v-card-text>
+                    </v-card>
+                  </v-menu>
+                </template>
+              </v-text-field>
+
+              <v-text-field
+                v-model="dateFontSize"
+                type="number"
+                variant="outlined"
+                density="compact"
+                class="mt-5"
+              ></v-text-field> -->
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
       </v-window-item>
@@ -136,7 +181,53 @@
         <v-expansion-panel-title>
           {{ i.title }}
         </v-expansion-panel-title>
-        <v-expansion-panel-text> </v-expansion-panel-text>
+        <v-expansion-panel-text v-if="i.value === 'fontParagraph'">
+          <v-row>
+            <v-col>
+              <p class="mt-5 mb-2">Font Color</p>
+              <v-text-field v-model="textColor" hide-details variant="outlined" density="compact">
+                <template v-slot:append-inner>
+                  <v-menu
+                    v-model="menutextColor"
+                    location="end"
+                    nudge-bottom="105"
+                    nudge-left="16"
+                    :close-on-content-click="false"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <div
+                        v-bind="props"
+                        :style="{
+                          backgroundColor: textColor,
+                          cursor: 'pointer',
+                          width: '30px',
+                          height: '30px',
+                          borderRadius: menutextColor ? '50%' : '4px',
+                          transition: 'border-radius 200ms ease-in-out'
+                        }"
+                      ></div>
+                    </template>
+                    <v-card>
+                      <v-card-text class="pa-0">
+                        <v-color-picker v-model="textColor" flat></v-color-picker>
+                      </v-card-text>
+                    </v-card>
+                  </v-menu>
+                </template>
+              </v-text-field>
+            </v-col>
+
+            <v-col>
+              <p class="mt-5 mb-2">Font Size</p>
+              <v-text-field
+                v-model="dateFontSize"
+                type="number"
+                variant="outlined"
+                density="compact"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </v-navigation-drawer>
@@ -674,7 +765,6 @@
 import ChartData from './components/charts/ChartData.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { getReport } from '../../dashboard/src/services/reports'
 import { Vue3JsonEditor } from 'vue3-json-editor'
 import line from './assets/line.png'
 import bar from './assets/bar.png'
@@ -692,7 +782,6 @@ export default {
   inject: ['eventBus'],
   data: () => {
     return {
-      title: null,
       drawer: false,
       tab: null,
       chartOrientation: [
@@ -904,26 +993,26 @@ export default {
       ],
       defaultDateRange: [],
       dateRangeStyle: [
-        {
-          title: 'Date Range Picker',
-          value: 'dateRangePicker'
-        },
+        // {
+        //   title: 'Date Range Picker',
+        //   value: 'dateRangePicker'
+        // },
         {
           title: 'Header',
           value: 'header'
         },
-        {
-          title: 'Label',
-          value: 'label'
-        },
+        // {
+        //   title: 'Label',
+        //   value: 'label'
+        // },
         {
           title: 'Background and Border',
           value: 'bgBorder'
-        },
-        {
-          title: 'Padding',
-          value: 'padding'
         }
+        // {
+        //   title: 'Padding',
+        //   value: 'padding'
+        // }
       ],
       textStyle: [
         {
@@ -942,7 +1031,12 @@ export default {
           title: 'Padding',
           value: 'padding'
         }
-      ]
+      ],
+      daterangeColor: '#333',
+      menudaterangeColor: false,
+      dateFontSize: 12,
+      textColor: '#000',
+      menutextColor: false
     }
   },
   props: {
@@ -955,9 +1049,6 @@ export default {
     }
   },
   mounted() {
-    if (this.$route.query.id) {
-      this.handleGetReportsById(this.$route.query.id)
-    }
     this.handleSelectedDateRange(this.selectedDateRange)
   },
   methods: {
@@ -1119,15 +1210,6 @@ export default {
         item.i = index
       })
       // }
-    },
-
-    handleGetReportsById(e) {
-      getReport(e)
-        .then((response) => {
-          this.title = response.data.name
-        })
-        .catch(() => {})
-        .finally()
     },
 
     handleSelectedChart(item) {

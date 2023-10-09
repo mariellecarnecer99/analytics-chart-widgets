@@ -1,15 +1,14 @@
 <template>
   <v-app-bar color="rgba(233, 73, 93)" class="flex-grow-0" dark>
-    <v-app-bar-title @click="$router.push({ path: '/' })" class="cursor">
-      <v-icon icon="mdi-chart-box" color="white" />
-      <span v-if="$route.query?.id" class="ml-2" style="color: #ffffff">Edit Report</span>
-      <span v-else class="ml-2" style="color: #ffffff">Add Report</span>
-    </v-app-bar-title>
-    <v-spacer></v-spacer>
-    <p v-if="mainTitle" style="color: white">
-      {{ mainTitle }}
-      <v-icon size="small" color="white">mdi-pencil</v-icon>
-    </p>
+    <v-icon
+      icon="mdi-chart-box"
+      color="white"
+      size="large"
+      class="cursor mx-3"
+      @click="$router.push({ path: '/' })"
+    />
+    <v-text-field v-model="mainTitle" variant="plain" density="compact" class="mt-2" autofocus>
+    </v-text-field>
     <v-spacer></v-spacer>
     <v-btn
       v-if="$route.query?.id"
@@ -91,7 +90,6 @@
                 :control="item.selectedControl"
                 :selectedChartsLength="widgets.length"
                 :preview="previewDialog"
-                :chartTitle="mainTitle"
                 :widgets="item"
                 :selectedWidgets="widgets"
                 :chartData="item.data"
@@ -193,9 +191,8 @@ import html2canvas from 'html2canvas'
 import { useSelectedChart } from '../../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 const store = useSelectedChart()
-const { fetchChartOptions, title } = storeToRefs(store)
+const { fetchChartOptions } = storeToRefs(store)
 const getChartOptions = fetchChartOptions
-const getChartTitle = title
 import { getReport, addReport, updateReport } from '../../../../dashboard/src/services/reports'
 export default {
   name: 'AppBar',
@@ -307,9 +304,7 @@ export default {
       widgets: [],
       options: getChartOptions,
       modifiedOptions: [],
-      embedAll: false,
-      title: getChartTitle,
-      chartTitle: null
+      embedAll: false
     }
   },
   watch: {
@@ -317,33 +312,14 @@ export default {
       {
         handler: 'getOptions'
       }
-    ],
-    title: [
-      {
-        handler: 'handleChartTitle'
-      }
     ]
   },
   mounted() {
     if (this.$route.query.id) {
       this.handleGetReportsById(this.$route.query.id)
-    } else {
-      const item = {
-        x: 0,
-        y: 0,
-        w: 2,
-        h: 1,
-        i: this.widgets.length,
-        selectedControl: 'text'
-      }
-      this.widgets.push(item)
     }
   },
   methods: {
-    handleChartTitle(data) {
-      this.chartTitle = data
-    },
-
     copyText() {
       const input = document.getElementById('tocopy')
       input.select()
@@ -388,7 +364,7 @@ export default {
     handleSaveChanges() {
       if (!this.$route.query.id) {
         addReport({
-          name: this.chartTitle,
+          name: this.mainTitle,
           widgetCount: this.widgets.length,
           widgets: this.widgets
         })
@@ -405,7 +381,7 @@ export default {
           console.log('Object with index not found in the array.')
         }
         updateReport(this.$route.query.id, {
-          name: this.title,
+          name: this.mainTitle,
           widgetCount: this.widgets.length,
           widgets: this.widgets
         })
