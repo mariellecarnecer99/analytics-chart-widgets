@@ -31,6 +31,7 @@
     class="py-8"
     variant="plain"
     density="compact"
+    :style="textFieldStyle"
     @input="handleChangedText"
   ></v-text-field>
 </template>
@@ -104,7 +105,11 @@ export default {
     chartDatesSwitch: Boolean,
     dateRange: Array,
     textControlColor: String,
-    textControlText: String
+    textControlText: String,
+    textControlFontSize: Number,
+    textControlFont: String,
+    textControlFormat: Array,
+    textControlAlignment: String
   },
   data: () => {
     return {
@@ -228,8 +233,39 @@ export default {
       apiData: null,
       chartsConfig: null,
       selectedApi: null,
-      text: null,
-      textColor: null
+      text: null
+    }
+  },
+  computed: {
+    textFieldStyle() {
+      const stylesToCheckFor = ['italic', 'bold', 'underline', 'strikethrough']
+
+      const style = {}
+
+      stylesToCheckFor.forEach((value) => {
+        if (this.textControlFormat.some((item) => item.value === value)) {
+          if (value === 'italic') {
+            style.fontStyle = 'italic'
+          } else if (value === 'bold') {
+            style.fontWeight = 'bold'
+          } else if (value === 'underline') {
+            style.textDecoration = style.textDecoration
+              ? style.textDecoration + ' underline'
+              : 'underline'
+          } else if (value === 'strikethrough') {
+            style.textDecoration = style.textDecoration
+              ? style.textDecoration + ' line-through'
+              : 'line-through'
+          }
+        }
+      })
+
+      style.color = this.textControlColor
+      style.fontSize = this.textControlFontSize + 'px'
+      style.fontFamily = this.textControlFont
+      style.textAlign = this.textControlAlignment
+
+      return style
     }
   },
   watch: {
@@ -454,12 +490,6 @@ export default {
         this.handleOptions()
         this.handleApexOptions()
         this.handleChartjsOptions()
-      }
-    },
-    textControlColor: {
-      handler(newOption) {
-        this.textColor = newOption
-        // store.getControlOptions(this.textColor)
       }
     }
   },

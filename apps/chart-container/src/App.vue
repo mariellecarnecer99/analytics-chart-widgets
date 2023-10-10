@@ -56,6 +56,10 @@
           :chartDatesSwitch="item.i === specificItemId ? datesSwitch : null"
           :dateRange="item.i === specificItemId ? defaultDateRange : null"
           :textControlColor="item.i === specificItemId ? textColor : null"
+          :textControlFontSize="item.i === specificItemId ? textFontSize : null"
+          :textControlFont="item.i === specificItemId ? textFont : null"
+          :textControlFormat="item.i === specificItemId ? textFormats : []"
+          :textControlAlignment="item.i === specificItemId ? textAlignments : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -183,9 +187,8 @@
           {{ i.title }}
         </v-expansion-panel-title>
         <v-expansion-panel-text v-if="i.value === 'fontParagraph'">
-          <v-row>
+          <v-row class="mt-3">
             <v-col>
-              <p class="mt-5 mb-2">Font Color</p>
               <v-text-field v-model="textColor" hide-details variant="outlined" density="compact">
                 <template v-slot:append-inner>
                   <v-menu
@@ -219,13 +222,43 @@
             </v-col>
 
             <v-col>
-              <p class="mt-5 mb-2">Font Size</p>
               <v-text-field
-                v-model="dateFontSize"
+                v-model="textFontSize"
                 type="number"
                 variant="outlined"
                 density="compact"
               ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-0">
+            <v-col>
+              <v-select
+                v-model="textFont"
+                :items="fonts"
+                label="Select ..."
+                variant="outlined"
+                density="compact"
+              ></v-select>
+            </v-col>
+          </v-row>
+
+          <v-row class="mt-0 mb-2">
+            <v-col v-for="(item, index) in textFormatItems" :key="index">
+              <v-icon
+                :class="{ selected: textFormats.includes(item) }"
+                :style="textFormats.includes(item) ? { background: '#e0e0e0' } : {}"
+                @click="toggleSelection(item)"
+              >
+                {{ item.icon }}
+              </v-icon>
+            </v-col>
+          </v-row>
+
+          <v-row class="alignItems mt-5 mb-4">
+            <v-col v-for="(item, index) in textAlignmentItems" :key="index">
+              <v-icon :class="alignmentIconClass(item.value)" @click="handleAlignments(item.value)">
+                {{ item.icon }}
+              </v-icon>
             </v-col>
           </v-row>
         </v-expansion-panel-text>
@@ -1022,23 +1055,54 @@ export default {
           value: 'fontParagraph'
         },
         {
-          title: 'Overflow settings',
-          value: 'overflowSettings'
-        },
-        {
           title: 'Background and Border',
           value: 'bgBorder'
-        },
-        {
-          title: 'Padding',
-          value: 'padding'
         }
       ],
       daterangeColor: '#333',
       menudaterangeColor: false,
-      dateFontSize: 12,
+      textFontSize: 12,
       textColor: '#000',
-      menutextColor: false
+      menutextColor: false,
+      textFont: 'Arial',
+      textFormatItems: [
+        {
+          icon: 'mdi-format-bold',
+          value: 'bold'
+        },
+        {
+          icon: 'mdi-format-italic',
+          value: 'italic'
+        },
+        {
+          icon: 'mdi-format-underline',
+          value: 'underline'
+        },
+        {
+          icon: 'mdi-format-strikethrough',
+          value: 'strikethrough'
+        }
+      ],
+      textFormats: [],
+      textAlignmentItems: [
+        {
+          icon: 'mdi-format-align-left',
+          value: 'left'
+        },
+        {
+          icon: 'mdi-format-align-center',
+          value: 'center'
+        },
+        {
+          icon: 'mdi-format-align-right',
+          value: 'right'
+        },
+        {
+          icon: 'mdi-format-align-justify',
+          value: 'justify'
+        }
+      ],
+      textAlignments: 'left'
     }
   },
   props: {
@@ -1048,12 +1112,35 @@ export default {
     getGridColor() {
       const { gridColor } = this
       return gridColor
+    },
+    alignmentIconClass() {
+      return (alignmentOption) => {
+        // Check if the alignment option matches the selectedAlignment
+        if (this.textAlignments === alignmentOption) {
+          return 'icon-selected-color' // Use your class for selected color (e.g., 'icon-selected-color')
+        } else {
+          return 'icon-default-color' // Use your class for default color (e.g., 'icon-default-color')
+        }
+      }
     }
   },
   mounted() {
     this.handleSelectedDateRange(this.selectedDateRange)
   },
   methods: {
+    toggleSelection(item) {
+      const index = this.textFormats.indexOf(item)
+      if (index === -1) {
+        this.textFormats.push(item)
+      } else {
+        this.textFormats.splice(index, 1)
+      }
+    },
+
+    handleAlignments(align) {
+      this.textAlignments = align
+    },
+
     copyText() {
       const input = document.getElementById('tocopy')
       input.select()
@@ -1484,5 +1571,17 @@ export default {
 .uploadData {
   border: 1px dashed;
   width: inherit;
+}
+
+.alignItems {
+  background-color: #e0e0e0;
+}
+
+.icon-selected-color {
+  color: #000;
+}
+
+.icon-default-color {
+  color: #a4a3a4;
 }
 </style>
