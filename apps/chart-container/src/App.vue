@@ -466,6 +466,7 @@
                     density="compact"
                     auto-grow
                     append-inner-icon="mdi-content-copy"
+                    @click:append-inner="copyText"
                   ></v-textarea>
                 </v-col>
               </v-row>
@@ -1052,6 +1053,12 @@ export default {
     this.handleSelectedDateRange(this.selectedDateRange)
   },
   methods: {
+    copyText() {
+      const input = document.getElementById('tocopy')
+      input.select()
+      document.execCommand('copy')
+    },
+
     handleSelectedDateRange(e) {
       if (e === '7days') {
         this.defaultDateRange = this.calculateDateRangeDays(7)
