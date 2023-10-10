@@ -242,8 +242,8 @@
             </v-col>
           </v-row>
 
-          <v-row class="mt-0 mb-2">
-            <v-col v-for="(item, index) in textFormatItems" :key="index">
+          <v-row class="mt-0 mb-2" no-gutters>
+            <v-col v-for="(item, index) in textFormatItems" :key="index" class="text-center">
               <v-icon
                 :class="{ selected: textFormats.includes(item) }"
                 :style="textFormats.includes(item) ? { background: '#e0e0e0' } : {}"
@@ -255,7 +255,7 @@
           </v-row>
 
           <v-row class="alignItems mt-5 mb-4">
-            <v-col v-for="(item, index) in textAlignmentItems" :key="index">
+            <v-col v-for="(item, index) in textAlignmentItems" :key="index" class="text-center">
               <v-icon :class="alignmentIconClass(item.value)" @click="handleAlignments(item.value)">
                 {{ item.icon }}
               </v-icon>

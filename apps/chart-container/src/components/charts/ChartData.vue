@@ -263,7 +263,7 @@ export default {
       style.color = this.textControlColor
       style.fontSize = this.textControlFontSize + 'px'
       style.fontFamily = this.textControlFont
-      style.textAlign = this.textControlAlignment
+      style.textAlignLast = this.textControlAlignment
 
       return style
     }
