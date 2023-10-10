@@ -399,7 +399,6 @@ export default {
         }
       }
 
-      console.log(this.widgets)
       if (!this.$route.query.id) {
         addReport({
           name: this.mainTitle,

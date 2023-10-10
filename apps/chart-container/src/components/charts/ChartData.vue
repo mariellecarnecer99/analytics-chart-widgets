@@ -31,7 +31,7 @@
     class="py-8"
     variant="plain"
     density="compact"
-    :style="textFieldStyle"
+    :style="textControlFormat ? textFieldStyle : {}"
     @input="handleChangedText"
   ></v-text-field>
 </template>
@@ -109,7 +109,12 @@ export default {
     textControlFontSize: Number,
     textControlFont: String,
     textControlFormat: Array,
-    textControlAlignment: String
+    textControlAlignment: String,
+    textControlBgColor: String,
+    textControlBorderWeight: Number,
+    textControlBorder: String,
+    textControlBorderRadius: Number,
+    textControlBorderColor: String
   },
   data: () => {
     return {
@@ -243,7 +248,7 @@ export default {
       const style = {}
 
       stylesToCheckFor.forEach((value) => {
-        if (this.textControlFormat.some((item) => item.value === value)) {
+        if (this.textControlFormat?.some((item) => item.value === value)) {
           if (value === 'italic') {
             style.fontStyle = 'italic'
           } else if (value === 'bold') {
@@ -264,6 +269,16 @@ export default {
       style.fontSize = this.textControlFontSize + 'px'
       style.fontFamily = this.textControlFont
       style.textAlignLast = this.textControlAlignment
+      style.backgroundColor = this.textControlBgColor
+      style.height = '100%'
+      style.border =
+        this.textControlBorderWeight +
+        'px' +
+        ' ' +
+        this.textControlBorderColor +
+        ' ' +
+        this.textControlBorder
+      style.borderRadius = this.textControlBorderRadius + 'px'
 
       return style
     }

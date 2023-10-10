@@ -60,6 +60,11 @@
           :textControlFont="item.i === specificItemId ? textFont : null"
           :textControlFormat="item.i === specificItemId ? textFormats : []"
           :textControlAlignment="item.i === specificItemId ? textAlignments : null"
+          :textControlBgColor="item.i === specificItemId ? textbgColor : null"
+          :textControlBorderWeight="item.i === specificItemId ? textBorderWeight : null"
+          :textControlBorder="item.i === specificItemId ? textBorder : null"
+          :textControlBorderRadius="item.i === specificItemId ? textBorderRadius : null"
+          :textControlBorderColor="item.i === specificItemId ? textborderColor : null"
         />
         <span class="remove deleteChart" @click="removeItem(item.i)"
           ><v-icon size="small">mdi-close</v-icon></span
@@ -84,7 +89,7 @@
 
     <v-window v-model="tab">
       <v-window-item value="setup">
-        <v-expansion-panels variant="accordion">
+        <v-expansion-panels v-model="panel" variant="accordion">
           <v-expansion-panel>
             <v-expansion-panel-title> Default date range </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -181,7 +186,7 @@
 
     <v-divider></v-divider>
 
-    <v-expansion-panels variant="accordion">
+    <v-expansion-panels v-model="panel" variant="accordion">
       <v-expansion-panel v-for="i in textStyle" :key="i">
         <v-expansion-panel-title>
           {{ i.title }}
@@ -254,11 +259,125 @@
             </v-col>
           </v-row>
 
-          <v-row class="alignItems mt-5 mb-4">
+          <v-row class="alignItems mt-5 mb-4 py-2" no-gutters>
             <v-col v-for="(item, index) in textAlignmentItems" :key="index" class="text-center">
               <v-icon :class="alignmentIconClass(item.value)" @click="handleAlignments(item.value)">
                 {{ item.icon }}
               </v-icon>
+            </v-col>
+          </v-row>
+        </v-expansion-panel-text>
+
+        <v-expansion-panel-text v-if="i.value === 'bgBorder'">
+          <v-row class="mt-3">
+            <v-col>
+              <v-text-field v-model="textbgColor" hide-details variant="outlined" density="compact">
+                <template v-slot:append-inner>
+                  <v-menu
+                    v-model="menutextbgColor"
+                    location="end"
+                    nudge-bottom="105"
+                    nudge-left="16"
+                    :close-on-content-click="false"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <div
+                        v-bind="props"
+                        :style="{
+                          backgroundColor: textbgColor,
+                          cursor: 'pointer',
+                          width: '30px',
+                          height: '30px',
+                          borderRadius: menutextbgColor ? '50%' : '4px',
+                          transition: 'border-radius 200ms ease-in-out'
+                        }"
+                      ></div>
+                    </template>
+                    <v-card>
+                      <v-card-text class="pa-0">
+                        <v-color-picker v-model="textbgColor" flat></v-color-picker>
+                      </v-card-text>
+                    </v-card>
+                  </v-menu>
+                </template>
+              </v-text-field>
+            </v-col>
+
+            <v-col>
+              <v-text-field
+                v-model="textBorderRadius"
+                type="number"
+                variant="outlined"
+                density="compact"
+                prepend-inner-icon="mdi-border-style"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row class="mt-3">
+            <v-col>
+              <v-text-field
+                v-model="textborderColor"
+                hide-details
+                variant="outlined"
+                density="compact"
+              >
+                <template v-slot:append-inner>
+                  <v-menu
+                    v-model="menutextborderColor"
+                    location="end"
+                    nudge-bottom="105"
+                    nudge-left="16"
+                    :close-on-content-click="false"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <div
+                        v-bind="props"
+                        :style="{
+                          backgroundColor: textborderColor,
+                          cursor: 'pointer',
+                          width: '30px',
+                          height: '30px',
+                          borderRadius: menutextborderColor ? '50%' : '4px',
+                          transition: 'border-radius 200ms ease-in-out'
+                        }"
+                      ></div>
+                    </template>
+                    <v-card>
+                      <v-card-text class="pa-0">
+                        <v-color-picker v-model="textborderColor" flat></v-color-picker>
+                      </v-card-text>
+                    </v-card>
+                  </v-menu>
+                </template>
+              </v-text-field>
+            </v-col>
+
+            <v-col>
+              <v-text-field
+                v-model="textBorderWeight"
+                type="number"
+                variant="outlined"
+                density="compact"
+                prepend-inner-icon="mdi-border-top"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <v-select
+                v-model="textBorder"
+                :items="textBorderStyle"
+                item-title="style"
+                item-value="value"
+                label="Border Style"
+                density="compact"
+                variant="outlined"
+                prepend-inner-icon="mdi-table-border"
+                @update:modelValue="getBorderStyle"
+              >
+              </v-select>
             </v-col>
           </v-row>
         </v-expansion-panel-text>
@@ -278,7 +397,7 @@
 
     <v-window v-model="tab">
       <v-window-item value="setup">
-        <v-expansion-panels variant="accordion">
+        <v-expansion-panels v-model="panel" variant="accordion">
           <v-expansion-panel v-for="i in setupItems" :key="i">
             <v-expansion-panel-title>
               {{ i.title }}
@@ -1064,6 +1183,10 @@ export default {
       textFontSize: 12,
       textColor: '#000',
       menutextColor: false,
+      textbgColor: '#ccc',
+      menutextbgColor: false,
+      textborderColor: '#000',
+      menutextborderColor: false,
       textFont: 'Arial',
       textFormatItems: [
         {
@@ -1102,7 +1225,29 @@ export default {
           value: 'justify'
         }
       ],
-      textAlignments: 'left'
+      textAlignments: 'left',
+      panel: [0],
+      textBorderRadius: 1,
+      textBorderWeight: 2,
+      textBorderStyle: [
+        {
+          style: 'Solid',
+          value: 'solid'
+        },
+        {
+          style: 'Dashed',
+          value: 'dashed'
+        },
+        {
+          style: 'Dotted',
+          value: 'dotted'
+        },
+        {
+          style: 'Double',
+          value: 'double'
+        }
+      ],
+      textBorder: 'solid'
     }
   },
   props: {
@@ -1115,19 +1260,23 @@ export default {
     },
     alignmentIconClass() {
       return (alignmentOption) => {
-        // Check if the alignment option matches the selectedAlignment
         if (this.textAlignments === alignmentOption) {
-          return 'icon-selected-color' // Use your class for selected color (e.g., 'icon-selected-color')
+          return 'icon-selected-color'
         } else {
-          return 'icon-default-color' // Use your class for default color (e.g., 'icon-default-color')
+          return 'icon-default-color'
         }
       }
     }
   },
   mounted() {
     this.handleSelectedDateRange(this.selectedDateRange)
+    this.getBorderStyle(this.textBorder)
   },
   methods: {
+    getBorderStyle(e) {
+      this.textBorder = e
+    },
+
     toggleSelection(item) {
       const index = this.textFormats.indexOf(item)
       if (index === -1) {
@@ -1295,16 +1444,11 @@ export default {
     },
 
     removeItem(i) {
-      // console.log('val: ', val);
-      // console.log('i: ', i)
-      // if (e.key === 'Backspace') {
-      //   console.log('e.key: ', e.key)
       const index = this.widgets.map((item) => item.i).indexOf(i)
       this.widgets.splice(index, 1)
       this.widgets.forEach((item, index) => {
         item.i = index
       })
-      // }
     },
 
     handleSelectedChart(item) {
