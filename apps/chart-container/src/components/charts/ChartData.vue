@@ -103,7 +103,8 @@ export default {
     chartLegendSwitch: Boolean,
     chartDatesSwitch: Boolean,
     dateRange: Array,
-    textControlColor: String
+    textControlColor: String,
+    textControlText: String
   },
   data: () => {
     return {
@@ -458,7 +459,6 @@ export default {
     textControlColor: {
       handler(newOption) {
         this.textColor = newOption
-        console.log('this.textColor: ', this.textColor)
         // store.getControlOptions(this.textColor)
       }
     }
@@ -473,9 +473,14 @@ export default {
       this.handleOptions()
       this.handleApexOptions()
       this.handleChartjsOptions()
+      this.handleTextControl()
     }
   },
   methods: {
+    handleTextControl() {
+      this.text = this.textControlText
+    },
+
     handleGetReportsById(data) {
       this.handleOptions(data)
       this.handleApexOptions(data)

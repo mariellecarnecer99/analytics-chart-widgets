@@ -26,6 +26,7 @@
           :chartLib="item.selectedLib"
           :chartId="item.i"
           :control="item.selectedControl"
+          :textControlText="item.text"
           :selectedChartsLength="widgets.length"
           :widgets="item"
           :selectedWidgets="widgets"

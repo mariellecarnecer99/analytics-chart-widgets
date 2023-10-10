@@ -86,6 +86,7 @@
               <ChartData
                 :chartType="item.chart?.value"
                 :chartLib="item.selectedLib"
+                :textControlText="item.text"
                 :chartId="item.i"
                 :control="item.selectedControl"
                 :selectedChartsLength="widgets.length"
