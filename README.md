@@ -12,18 +12,31 @@ A great plugin which you can fully customize different charts and be able to gen
 
 **Using yarn**
 
-yarn add analytics-chart-widgets
+yarn add vue-analytics-chart-widgets
 
 **Using npm**
 
-npm i analytics-chart-widgets
+npm i vue-analytics-chart-widgets
 
 ### Usage
 
-    import AnalyticsChartWidgets from 'analytics-chart-widgets';
-    import 'analytics-chart-widgets/dashboard/dist/index-31637949.js'
+    import { registerPlugins } from "vue-analytics-chart-widgets"
+    import "vue-analytics-chart-widgets/style.css";
 
-    Vue.component('analytics-chart-widgets', AnalyticsChartWidgets);
+    app.use(registerPlugins)
+
+    <script>
+        import { VueAnalyticsChartWidgets } from "vue-analytics-chart-widgets";
+        export default {
+          components: {
+            VueAnalyticsChartWidgets
+          }
+        }
+    </script>
+
+    <template>
+        <VueAnalyticsChartWidgets />
+    </template>
 
 ## Features
 
@@ -35,10 +48,9 @@ npm i analytics-chart-widgets
   - Blend data
 - Date control filter for each charts
 - Date control that filter out all the configured charts
-- JSON editor for each charts
 - Can add styles to your charts
-- Preview configured chart
-- Download chart as image
+- Preview configured report
+- Download report as image
 - Will have a full control of your chart data and controls
   - Date range control
   - Chart title
