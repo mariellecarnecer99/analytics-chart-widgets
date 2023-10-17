@@ -1,4 +1,4 @@
-# analytics-chart-widgets
+# vue-analytics-chart-widgets
 
 A great plugin which you can fully customize different charts and be able to generate a code which can be embedded to any website
 
@@ -20,23 +20,38 @@ npm i vue-analytics-chart-widgets
 
 ### Usage
 
-    import { registerPlugins } from "vue-analytics-chart-widgets"
-    import "vue-analytics-chart-widgets/style.css";
+Register it globally
 
-    app.use(registerPlugins)
+```js
+import { registerPlugins } from "vue-analytics-chart-widgets";
+import "vue-analytics-chart-widgets/style.css";
 
-    <script>
-        import { VueAnalyticsChartWidgets } from "vue-analytics-chart-widgets";
-        export default {
-          components: {
-            VueAnalyticsChartWidgets
-          }
-        }
-    </script>
+const app = createApp(App);
 
-    <template>
-        <VueAnalyticsChartWidgets />
-    </template>
+// Pass environment variables as options to the registerPlugins function
+app.use(registerPlugins, {
+	apiUrl: { your_api_url },
+});
+
+app.mount("#app");
+```
+
+Use it in your components:
+
+```js
+<script>
+    import { VueAnalyticsChartWidgets } from "vue-analytics-chart-widgets";
+    export default {
+      components: {
+        VueAnalyticsChartWidgets
+      }
+    }
+</script>
+
+<template>
+    <VueAnalyticsChartWidgets />
+</template>
+```
 
 ## Features
 
@@ -46,6 +61,7 @@ npm i vue-analytics-chart-widgets
   - Upload data source(csv)
   - Input service url
   - Blend data
+- Can add your own endpoint URL
 - Date control filter for each charts
 - Date control that filter out all the configured charts
 - Can add styles to your charts
