@@ -28,9 +28,10 @@ import "vue-analytics-chart-widgets/style.css";
 
 const app = createApp(App);
 
-// Pass environment variables as options to the registerPlugins function
+// Pass environment variables or localStorage data as options to the registerPlugins function
 app.use(registerPlugins, {
 	apiUrl: { your_api_url },
+	authToken: { your_auth_token },
 });
 
 app.mount("#app");
