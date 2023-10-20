@@ -574,6 +574,20 @@
                     </v-col>
                   </v-row>
 
+                  <div v-if="selectedApi">
+                    <v-checkbox v-model="authHeaders" label="Authorization Headers"></v-checkbox>
+                    <div v-if="authHeaders === true">
+                      <v-textarea v-model="accessToken" variant="outlined" clearable></v-textarea>
+                      <v-btn
+                        @click="makeApiRequest"
+                        variant="outlined"
+                        color="primary"
+                        class="mx-auto mb-8 d-block"
+                        >Submit</v-btn
+                      >
+                    </div>
+                  </div>
+
                   <v-row v-if="selectedApi">
                     <v-col>
                       <p class="mb-2">API date control</p>
@@ -951,6 +965,7 @@ export default {
       selectedOrientation: null,
       dateControl: [],
       selectedApi: null,
+      accessToken: '',
       isLoading: false,
       isSelecting: false,
       gridColor: '#ccc',
@@ -1247,7 +1262,8 @@ export default {
           value: 'double'
         }
       ],
-      textBorder: 'solid'
+      textBorder: 'solid',
+      authHeaders: false
     }
   },
   props: {
@@ -1643,6 +1659,66 @@ export default {
       //   this.apexOptions.series.push(blendData)
       // }
       // reader.readAsText(e.target.files[0])
+    },
+
+    async makeApiRequest() {
+      try {
+        let headers = {}
+        if (this.authHeaders && this.accessToken) {
+          headers['Authorization'] = `${this.accessToken}`
+        }
+
+        await axios
+          .get(this.selectedApi, { headers })
+          .then((response) => {
+            const responseData = response.data
+            this.apiData = responseData
+
+            if (this.apiData) {
+              let startDate = new Date(responseData[0].createdAt)
+              let endDate = new Date(responseData[0].createdAt)
+
+              responseData.forEach((item) => {
+                const currentDate = new Date(item.createdAt)
+                if (currentDate < startDate) {
+                  startDate = currentDate
+                }
+                if (currentDate > endDate) {
+                  endDate = currentDate
+                }
+              })
+
+              const startDateLocaleDateString = startDate.toLocaleDateString()
+              const endDateLocaleDateString = endDate.toLocaleDateString()
+
+              this.apiDates.push(startDateLocaleDateString)
+              this.apiDates.push(endDateLocaleDateString)
+            }
+
+            // Get dimensions
+            const allKeys = new Set()
+            for (const item of responseData) {
+              const keys = Object.keys(item)
+              keys.forEach((key) => allKeys.add(key))
+            }
+            const dimensions = Array.from(allKeys)
+            const keyToFind = 'createdAt'
+            const index = dimensions.indexOf(keyToFind)
+
+            this.defaultCategory = dimensions[index]
+            this.defaultMetric = dimensions[4]
+
+            this.serviceUrl = {
+              defaultFile: responseData,
+              defaultCategory: this.defaultCategory,
+              defaultMetric: this.defaultMetric
+            }
+          })
+          .catch(() => {})
+          .finally()
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     getApiData(api) {
