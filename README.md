@@ -31,7 +31,8 @@ const app = createApp(App);
 // Pass environment variables or localStorage data as options to the registerPlugins function
 app.use(registerPlugins, {
 	apiUrl: { your_api_url },
-	authToken: { your_auth_token },
+	authorizationType: { your_authorization_type },
+	accessToken: { your_access_token },
 });
 
 app.mount("#app");
