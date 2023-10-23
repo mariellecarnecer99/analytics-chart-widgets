@@ -1,7 +1,7 @@
 <template>
   <div v-if="chartDatesSwitch === true" class="selectedDates d-flex mt-2 ml-3 text-center">
     <v-icon class="mt-1" color="primary">mdi-calendar</v-icon>
-    <v-chip v-for="item in datexFilter" class="ma-1" color="primary" size="small" label>
+    <v-chip v-for="item in defaultDateControl" class="ma-1" color="primary" size="small" label>
       {{ item }}
     </v-chip>
   </div>
@@ -44,7 +44,7 @@ export default {
     id: Number,
     option: Object,
     chartType: String,
-    datexFilter: Object,
+    defaultDateControl: Array,
     chartDatesSwitch: Boolean
   },
   watch: {

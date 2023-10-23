@@ -54,6 +54,7 @@
           :chartTickMarkersSwitch="item.i === specificItemId ? tickMarkersSwitch : null"
           :chartLegendSwitch="item.i === specificItemId ? legendSwitch : null"
           :chartDatesSwitch="item.i === specificItemId ? datesSwitch : null"
+          :defaultDateControl="item.i === specificItemId ? dateControl : null"
           :dateRange="item.i === specificItemId ? defaultDateRange : null"
           :textControlColor="item.i === specificItemId ? textColor : null"
           :textControlFontSize="item.i === specificItemId ? textFontSize : null"
@@ -1508,6 +1509,8 @@ export default {
         const dateMapped = date.map((item) => {
           return moment(item).format('L')
         })
+        this.dateControl = dateMapped
+        this.datesSwitch = true
         this.getDaysBetweenDates(dateMapped)
       }
     },
@@ -1527,7 +1530,6 @@ export default {
         newDates.push(currDate.format('L'))
         currDate.add(1, 'days')
         this.xDates = newDates
-        this.datesSwitch = true
         randomNumbers.push(Math.round(Math.random() * 100))
         this.yRandom = randomNumbers
       }

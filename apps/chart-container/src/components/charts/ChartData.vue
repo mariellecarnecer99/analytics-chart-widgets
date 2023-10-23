@@ -4,7 +4,7 @@
     :option="options"
     :id="chartId"
     :chartType="chartType"
-    :datexFilter="datexFilter"
+    :defaultDateControl="defaultDateControl"
     :chartDatesSwitch="chartDatesSwitch"
   />
   <ApexCharts
@@ -13,7 +13,7 @@
     :apexSeries="apexOptions.series"
     :id="chartId"
     :chartType="chartType"
-    :datexFilter="datexFilter"
+    :defaultDateControl="defaultDateControl"
     :chartDatesSwitch="chartDatesSwitch"
   />
   <ChartJS
@@ -21,7 +21,7 @@
     :id="chartId"
     :option="datacollection"
     :chartType="chartType"
-    :datexFilter="datexFilter"
+    :defaultDateControl="defaultDateControl"
     :chartDatesSwitch="chartDatesSwitch"
   />
   <DateRange v-if="control === 'daterange'" :dateRange="dateRange" />
@@ -84,6 +84,7 @@ export default {
     selectedOrientation: String,
     datexFilter: Array,
     dateyFilter: Array,
+    defaultDateControl: Array,
     chartJson: Object,
     uploadedData: Object,
     selectedDimensions: Object,
