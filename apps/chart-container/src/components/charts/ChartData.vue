@@ -235,7 +235,7 @@ export default {
       aggregationType: true,
       dates: [],
       datepickerModal: false,
-      selectedDates: datesSelected,
+      selectedDateControl: datesSelected,
       apiData: null,
       chartsConfig: null,
       selectedApi: null,
@@ -285,9 +285,9 @@ export default {
     }
   },
   watch: {
-    selectedDates: [
+    selectedDateControl: [
       {
-        handler: 'getDates'
+        handler: 'getSelectedDatesControl'
       }
     ],
     modifiedChart: {
@@ -392,6 +392,7 @@ export default {
     },
     serviceUrl: {
       handler(newOption) {
+        this.apiData = newOption?.defaultFile
         if (newOption != null) {
           this.getUniqueValues(
             newOption.defaultFile,
@@ -1044,36 +1045,19 @@ export default {
       }
     },
 
-    getDates(e) {
-      if (this.dataUpload) {
-        let mappedData = this.dataUpload
-
-        const randomNumbers = []
-
-        let newDateFormat = e.map((x) => {
-          return (x = moment(x).format('L'))
-        })
-
-        let res = newDateFormat.map((x) => mappedData.find((date) => date == x))
-
-        this.dataUpload = res
-        this.handleOptions()
-        this.handleApexOptions()
-        this.handleChartjsOptions()
-      }
-
+    getSelectedDatesControl(val) {
       if (this.apiData) {
-        let mappedData = this.apiData.map((date) => {
-          const newDateFormat = moment(date.createdAt).format('DD-MM-YYYY')
+        // Map the data and format the "createdAt" dates
+        const mappedData = this.apiData.map((date) => {
+          const newDateFormat = moment(date.createdAt, 'DD-MMM-YY').format('YYYY-MM-DD')
           return {
             ...date,
             newFormat: newDateFormat
           }
         })
 
-        let res = e.map((x) => mappedData.find((date) => date.newFormat == x))
-
-        const filteredData = res.filter((item) => item !== undefined)
+        // Filter the data based on the selected dates
+        const filteredData = mappedData.filter((item) => val.includes(item.newFormat))
 
         // Get dimensions
         const allKeys = new Set()
@@ -1089,6 +1073,31 @@ export default {
         this.defaultMetric = this.dimensions[4]
 
         this.getUniqueValues(filteredData, this.defaultCategory, this.defaultMetric)
+
+        this.handleOptions()
+        this.handleApexOptions()
+        this.handleChartjsOptions()
+      }
+
+      if (this.datexFilter) {
+        const mappedData = this.datexFilter.map((date) => {
+          return moment(date).format('YYYY-MM-DD')
+        })
+
+        // Filter the data based on the selected dates
+        const filteredData = mappedData.filter((item) => val.includes(item))
+
+        this.dataUpload = filteredData
+        // Create an array of values corresponding to the selected dates
+        const selectedValues = filteredData.map((date) => {
+          const index = mappedData.indexOf(date)
+          return index !== -1 ? this.dateyFilter[index] : null
+        })
+
+        // Filter out null values (dates that were not found in mappedData)
+        const filteredValues = selectedValues.filter((value) => value !== null)
+
+        this.seriesUpload = filteredValues
 
         this.handleOptions()
         this.handleApexOptions()

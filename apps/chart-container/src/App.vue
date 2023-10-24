@@ -33,13 +33,13 @@
           :chartData="item.data"
           :modifiedChart="item.i === specificItemId ? modifiedChart : null"
           :selectedOrientation="item.i === specificItemId ? selectedOrientation : null"
-          :datexFilter="item.i === specificItemId ? xDates : null"
-          :dateyFilter="item.i === specificItemId ? yRandom : null"
+          :datexFilter="xDates"
+          :dateyFilter="yRandom"
           :chartJson="item.i === specificItemId ? chartJson : null"
           :uploadedData="item.i === specificItemId ? uploadedData : null"
           :selectedDimensions="item.i === specificItemId ? selectedDimensions : null"
           :selectedMetrics="item.i === specificItemId ? selectedMetrics : null"
-          :serviceUrl="item.i === specificItemId ? serviceUrl : null"
+          :serviceUrl="serviceUrl"
           :bgColor="item.i === specificItemId ? gridColor : null"
           :bgSwitch="item.i === specificItemId ? gridLinesSwitch : false"
           :chartFont="item.i === specificItemId ? fontType : null"
@@ -96,7 +96,7 @@
             <v-expansion-panel-text>
               <v-select
                 v-model="selectedDateRange"
-                :items="dateRange"
+                :items="datesRange"
                 variant="outlined"
                 class="mt-3"
                 item-title="type"
@@ -579,31 +579,42 @@
                     <v-checkbox v-model="authHeaders" label="Authorization Headers"></v-checkbox>
                     <div v-if="authHeaders === true">
                       <v-textarea v-model="accessToken" variant="outlined" clearable></v-textarea>
-                      <v-btn
-                        @click="makeApiRequest"
-                        variant="outlined"
-                        color="primary"
-                        class="mx-auto mb-8 d-block"
-                        >Submit</v-btn
-                      >
                     </div>
                   </div>
 
                   <v-row v-if="selectedApi">
                     <v-col>
-                      <p class="mb-2">API date control</p>
-                      <VueDatePicker
-                        v-model="apiDates"
-                        placeholder="Select Date"
-                        format="MM/dd/yyyy"
-                        range
-                        menu-class-name="dp-custom-menu"
-                        text-input
-                        position="left"
-                        @update:model-value="handleDates"
-                      />
+                      <p class="mb-4">API date control</p>
+                      <v-row>
+                        <v-col>
+                          <p class="mb-2">Start date</p>
+                          <v-text-field
+                            v-model="apiStartDate"
+                            label="mm/dd/yyyy"
+                            variant="outlined"
+                            density="compact"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col>
+                          <p class="mb-2">End date</p>
+                          <v-text-field
+                            v-model="apiEndDate"
+                            label="mm/dd/yyyy"
+                            variant="outlined"
+                            density="compact"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
                     </v-col>
                   </v-row>
+                  <v-btn
+                    v-if="authHeaders === true || apiStartDate || apiEndDate"
+                    @click="makeApiRequest"
+                    variant="outlined"
+                    color="primary"
+                    class="mx-auto mb-3 d-block"
+                    >Submit</v-btn
+                  >
                 </v-col>
               </v-row>
             </v-expansion-panel-text>
@@ -1071,7 +1082,7 @@ export default {
       dateConfig: false,
       textConfig: false,
       selectedDateRange: 'fixed',
-      dateRange: [
+      datesRange: [
         {
           type: 'Fixed',
           value: 'fixed'
@@ -1264,7 +1275,9 @@ export default {
         }
       ],
       textBorder: 'solid',
-      authHeaders: false
+      authHeaders: false,
+      apiStartDate: null,
+      apiEndDate: null
     }
   },
   props: {
@@ -1671,12 +1684,71 @@ export default {
         }
 
         await axios
-          .get(this.selectedApi, { headers })
+          .get(this.selectedApi, {
+            headers,
+            params: {
+              start_date: this.apiStartDate?.toString(),
+              end_date: this.apiEndDate?.toString()
+            }
+          })
           .then((response) => {
             const responseData = response.data
-            this.apiData = responseData
 
-            if (this.apiData) {
+            if (this.apiStartDate && this.apiEndDate) {
+              const filteredData = responseData.filter((item) => {
+                const createdAtDate = new Date(item.createdAt)
+                const startDateDate = new Date(this.apiStartDate)
+                const endDateDate = new Date(this.apiEndDate)
+
+                return createdAtDate >= startDateDate && createdAtDate <= endDateDate
+              })
+
+              // Get dimensions
+              const allKeys = new Set()
+              for (const item of filteredData) {
+                const keys = Object.keys(item)
+                keys.forEach((key) => allKeys.add(key))
+              }
+              const dimensions = Array.from(allKeys)
+              const keyToFind = 'createdAt'
+              const index = dimensions.indexOf(keyToFind)
+
+              this.defaultCategory = dimensions[index]
+              this.defaultMetric = dimensions[4]
+
+              this.serviceUrl = {
+                defaultFile: filteredData,
+                defaultCategory: this.defaultCategory,
+                defaultMetric: this.defaultMetric
+              }
+            } else if (this.accessToken && this.apiStartDate && this.apiEndDate) {
+              const filteredData = responseData.filter((item) => {
+                const createdAtDate = new Date(item.createdAt)
+                const startDateDate = new Date(this.apiStartDate)
+                const endDateDate = new Date(this.apiEndDate)
+
+                return createdAtDate >= startDateDate && createdAtDate <= endDateDate
+              })
+
+              // Get dimensions
+              const allKeys = new Set()
+              for (const item of filteredData) {
+                const keys = Object.keys(item)
+                keys.forEach((key) => allKeys.add(key))
+              }
+              const dimensions = Array.from(allKeys)
+              const keyToFind = 'createdAt'
+              const index = dimensions.indexOf(keyToFind)
+
+              this.defaultCategory = dimensions[index]
+              this.defaultMetric = dimensions[4]
+
+              this.serviceUrl = {
+                defaultFile: filteredData,
+                defaultCategory: this.defaultCategory,
+                defaultMetric: this.defaultMetric
+              }
+            } else {
               let startDate = new Date(responseData[0].createdAt)
               let endDate = new Date(responseData[0].createdAt)
 
@@ -1695,25 +1767,25 @@ export default {
 
               this.apiDates.push(startDateLocaleDateString)
               this.apiDates.push(endDateLocaleDateString)
-            }
 
-            // Get dimensions
-            const allKeys = new Set()
-            for (const item of responseData) {
-              const keys = Object.keys(item)
-              keys.forEach((key) => allKeys.add(key))
-            }
-            const dimensions = Array.from(allKeys)
-            const keyToFind = 'createdAt'
-            const index = dimensions.indexOf(keyToFind)
+              // Get dimensions
+              const allKeys = new Set()
+              for (const item of responseData) {
+                const keys = Object.keys(item)
+                keys.forEach((key) => allKeys.add(key))
+              }
+              const dimensions = Array.from(allKeys)
+              const keyToFind = 'createdAt'
+              const index = dimensions.indexOf(keyToFind)
 
-            this.defaultCategory = dimensions[index]
-            this.defaultMetric = dimensions[4]
+              this.defaultCategory = dimensions[index]
+              this.defaultMetric = dimensions[4]
 
-            this.serviceUrl = {
-              defaultFile: responseData,
-              defaultCategory: this.defaultCategory,
-              defaultMetric: this.defaultMetric
+              this.serviceUrl = {
+                defaultFile: responseData,
+                defaultCategory: this.defaultCategory,
+                defaultMetric: this.defaultMetric
+              }
             }
           })
           .catch(() => {})

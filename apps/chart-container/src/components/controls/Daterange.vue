@@ -64,7 +64,7 @@ export default {
         currDate.add(1, 'days')
       }
       this.datesSelected = newDates
-      storeForDates.getSelectedDates(newDates)
+      storeForDates.getSelectedDates(this.datesSelected)
       return this.datesSelected
     }
   }
