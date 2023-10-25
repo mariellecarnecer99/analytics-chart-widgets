@@ -98,6 +98,7 @@
                 v-model="selectedDateRange"
                 :items="datesRange"
                 variant="outlined"
+                placeholder="Select preset dates"
                 class="mt-3"
                 item-title="type"
                 item-value="value"
@@ -1081,12 +1082,8 @@ export default {
       chartConfig: false,
       dateConfig: false,
       textConfig: false,
-      selectedDateRange: 'fixed',
+      selectedDateRange: null,
       datesRange: [
-        {
-          type: 'Fixed',
-          value: 'fixed'
-        },
         {
           type: 'Last 7 days',
           value: '7days'
@@ -1112,36 +1109,16 @@ export default {
           value: 'yesterday'
         },
         {
-          type: 'This week(starts Sunday)',
-          value: 'thisWeekSunday'
+          type: 'This week',
+          value: 'thisWeek'
         },
         {
-          type: 'This week to date(starts Sunday)',
-          value: 'thisWeekToDateSunday'
-        },
-        {
-          type: 'Last week(starts Sunday)',
-          value: 'lastWeekSunday'
-        },
-        {
-          type: 'This week(starts Monday)',
-          value: 'thisWeekMonday'
-        },
-        {
-          type: 'This week to date(starts Monday)',
-          value: 'thisWeekToDateMonday'
-        },
-        {
-          type: 'Last week(starts Monday)',
-          value: 'lastWeekMonday'
+          type: 'Last week',
+          value: 'lastWeek'
         },
         {
           type: 'This month',
           value: 'thisMonth'
-        },
-        {
-          type: 'This month to date',
-          value: 'thisMonthToDate'
         },
         {
           type: 'Last month',
@@ -1152,20 +1129,12 @@ export default {
           value: 'thisQuarter'
         },
         {
-          type: 'This quarter to date',
-          value: 'thisQuarterToDate'
-        },
-        {
           type: 'Last quarter',
           value: 'lastQuarter'
         },
         {
           type: 'This year',
           value: 'thisYear'
-        },
-        {
-          type: 'This year to date',
-          value: 'thisYearToDate'
         },
         {
           type: 'Last year',
@@ -1299,7 +1268,6 @@ export default {
     }
   },
   mounted() {
-    this.handleSelectedDateRange(this.selectedDateRange)
     this.getBorderStyle(this.textBorder)
   },
   methods: {
@@ -1339,34 +1307,20 @@ export default {
         this.defaultDateRange = this.calculateDateRangeDays(0)
       } else if (e === 'yesterday') {
         this.defaultDateRange = this.calculateDateRangeDays(1)
-      } else if (e === 'thisWeekSunday') {
+      } else if (e === 'thisWeek') {
         this.defaultDateRange = this.calculateDateRangeWeek('week')
-      } else if (e === 'thisWeekToDateSunday') {
-        this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeek')
-      } else if (e === 'lastWeekSunday') {
+      } else if (e === 'lastWeek') {
         this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'week')
-      } else if (e === 'thisWeekMonday') {
-        this.defaultDateRange = this.calculateDateRangeWeek('isoWeek')
-      } else if (e === 'thisWeekToDateMonday') {
-        this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeekMonday')
-      } else if (e === 'lastWeekMonday') {
-        this.defaultDateRange = this.calculateDateRangeWeekDays(1, 'isoWeekLastWeek')
       } else if (e === 'thisMonth') {
         this.defaultDateRange = this.calculateDateRangeWeek('month')
-      } else if (e === 'thisMonthToDate') {
-        this.defaultDateRange = this.calculateDateRangeMonth(1, 'month')
       } else if (e === 'lastMonth') {
         this.defaultDateRange = this.calculateDateRangeLastMonth(1, 'month')
       } else if (e === 'thisQuarter') {
         this.defaultDateRange = this.calculateDateRangeWeek('quarter')
-      } else if (e === 'thisQuarterToDate') {
-        this.defaultDateRange = this.calculateDateRangeQuarter()
       } else if (e === 'lastQuarter') {
         this.defaultDateRange = this.calculateDateRangeLastQuarter()
       } else if (e === 'thisYear') {
         this.defaultDateRange = this.calculateDateRangeWeek('year')
-      } else if (e === 'thisYearToDate') {
-        this.defaultDateRange = this.calculateDateRangeYear()
       } else if (e === 'lastYear') {
         this.defaultDateRange = this.calculateDateRangeLastYear()
       }
@@ -1374,11 +1328,19 @@ export default {
 
     calculateDateRangeDays(days) {
       const currentDate = moment()
-      const endDate =
-        days === 0
-          ? currentDate.format('YYYY-MM-DD')
-          : currentDate.clone().subtract(1, 'days').format('YYYY-MM-DD')
-      const startDate = currentDate.clone().subtract(days, 'days').format('YYYY-MM-DD')
+      let startDate, endDate
+
+      if (days === 0) {
+        startDate = currentDate.format('YYYY-MM-DD')
+        endDate = startDate
+      } else if (days === 1) {
+        endDate = currentDate.clone().subtract(1, 'days').format('YYYY-MM-DD')
+        startDate = endDate
+      } else {
+        endDate = currentDate.format('YYYY-MM-DD')
+        startDate = currentDate.clone().subtract(days, 'days').format('YYYY-MM-DD')
+      }
+
       return [startDate, endDate]
     },
 
@@ -1408,13 +1370,6 @@ export default {
       return [startDate, endDate]
     },
 
-    calculateDateRangeMonth(days, month) {
-      const currentDate = moment()
-      const endDate = currentDate.subtract(days, 'days').format('YYYY-MM-DD')
-      const startDate = currentDate.clone().startOf(month).format('YYYY-MM-DD')
-      return [startDate, endDate]
-    },
-
     calculateDateRangeLastMonth(days, month) {
       const currentDate = moment()
       const endDate = currentDate.clone().subtract(days, 'month').endOf(month).format('YYYY-MM-DD')
@@ -1424,14 +1379,6 @@ export default {
         .startOf(month)
         .format('YYYY-MM-DD')
       return [startDate, endDate]
-    },
-
-    calculateDateRangeQuarter() {
-      const currentDate = moment()
-      const thisQuarterStartDate = currentDate.clone().startOf('year').month(9).date(1)
-      const thisQuarterToDateEndDate = currentDate.clone().subtract(1, 'day').format('YYYY-MM-DD')
-      const thisQuarterToDateStartDate = thisQuarterStartDate.format('YYYY-MM-DD')
-      return [thisQuarterToDateStartDate, thisQuarterToDateEndDate]
     },
 
     calculateDateRangeLastQuarter() {
@@ -1449,13 +1396,6 @@ export default {
         .format('YYYY-MM-DD')
 
       return [lastQuarterStartDate, lastQuarterEndDate]
-    },
-
-    calculateDateRangeYear() {
-      const currentDate = moment()
-      const thisYearToDateStartDate = currentDate.clone().startOf('year').format('YYYY-MM-DD')
-      const thisYearToDateEndDate = currentDate.clone().subtract(1, 'day').format('YYYY-MM-DD')
-      return [thisYearToDateStartDate, thisYearToDateEndDate]
     },
 
     calculateDateRangeLastYear() {
