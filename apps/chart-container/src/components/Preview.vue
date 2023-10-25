@@ -8,9 +8,49 @@
         variant="outlined"
         size="small"
         color="primary"
+        @click="embedAll = !embedAll"
+        >Embed</v-btn
+      >
+      <v-btn
+        class="mr-3"
+        variant="outlined"
+        size="small"
+        color="primary"
+        @click="handleDownloadChart"
+        >Download Report</v-btn
+      >
+      <v-btn
+        class="mr-3"
+        variant="outlined"
+        size="small"
+        color="primary"
         @click="$router.push({ path: '/report', query: { id: $route.query?.id } })"
         >Edit</v-btn
       >
+      <v-dialog v-model="embedAll" width="500px">
+        <v-card>
+          <v-card-text>
+            <v-row justify="space-between">
+              <v-col cols="8">
+                <v-sheet class="my-2"><h3>Add report to your website</h3> </v-sheet>
+              </v-col>
+              <v-col cols="1">
+                <v-sheet class="my-2"
+                  ><v-icon @click="embedAll = !embedAll">mdi-close</v-icon></v-sheet
+                >
+              </v-col>
+            </v-row>
+            <v-textarea
+              :model-value="`<chart-widget id='${$route.query?.id}'></chart-widget>`"
+              id="tocopy"
+              variant="outlined"
+              density="compact"
+              append-inner-icon="mdi-content-copy"
+              @click:append-inner="copyText"
+            ></v-textarea>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
     </v-app-bar>
     <v-main>
       <grid-layout
@@ -50,6 +90,8 @@
 <script>
 import { getReport } from '../../../dashboard/src/services/reports'
 import ChartData from './charts/ChartData.vue'
+import { saveAs } from 'file-saver'
+import html2canvas from 'html2canvas'
 import { useSelectedChart } from '../stores/fetchSelectedChart'
 import { storeToRefs } from 'pinia'
 
@@ -63,7 +105,8 @@ export default {
   data: () => {
     return {
       chartWidgets: getWidgets,
-      mainTitle: null
+      mainTitle: null,
+      embedAll: false
     }
   },
   mounted() {
@@ -78,6 +121,20 @@ export default {
         })
         .catch(() => {})
         .finally()
+    },
+
+    handleDownloadChart() {
+      html2canvas(document.querySelector('#to_save')).then((canvas) => {
+        canvas.toBlob(function (blob) {
+          window.saveAs(blob, 'my-report.jpg')
+        })
+      })
+    },
+
+    copyText() {
+      const input = document.getElementById('tocopy')
+      input.select()
+      document.execCommand('copy')
     }
   }
 }
