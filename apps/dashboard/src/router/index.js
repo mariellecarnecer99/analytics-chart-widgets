@@ -17,6 +17,11 @@ const routes = [
     path: '/report',
     name: 'Report',
     component: () => import('../../../chart-container/src/layouts/default/Default.vue'),
+  },
+  {
+    path: '/preview',
+    name: 'Preview',
+    component: () => import('../../../chart-container/src/components/Preview.vue'),
   }
 ]
 
