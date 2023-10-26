@@ -1,10 +1,12 @@
-# vue-analytics-chart-widgets
+# analytics-chart-widgets
 
 A great plugin which you can fully customize different charts and be able to generate a code which can be embedded to any website
 
 ## Demo
 
-[Have fun!](https://analytics-chart-widgets-dashboard.vercel.app)
+[Have fun!](https://vue-analytics-chart-widgets-demo.vercel.app)
+
+[https://github.com/mariellecarnecer99/vue-analytics-chart-widgets-demo](https://github.com/mariellecarnecer99/vue-analytics-chart-widgets-demo)
 
 ## Project setup
 
