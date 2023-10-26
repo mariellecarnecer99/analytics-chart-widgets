@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    component: () => import('../../../dashboard/src/layouts/default/Default.vue'),
+    component: () => import('../../../dashboard/src/layouts/default/Dashboard.vue'),
     children: [
       {
         path: '/',
