@@ -585,31 +585,60 @@
 
                   <v-row v-if="selectedApi">
                     <v-col>
-                      <p class="mb-4">API date control</p>
+                      <p class="mb-2">API date control</p>
+                      <p class="mb-4">Query Parameters</p>
                       <v-row>
-                        <v-col>
-                          <p class="mb-2">Start date</p>
+                        <v-col cols="6">
+                          <p class="mb-2">Parameter</p>
+                          <v-text-field
+                            v-model="startDateParams"
+                            label="Start date"
+                            variant="outlined"
+                            density="compact"
+                          >
+                          </v-text-field>
+                        </v-col>
+                        <v-col cols="6">
+                          <p class="mb-2">Value</p>
                           <v-text-field
                             v-model="apiStartDate"
-                            label="mm/dd/yyyy"
+                            hint="Ex. format: '{{start_date}}'"
                             variant="outlined"
                             density="compact"
-                          ></v-text-field>
+                          >
+                          </v-text-field>
                         </v-col>
-                        <v-col>
-                          <p class="mb-2">End date</p>
+                        <v-col cols="6">
+                          <p class="mb-2">Parameter</p>
+                          <v-text-field
+                            v-model="endDateParams"
+                            label="End date"
+                            variant="outlined"
+                            density="compact"
+                          >
+                          </v-text-field>
+                        </v-col>
+                        <v-col cols="6">
+                          <p class="mb-2">Value</p>
                           <v-text-field
                             v-model="apiEndDate"
-                            label="mm/dd/yyyy"
+                            hint="Ex. format: '{{end_date}}'"
                             variant="outlined"
                             density="compact"
-                          ></v-text-field>
+                          >
+                          </v-text-field>
                         </v-col>
                       </v-row>
                     </v-col>
                   </v-row>
                   <v-btn
-                    v-if="authHeaders === true || apiStartDate || apiEndDate"
+                    v-if="
+                      authHeaders === true ||
+                      startDateParams ||
+                      apiStartDate ||
+                      endDateParams ||
+                      apiEndDate
+                    "
                     @click="makeApiRequest"
                     variant="outlined"
                     color="primary"
@@ -1246,7 +1275,9 @@ export default {
       textBorder: 'solid',
       authHeaders: false,
       apiStartDate: null,
-      apiEndDate: null
+      apiEndDate: null,
+      startDateParams: null,
+      endDateParams: null
     }
   },
   props: {
@@ -1627,68 +1658,16 @@ export default {
           .get(this.selectedApi, {
             headers,
             params: {
-              start_date: this.apiStartDate?.toString(),
-              end_date: this.apiEndDate?.toString()
+              [this.startDateParams]: this.apiStartDate,
+              [this.endDateParams]: this.apiEndDate
             }
           })
           .then((response) => {
             const responseData = response.data
 
-            if (this.apiStartDate && this.apiEndDate) {
-              const filteredData = responseData.filter((item) => {
-                const createdAtDate = new Date(item.createdAt)
-                const startDateDate = new Date(this.apiStartDate)
-                const endDateDate = new Date(this.apiEndDate)
+            this.apiData = responseData
 
-                return createdAtDate >= startDateDate && createdAtDate <= endDateDate
-              })
-
-              // Get dimensions
-              const allKeys = new Set()
-              for (const item of filteredData) {
-                const keys = Object.keys(item)
-                keys.forEach((key) => allKeys.add(key))
-              }
-              const dimensions = Array.from(allKeys)
-              const keyToFind = 'createdAt'
-              const index = dimensions.indexOf(keyToFind)
-
-              this.defaultCategory = dimensions[index]
-              this.defaultMetric = dimensions[4]
-
-              this.serviceUrl = {
-                defaultFile: filteredData,
-                defaultCategory: this.defaultCategory,
-                defaultMetric: this.defaultMetric
-              }
-            } else if (this.accessToken && this.apiStartDate && this.apiEndDate) {
-              const filteredData = responseData.filter((item) => {
-                const createdAtDate = new Date(item.createdAt)
-                const startDateDate = new Date(this.apiStartDate)
-                const endDateDate = new Date(this.apiEndDate)
-
-                return createdAtDate >= startDateDate && createdAtDate <= endDateDate
-              })
-
-              // Get dimensions
-              const allKeys = new Set()
-              for (const item of filteredData) {
-                const keys = Object.keys(item)
-                keys.forEach((key) => allKeys.add(key))
-              }
-              const dimensions = Array.from(allKeys)
-              const keyToFind = 'createdAt'
-              const index = dimensions.indexOf(keyToFind)
-
-              this.defaultCategory = dimensions[index]
-              this.defaultMetric = dimensions[4]
-
-              this.serviceUrl = {
-                defaultFile: filteredData,
-                defaultCategory: this.defaultCategory,
-                defaultMetric: this.defaultMetric
-              }
-            } else {
+            if (this.apiData) {
               let startDate = new Date(responseData[0].createdAt)
               let endDate = new Date(responseData[0].createdAt)
 
@@ -1707,25 +1686,25 @@ export default {
 
               this.apiDates.push(startDateLocaleDateString)
               this.apiDates.push(endDateLocaleDateString)
+            }
 
-              // Get dimensions
-              const allKeys = new Set()
-              for (const item of responseData) {
-                const keys = Object.keys(item)
-                keys.forEach((key) => allKeys.add(key))
-              }
-              const dimensions = Array.from(allKeys)
-              const keyToFind = 'createdAt'
-              const index = dimensions.indexOf(keyToFind)
+            // Get dimensions
+            const allKeys = new Set()
+            for (const item of responseData) {
+              const keys = Object.keys(item)
+              keys.forEach((key) => allKeys.add(key))
+            }
+            const dimensions = Array.from(allKeys)
+            const keyToFind = 'createdAt'
+            const index = dimensions.indexOf(keyToFind)
 
-              this.defaultCategory = dimensions[index]
-              this.defaultMetric = dimensions[4]
+            this.defaultCategory = dimensions[index]
+            this.defaultMetric = dimensions[4]
 
-              this.serviceUrl = {
-                defaultFile: responseData,
-                defaultCategory: this.defaultCategory,
-                defaultMetric: this.defaultMetric
-              }
+            this.serviceUrl = {
+              defaultFile: responseData,
+              defaultCategory: this.defaultCategory,
+              defaultMetric: this.defaultMetric
             }
           })
           .catch(() => {})

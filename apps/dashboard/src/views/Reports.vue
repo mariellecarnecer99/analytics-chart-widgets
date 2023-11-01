@@ -35,7 +35,7 @@
             <template v-slot:default="{ isActive }">
               <v-card class="text-center">
                 <v-icon size="80" color="red" class="iconDelete">mdi-close-circle-outline</v-icon>
-                <v-card-title class="text-h5"> Are you sure? </v-card-title>
+                <v-card-title class="text-h5">Are you sure?</v-card-title>
                 <v-card-text
                   >Do you really want to delete this report? This process cannot be undone.
                 </v-card-text>
